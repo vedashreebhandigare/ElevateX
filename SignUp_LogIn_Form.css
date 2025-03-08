@@ -1,0 +1,320 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+    text-decoration: none;
+    list-style: none;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #25252b;
+}
+
+.container {
+    position: relative;
+    width: 850px;
+    height: 550px;
+    background: #1e1e24;
+    margin: 20px;
+    border-radius: 30px;
+    box-shadow: 0px 15px 40px rgba(69, 243, 255, 0.5);
+    overflow: hidden;
+}
+
+/* 🎨 Heading Colors */
+.container h1 {
+    font-size: 36px;
+    margin: -10px 0;
+}
+
+.form-box.login h1 {
+    color: #ff2770; /* Pink for Login */
+}
+
+.form-box.register h1 {
+    color: #45f3ff; /* Blue for Registration */
+}
+
+/* 📌 Black-colored text */
+.container p, .toggle-panel p {
+    font-size: 14.5px;
+    margin: 15px 0;
+    color: black; /* Changed from #ddd to black */
+}
+
+/* 📌 "Don't have an account?" text */
+.forgot-link a {
+    font-size: 14.5px;
+    color: #45f3ff; /* Blue instead of pink */
+}
+
+/* 🎯 Form Container */
+.form-box {
+    position: absolute;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background: #1e1e24;
+    display: flex;
+    align-items: center;
+    color: black;
+    text-align: center;
+    padding: 40px;
+    z-index: 1;
+    transition: .6s ease-in-out 1.2s, visibility 0s 1s;
+}
+
+.container.active .form-box {
+    right: 50%;
+}
+
+.form-box.register {
+    visibility: hidden;
+}
+
+.container.active .form-box.register {
+    visibility: visible;
+}
+
+/* ✨ Input Fields */
+.input-box {
+    position: relative;
+    margin: 30px 0;
+}
+
+.input-box input {
+    width: 100%;
+    padding: 13px 50px 13px 20px;
+    background: #333;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: #45f3ff;
+    font-weight: 500;
+}
+
+.input-box input::placeholder {
+    color: #888;
+    font-weight: 400;
+}
+
+.input-box i {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #45f3ff;
+}
+
+/* 🔘 Button Styles */
+.btn {
+    width: 100%;
+    height: 48px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+/* 🔵 Login Button */
+.login .btn {
+    background: transparent;
+    border: 2px solid #45f3ff; /* Blue border */
+    color: #45f3ff;
+    box-shadow: none;
+}
+
+.login .btn:hover {
+    background: #45f3ff; /* Blue when hovered */
+    color: white;
+}
+
+/* 🔴 Register Button */
+.register .btn {
+    background: #45f3ff; /* Blue */
+    border: none;
+    color: #25252b;
+    box-shadow: 0 0 10px rgba(69, 243, 255, .3);
+}
+
+.register .btn:hover {
+    background: #ff2770; /* Pink when hovered */
+    box-shadow: 0 0 15px rgba(255, 39, 112, 0.5);
+}
+
+/* 🔗 Social Icons */
+.social-icons {
+    display: flex;
+    justify-content: center;
+}
+
+.social-icons a {
+    display: inline-flex;
+    padding: 10px;
+    border: 2px solid #45f3ff;
+    border-radius: 8px;
+    font-size: 24px;
+    color: #45f3ff;
+    margin: 0 8px;
+    transition: 0.3s;
+}
+
+.social-icons a:hover {
+    background: #ff2770;
+    color: #fff;
+    border-color: #ff2770;
+}
+
+/* 🔄 Toggle Box */
+.toggle-box {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+/* 🟣 Toggle Box Background Color (AFTER Clicking Register) */
+.toggle-box::before {
+    content: '';
+    position: absolute;
+    left: -250%;
+    width: 300%;
+    height: 100%;
+    background: #45f3ff;
+    border-radius: 150px;
+    z-index: 2;
+    transition: 1.8s ease-in-out;
+}
+
+.container.active .toggle-box::before {
+    left: 50%;
+    background: #ff2770; /* Pink after clicking Register */
+}
+
+/* Toggle Panels */
+.toggle-panel {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    transition: .6s ease-in-out;
+}
+
+.toggle-panel.toggle-left {
+    left: 0;
+    transition-delay: 1.2s;
+}
+
+.container.active .toggle-panel.toggle-left {
+    left: -50%;
+    transition-delay: .6s;
+}
+
+.toggle-panel.toggle-right {
+    right: -50%;
+    transition-delay: .6s;
+}
+
+.container.active .toggle-panel.toggle-right {
+    right: 0;
+    transition-delay: 1.2s;
+}
+
+.toggle-panel p {
+    margin-bottom: 20px;
+}
+
+/* Toggle Buttons */
+.toggle-panel .btn {
+    width: 160px;
+    height: 46px;
+    background: #000000;
+    border: 2px solid #ff2770;
+    color: #ff2770;
+    box-shadow: none;
+    transition: 0.3s;
+}
+
+.toggle-panel .btn:hover {
+    background: #ff2770;
+    color: #25252b;
+}
+
+/* 📱 Responsive Design */
+@media screen and (max-width: 650px) {
+    .container {
+        height: calc(100vh - 40px);
+    }
+
+    .form-box {
+        bottom: 0;
+        width: 100%;
+        height: 70%;
+    }
+
+    .container.active .form-box {
+        right: 0;
+        bottom: 30%;
+    }
+
+    .toggle-box::before {
+        left: 0;
+        top: -270%;
+        width: 100%;
+        height: 300%;
+        border-radius: 20vw;
+    }
+
+    .container.active .toggle-box::before {
+        left: 0;
+        top: 70%;
+    }
+
+    .container.active .toggle-panel.toggle-left {
+        left: 0;
+        top: -30%;
+    }
+
+    .toggle-panel {
+        width: 100%;
+        height: 30%;
+    }
+
+    .toggle-panel.toggle-left {
+        top: 0;
+    }
+
+    .toggle-panel.toggle-right {
+        right: 0;
+        bottom: -30%;
+    }
+
+    .container.active .toggle-panel.toggle-right {
+        bottom: 0;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .form-box {
+        padding: 20px;
+    }
+
+    .toggle-panel h1 {
+        font-size: 30px;
+    }
+}
