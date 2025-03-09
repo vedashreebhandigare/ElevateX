@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enhanced Resume Analyzer & Course Recommender</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #45f3ff;
+      --primary-dark: #3a56d4;
+      --secondary: #ff2770;
+      --dark: #121212;
+      --light: #f8f9fa;
+      --success: #4caf50;
+      --warning: #ff9800;
+      --danger: #f44336;
+      --card-bg: rgba(255, 255, 255, 0.1);
+      --card-shadow: rgba(0, 0, 0, 0.2);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #1e1e1e, #121212);
+      color: var(--light);
+      line-height: 1.6;
+      padding-bottom: 40px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      background-color: #000; /* Set header background to black */
+      padding: 30px 0;
+      box-shadow: 0 4px 20px var(--card-shadow);
+    }
+    
+    header h1 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  /* Gradient text with your color scheme */
+  background: linear-gradient(90deg, #45f3ff, #ff2770);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+    
+    header p {
+      text-align: center;
+      font-size: 1.1rem;
+      max-width: 800px;
+      margin: 0 auto;
+      color: #ccc;
+    }
+    
+    .upload-section {
+      background-color: rgba(68, 68, 68, 0.3);
+      border-radius: 12px;
+      padding: 40px;
+      margin: 40px 0;
+      box-shadow: 0 8px 30px var(--card-shadow);
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .upload-section h2 {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+    
+    .upload-section p {
+      margin-bottom: 20px;
+      font-size: 1rem;
+      color: #ccc;
+    }
+    
+    .upload-box {
+      border: 2px dashed rgba(255, 255, 255, 0.4);
+      border-radius: 10px;
+      padding: 50px 20px;
+      margin: 20px 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .upload-box:hover {
+      border-color: var(--primary);
+      background-color: rgba(67, 97, 238, 0.1);
+    }
+    
+    .upload-box i {
+      font-size: 3rem;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 12px 30px;
+      background-color: var(--primary);
+      color: var(--dark);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all 0.3s;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px var(--card-shadow);
+    }
+    
+    .btn-secondary {
+      background-color: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+    
+    .btn-secondary:hover {
+      background-color: var(--primary);
+      color: var(--dark);
+    }
+    
+    .progress-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      border-radius: 10px;
+      transition: width 0.3s ease;
+    }
+    
+    #fileInput {
+      display: none;
+    }
+    
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 40px;
+    }
+    
+    .spinner {
+      border: 4px solid rgba(255, 255, 255, 0.2);
+      border-top: 4px solid var(--primary);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .results-section {
+      display: none;
+      margin-top: 40px;
+    }
+    
+    .results-card {
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      margin-bottom: 40px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px var(--card-shadow);
+    }
+    
+    .card-header {
+      background-color: var(--primary);
+      color: var(--dark);
+      padding: 20px;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    
+    .card-body {
+      padding: 30px;
+    }
+    
+    .profile-info p {
+      margin-bottom: 10px;
+      font-size: 1rem;
+    }
+    
+    h3 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      font-size: 1.3rem;
+      border-bottom: 2px solid var(--primary);
+      display: inline-block;
+      padding-bottom: 5px;
+    }
+    
+    .skill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    .skill-tag {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: var(--primary);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      transition: transform 0.2s;
+    }
+    
+    .skill-tag:hover {
+      transform: scale(1.05);
+    }
+    
+    .gap-tag {
+      background-color: rgba(244, 67, 54, 0.2);
+      color: var(--danger);
+    }
+    
+    .interest-tag {
+      background-color: rgba(76, 201, 240, 0.2);
+      color: var(--secondary);
+    }
+    
+    .course-card {
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      transition: transform 0.3s, box-shadow 0.3s;
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+    
+    .course-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px var(--card-shadow);
+    }
+    
+    .course-title {
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+    
+    .course-meta {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 10px;
+      color: #ccc;
+      font-size: 0.9rem;
+    }
+    
+    .course-reason {
+      background-color: rgba(67, 97, 238, 0.1);
+      padding: 10px 14px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .error-message {
+      background-color: rgba(244, 67, 54, 0.2);
+      color: var(--danger);
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      display: none;
+      text-align: center;
+    }
+    
+    @media screen and (max-width: 768px) {
+      .container {
+        padding: 15px;
+      }
+      .upload-section {
+        padding: 20px;
+      }
+      .btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+      }
+      header h1 {
+        font-size: 2rem;
+      }
+      header p {
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Enhanced Resume Analyzer & Course Recommender</h1>
+      <p>Leveraging our past insights, analyze your resume to pinpoint skills, uncover gaps, and get tailored course recommendations to advance your career</p>
+    </div>
+  </header>
+  
+  <main class="container">
+    <div class="error-message" id="errorMsg"></div>
+    
+    <section class="upload-section">
+      <h2>Upload Your Resume</h2>
+      <p>Choose a PDF, DOCX, or TXT file to start your analysis</p>
+      
+      <div class="upload-box" id="uploadBox">
+        <i class="fas fa-file-upload"></i>
+        <h3>Drag & Drop your file here</h3>
+        <p>or</p>
+        <input type="file" id="fileInput" accept=".pdf,.docx,.txt">
+        <button class="btn">
+          <span>Browse Files</span>
+          <div class="progress-bar">
+            <div class="progress-fill" id="uploadProgress" style="width: 0%"></div>
+          </div>
+        </button>
+      </div>
+      
+      <p style="font-size:0.9rem; color: #bbb;">Supported formats: PDF, DOCX, TXT</p>
+    </section>
+    
+    <div class="loading" id="loadingIndicator">
+      <div class="spinner"></div>
+      <p>Analyzing your resume...</p>
+    </div>
+    
+    <section class="results-section" id="resultsSection">
+      <div class="results-card">
+        <div class="card-header">
+          Skills & Profile Analysis
+        </div>
+        <div class="card-body">
+          <div class="profile-info">
+            <p><strong>Job Role:</strong> <span id="jobRole">Full Stack Developer</span></p>
+            <p><strong>Experience Level:</strong> <span id="expLevel">Intermediate</span></p>
+          </div>
+          
+          <h3>Current Skills</h3>
+          <div class="skill-list" id="currentSkills">
+            <!-- Skills will be inserted here -->
+          </div>
+          
+          <h3>Skill Gaps</h3>
+          <div class="skill-list" id="skillGaps">
+            <!-- Skill gaps will be inserted here -->
+          </div>
+          
+          <h3>Interests</h3>
+          <div class="skill-list" id="interests">
+            <!-- Interests will be inserted here -->
+          </div>
+        </div>
+      </div>
+      
+      <div class="results-card">
+        <div class="card-header">
+          Recommended Courses
+        </div>
+        <div class="card-body">
+          <div id="coursesList">
+            <!-- Courses will be inserted here -->
+          </div>
+        </div>
+      </div>
+      
+      <div class="text-center" style="text-align: center;">
+        <button class="btn btn-secondary" id="resetBtn">
+          <span>Analyze Another Resume</span>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 0%"></div>
+          </div>
+        </button>
+      </div>
+    </section>
+  </main>
+  
+  <script>
+    // Enhanced implementation based on our past discussions for better UI/UX
+    document.addEventListener('DOMContentLoaded', function() {
+      const fileInput = document.getElementById('fileInput');
+      const uploadBox = document.getElementById('uploadBox');
+      const loadingIndicator = document.getElementById('loadingIndicator');
+      const resultsSection = document.getElementById('resultsSection');
+      const resetBtn = document.getElementById('resetBtn');
+      const errorMsg = document.getElementById('errorMsg');
+      const uploadProgress = document.getElementById('uploadProgress');
+      
+      // Handle file upload via click
+      uploadBox.addEventListener('click', function() {
+        fileInput.click();
+      });
+      
+      // Handle drag and drop
+      uploadBox.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        uploadBox.style.borderColor = '#45f3ff';
+        uploadBox.style.backgroundColor = 'rgba(67, 97, 238, 0.1)';
+      });
+      
+      uploadBox.addEventListener('dragleave', function() {
+        uploadBox.style.borderColor = 'rgba(255, 255, 255, 0.4)';
+        uploadBox.style.backgroundColor = 'transparent';
+      });
+      
+      uploadBox.addEventListener('drop', function(e) {
+        e.preventDefault();
+        uploadBox.style.borderColor = 'rgba(255, 255, 255, 0.4)';
+        uploadBox.style.backgroundColor = 'transparent';
+        
+        if (e.dataTransfer.files.length) {
+          handleFile(e.dataTransfer.files[0]);
+        }
+      });
+      
+      // Handle file selection via input
+      fileInput.addEventListener('change', function() {
+        if (fileInput.files.length) {
+          handleFile(fileInput.files[0]);
+        }
+      });
+      
+      // Reset function
+      resetBtn.addEventListener('click', function() {
+        resultsSection.style.display = 'none';
+        fileInput.value = '';
+        errorMsg.style.display = 'none';
+        document.querySelector('.upload-section').style.display = 'block';
+        uploadProgress.style.width = '0%';
+      });
+      
+      function handleFile(file) {
+        // Check file type
+        const fileType = file.name.split('.').pop().toLowerCase();
+        if (!['pdf', 'docx', 'txt'].includes(fileType)) {
+          showError('Please upload a PDF, DOCX, or TXT file.');
+          return;
+        }
+        
+        // Simulate upload progress
+        simulateUploadProgress();
+        
+        // Show loading after "upload" completes
+        setTimeout(() => {
+          document.querySelector('.upload-section').style.display = 'none';
+          loadingIndicator.style.display = 'block';
+          
+          // Simulate processing time
+          setTimeout(() => {
+            loadingIndicator.style.display = 'none';
+            analyzeResume(file);
+          }, 2000);
+        }, 2000);
+      }
+      
+      function simulateUploadProgress() {
+        let progress = 0;
+        const interval = setInterval(() => {
+          progress += 5;
+          uploadProgress.style.width = `${progress}%`;
+          
+          if (progress >= 100) {
+            clearInterval(interval);
+          }
+        }, 100);
+      }
+      
+      function showError(message) {
+        errorMsg.textContent = message;
+        errorMsg.style.display = 'block';
+      }
+      
+      function analyzeResume(file) {
+        // In a real application, the file would be sent to a server for analysis.
+        // Here, we simulate a response with mock data.
+        const mockData = generateMockData(file.name);
+        displayResults(mockData);
+      }
+      
+      function generateMockData(fileName) {
+        const nameHash = fileName.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+        
+        const roles = ['Full Stack Developer', 'Data Scientist', 'UX Designer', 'Product Manager', 'Frontend Developer'];
+        const levels = ['Beginner', 'Intermediate', 'Advanced'];
+        
+        const techSkills = ['JavaScript', 'Python', 'React', 'Node.js', 'SQL', 'HTML/CSS', 'Git', 'Docker', 'AWS', 'TypeScript'];
+        const softSkills = ['Communication', 'Problem Solving', 'Teamwork', 'Project Management', 'Leadership'];
+        
+        const gapSkills = ['GraphQL', 'CI/CD', 'TDD', 'Kubernetes', 'System Design', 'Cloud Architecture', 'TypeScript', 'React Native'];
+        const interestList = ['Machine Learning', 'Blockchain', 'Mobile Development', 'UI Design', 'Data Visualization', 'Game Development'];
+        
+        const numSkills = (nameHash % 5) + 3;
+        const numGaps = (nameHash % 3) + 2;
+        const numInterests = (nameHash % 3) + 1;
+        
+        const selectedRole = roles[nameHash % roles.length];
+        const selectedLevel = levels[nameHash % levels.length];
+        
+        const skills = [];
+        for (let i = 0; i < numSkills; i++) {
+          const pool = i < 3 ? techSkills : softSkills;
+          const randomIndex = (nameHash + i) % pool.length;
+          skills.push(pool[randomIndex]);
+        }
+        
+        const gaps = [];
+        for (let i = 0; i < numGaps; i++) {
+          const randomIndex = (nameHash + i * 3) % gapSkills.length;
+          gaps.push(gapSkills[randomIndex]);
+        }
+        
+        const interests = [];
+        for (let i = 0; i < numInterests; i++) {
+          const randomIndex = (nameHash + i * 7) % interestList.length;
+          interests.push(interestList[randomIndex]);
+        }
+        
+        const courses = [];
+        const courseNames = [
+          "Complete Web Development Bootcamp",
+          "Advanced React Patterns",
+          "Data Structures and Algorithms",
+          "System Design for Software Engineers",
+          "Modern JavaScript from the Beginning",
+          "Python for Data Science and Machine Learning",
+          "UI/UX Design Fundamentals"
+        ];
+        
+        for (let i = 0; i < 5; i++) {
+          const courseIndex = (nameHash + i * 11) % courseNames.length;
+          let relatedSkill = i < gaps.length ? gaps[i] : (i - gaps.length < interests.length ? interests[i - gaps.length] : null);
+          let reason = relatedSkill ? (i < gaps.length ? `Fills skill gap: ${relatedSkill}` : `Matches interest: ${relatedSkill}`) : `Relevant to your role as ${selectedRole}`;
+          
+          courses.push({
+            title: courseNames[courseIndex],
+            subject: getSubjectForCourse(courseNames[courseIndex]),
+            price: `$${(19 + (nameHash % 30)).toFixed(2)}`,
+            level: levels[i % levels.length],
+            subscribers: 1000 + (nameHash + i * 123) % 5000,
+            reviews: 100 + (nameHash + i * 77) % 500,
+            reason: reason
+          });
+        }
+        
+        return {
+          jobRole: selectedRole,
+          experienceLevel: selectedLevel,
+          currentSkills: skills,
+          skillGaps: gaps,
+          interests: interests,
+          recommendedCourses: courses
+        };
+      }
+      
+      function getSubjectForCourse(title) {
+        if (title.includes("Web")) return "Web Development";
+        if (title.includes("React")) return "Frontend Development";
+        if (title.includes("Data")) return "Data Science";
+        if (title.includes("Python")) return "Programming";
+        if (title.includes("System")) return "Software Engineering";
+        if (title.includes("JavaScript")) return "Web Development";
+        if (title.includes("UI/UX")) return "Design";
+        return "Computer Science";
+      }
+      
+      function displayResults(data) {
+        document.getElementById('jobRole').textContent = data.jobRole;
+        document.getElementById('expLevel').textContent = data.experienceLevel;
+        
+        const skillsContainer = document.getElementById('currentSkills');
+        skillsContainer.innerHTML = '';
+        data.currentSkills.forEach(skill => {
+          const tag = document.createElement('span');
+          tag.className = 'skill-tag';
+          tag.textContent = skill;
+          skillsContainer.appendChild(tag);
+        });
+        
+        const gapsContainer = document.getElementById('skillGaps');
+        gapsContainer.innerHTML = '';
+        data.skillGaps.forEach(gap => {
+          const tag = document.createElement('span');
+          tag.className = 'skill-tag gap-tag';
+          tag.textContent = gap;
+          gapsContainer.appendChild(tag);
+        });
+        
+        const interestsContainer = document.getElementById('interests');
+        interestsContainer.innerHTML = '';
+        data.interests.forEach(interest => {
+          const tag = document.createElement('span');
+          tag.className = 'skill-tag interest-tag';
+          tag.textContent = interest;
+          interestsContainer.appendChild(tag);
+        });
+        
+        const coursesContainer = document.getElementById('coursesList');
+        coursesContainer.innerHTML = '';
+        data.recommendedCourses.forEach(course => {
+          const courseCard = document.createElement('div');
+          courseCard.className = 'course-card';
+          
+          const titleEl = document.createElement('div');
+          titleEl.className = 'course-title';
+          titleEl.textContent = course.title;
+          
+          const metaEl = document.createElement('div');
+          metaEl.className = 'course-meta';
+          metaEl.innerHTML = `
+            <span><i class="fas fa-tag"></i> ${course.subject}</span>
+            <span><i class="fas fa-signal"></i> ${course.level}</span>
+            <span><i class="fas fa-dollar-sign"></i> ${course.price}</span>
+          `;
+          
+          const statsEl = document.createElement('div');
+          statsEl.className = 'course-meta';
+          statsEl.innerHTML = `
+            <span><i class="fas fa-users"></i> ${course.subscribers.toLocaleString()} students</span>
+            <span><i class="fas fa-star"></i> ${course.reviews.toLocaleString()} reviews</span>
+          `;
+          
+          const reasonEl = document.createElement('div');
+          reasonEl.className = 'course-reason';
+          reasonEl.innerHTML = `<i class="fas fa-lightbulb"></i> ${course.reason}`;
+          
+          courseCard.appendChild(titleEl);
+          courseCard.appendChild(metaEl);
+          courseCard.appendChild(statsEl);
+          courseCard.appendChild(reasonEl);
+          coursesContainer.appendChild(courseCard);
+        });
+        
+        resultsSection.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

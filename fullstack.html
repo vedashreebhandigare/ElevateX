@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Full Stack Development Roadmap</title>
+  <style>
+    body {
+      background-color: #25252b;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid #45f3ff;
+    }
+
+    h1 {
+      color: #ff2770;
+      margin: 0;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: #45f3ff;
+      text-decoration: none;
+      font-weight: bold;
+      border: 1px solid #45f3ff;
+      padding: 5px 10px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background-color: #45f3ff;
+      color: #25252b;
+    }
+
+    /* Container for the roadmap diagram */
+    .roadmap-container {
+      position: relative;
+      width: 90%;
+      max-width: 1200px;
+      height: 2100px; /* Adjust height as needed */
+      margin: 40px auto;
+      background-color: #25252b;
+      border: 2px solid #45f3ff;
+      border-radius: 8px;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    /* The SVG lines are placed behind the nodes */
+    .roadmap-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1; /* behind the nodes */
+    }
+
+    /* Each clickable node (box) */
+    .node {
+      position: absolute;
+      z-index: 2; /* above lines */
+      width: 180px; /* slightly wider for better content fit */
+      height: 40px; /* fixed height for better alignment */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: #333;
+      border: 2px solid #ff2770;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      color: #fff;
+      font-weight: bold;
+      /* Center the node around its position */
+      transform: translate(-50%, -50%);
+    }
+
+    /* Hover effect: glow + slight lift */
+    .node:hover {
+      background: #ff2770;
+      color: #25252b;
+      transform: translate(-50%, -50%) translateY(-3px);
+      box-shadow: 0 0 15px #ff2770;
+    }
+
+    /* Checkpoint nodes */
+    .checkpoint {
+      position: absolute;
+      z-index: 2; /* above lines */
+      width: 220px; /* wider for better content fit */
+      height: 40px; /* fixed height for better alignment */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: #333;
+      border: 2px solid #45f3ff;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      color: #fff;
+      font-weight: bold;
+      /* Center the node around its position */
+      transform: translate(-50%, -50%);
+    }
+
+    /* Hover effect for checkpoints */
+    .checkpoint:hover {
+      background: #45f3ff;
+      color: #25252b;
+      transform: translate(-50%, -50%) translateY(-3px);
+      box-shadow: 0 0 15px #45f3ff;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: #25252b;
+      border: 2px solid #45f3ff;
+      border-radius: 8px;
+      padding: 20px;
+      width: 80%;
+      max-width: 600px;
+      position: relative;
+      text-align: left;
+      max-height: 70vh;
+      overflow-y: auto;
+      color: #fff;
+    }
+
+    .close {
+      color: #45f3ff;
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #ff2770;
+    }
+
+    #modal-title {
+      color: #ff2770;
+      margin-top: 0;
+      border-bottom: 1px solid #45f3ff;
+      padding-bottom: 10px;
+    }
+
+    /* Category label styles */
+    .category-label {
+      position: absolute;
+      font-size: 20px;
+      font-weight: bold;
+      color: #45f3ff;
+      z-index: 2;
+    }
+
+    /* Alternate node styles */
+    .node.primary {
+      border-color: #ff2770;
+    }
+
+    .node.alternative {
+      border-color: #45f3ff;
+      background: #2a2a33;
+    }
+    
+    .node.alternative:hover {
+      background: #45f3ff;
+      color: #25252b;
+      box-shadow: 0 0 15px #45f3ff;
+    }
+    
+    .node.optional {
+      border-style: dashed;
+      opacity: 0.9;
+    }
+    
+    /* Personal recommendation tag */
+    .recommendation {
+      position: absolute;
+      background-color: #ff2770;
+      color: #25252b;
+      font-size: 10px;
+      padding: 2px 5px;
+      border-radius: 4px;
+      top: -10px;
+      right: -10px;
+      transform: rotate(10deg);
+      z-index: 3;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Full Stack Development Roadmap</h1>
+    <a href="#" class="back-btn">← Back</a>
+  </header>
+
+  <main>
+    <div class="roadmap-container">
+      <!-- Category Labels -->
+      <div class="category-label" style="left: 50px; top: 80px;">Frontend Basics</div>
+      <div class="category-label" style="left: 50px; top: 520px;">Backend Development</div>
+      <div class="category-label" style="left: 50px; top: 1060px;">DevOps & Deployment</div>
+      <div class="category-label" style="left: 50px; top: 1600px;">Advanced Paths</div>
+      
+      <!-- SVG for connecting lines -->
+      <svg class="roadmap-svg" viewBox="0 0 1200 2100">
+        <defs>
+          <!-- Arrowhead marker -->
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+                  refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#45f3ff" />
+          </marker>
+          <!-- Dashed line marker for optional paths -->
+          <pattern id="dashed" patternUnits="userSpaceOnUse" width="6" height="1">
+            <line x1="0" y1="0" x2="3" y2="0" stroke="#45f3ff" stroke-width="1" />
+          </pattern>
+        </defs>
+
+        <!-- Frontend Basics Section -->
+        <!-- HTML -->
+        <line x1="300" y1="120" x2="600" y2="120" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- HTML to CSS -->
+        <line x1="600" y1="120" x2="900" y2="120" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+              
+        <!-- CSS to JavaScript -->
+        <line x1="900" y1="120" x2="600" y2="220" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- JavaScript to Static Webpages Checkpoint -->
+        <line x1="600" y1="220" x2="600" y2="320" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+              
+        <!-- Checkpoint to npm -->
+        <line x1="600" y1="320" x2="300" y2="420" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+              
+        <!-- npm to External Packages Checkpoint -->
+        <line x1="300" y1="420" x2="600" y2="420" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- External Packages to Git/GitHub -->
+        <line x1="600" y1="420" x2="900" y2="420" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Git/GitHub to Collaborative Work Checkpoint -->
+        <line x1="900" y1="420" x2="300" y2="520" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Backend Development Section -->
+        <!-- Collaborative Work to React/Tailwind -->
+        <line x1="300" y1="520" x2="600" y2="520" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- React/Tailwind to Frontend Apps Checkpoint -->
+        <line x1="600" y1="520" x2="900" y2="520" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Frontend Apps to Node.js -->
+        <line x1="900" y1="520" x2="300" y2="620" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Node.js to CLI Apps Checkpoint -->
+        <line x1="300" y1="620" x2="600" y2="620" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- CLI Apps to PostgreSQL -->
+        <line x1="600" y1="620" x2="900" y2="620" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- PostgreSQL to Simple CRUD Checkpoint -->
+        <line x1="900" y1="620" x2="300" y2="720" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Simple CRUD to RESTful APIs -->
+        <line x1="300" y1="720" x2="600" y2="720" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- RESTful APIs to JWT Auth -->
+        <line x1="600" y1="720" x2="900" y2="720" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- JWT Auth to Complete App Checkpoint -->
+        <line x1="900" y1="720" x2="300" y2="820" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Complete App to Redis -->
+        <line x1="300" y1="820" x2="600" y2="820" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Redis to Linux Basics -->
+        <line x1="600" y1="820" x2="900" y2="960" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- DevOps Section -->
+        <!-- Linux Basics to AWS Services -->
+        <line x1="900" y1="960" x2="600" y2="1060" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- AWS Services to GitHub Actions -->
+        <line x1="600" y1="1060" x2="300" y2="1160" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- GitHub Actions to Deployment Checkpoint -->
+        <line x1="300" y1="1160" x2="600" y2="1160" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Deployment to Ansible -->
+        <line x1="600" y1="1160" x2="900" y2="1160" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Ansible to Automation Checkpoint -->
+        <line x1="900" y1="1160" x2="300" y2="1260" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Automation to Terraform -->
+        <line x1="300" y1="1260" x2="600" y2="1260" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Terraform to Infrastructure Checkpoint -->
+        <line x1="600" y1="1260" x2="900" y2="1260" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Infrastructure to Monit -->
+        <line x1="900" y1="1260" x2="600" y2="1360" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Monit to Monitoring Checkpoint -->
+        <line x1="600" y1="1360" x2="300" y2="1460" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Advanced Paths Section -->
+        <!-- Monitoring to Advanced Tracks -->
+        <line x1="300" y1="1460" x2="600" y2="1700" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Advanced Tracks to specialized paths -->
+        <line x1="600" y1="1700" x2="300" y2="1800" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="1700" x2="600" y2="1800" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="1700" x2="900" y2="1800" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+      </svg>
+
+      <!-- Nodes (boxes) - Using absolute positioning -->
+      <!-- Frontend Basics -->
+      <div class="node primary" style="left: 300px; top: 120px;"
+           onclick="openModal('html')">HTML</div>
+      <div class="node primary" style="left: 600px; top: 120px;"
+           onclick="openModal('css')">CSS</div>
+      <div class="node primary" style="left: 900px; top: 120px;"
+           onclick="openModal('javascript')">JavaScript</div>
+      <div class="checkpoint" style="left: 600px; top: 320px;"
+           onclick="openModal('staticwebpages')">Checkpoint — Static Webpages</div>
+      <div class="node primary" style="left: 300px; top: 420px;"
+           onclick="openModal('npm')">npm</div>
+      <div class="checkpoint" style="left: 600px; top: 420px;"
+           onclick="openModal('externalpackages')">Checkpoint — External Packages</div>
+      <div class="node primary" style="left: 900px; top: 420px;"
+           onclick="openModal('gitgithub')">Git & GitHub</div>
+           
+      <!-- Backend Development -->
+      <div class="checkpoint" style="left: 300px; top: 520px;"
+           onclick="openModal('collaborativework')">Checkpoint — Collaborative Work</div>
+      <div class="node primary" style="left: 600px; top: 520px;"
+           onclick="openModal('reacttailwind')">React & Tailwind</div>
+      <div class="checkpoint" style="left: 900px; top: 520px;"
+           onclick="openModal('frontendapps')">Checkpoint — Frontend Apps</div>
+      <div class="node primary" style="left: 300px; top: 620px;"
+           onclick="openModal('nodejs')">Node.js
+           <span class="recommendation">♦</span>
+      </div>
+      <div class="checkpoint" style="left: 600px; top: 620px;"
+           onclick="openModal('cliapps')">Checkpoint — CLI Apps</div>
+      <div class="node primary" style="left: 900px; top: 620px;"
+           onclick="openModal('postgresql')">PostgreSQL</div>
+      <div class="checkpoint" style="left: 300px; top: 720px;"
+           onclick="openModal('simplecrud')">Checkpoint — Simple CRUD</div>
+      <div class="node primary" style="left: 600px; top: 720px;"
+           onclick="openModal('restfulapis')">RESTful APIs</div>
+      <div class="node primary" style="left: 900px; top: 720px;"
+           onclick="openModal('jwtauth')">JWT Auth</div>
+      <div class="checkpoint" style="left: 300px; top: 820px;"
+           onclick="openModal('completeapp')">Checkpoint — Complete App</div>
+      <div class="node primary" style="left: 600px; top: 820px;"
+           onclick="openModal('redis')">Redis</div>
+           
+      <!-- DevOps & Deployment -->
+      <div class="node primary" style="left: 900px; top: 960px;"
+           onclick="openModal('linuxbasics')">Linux Basics</div>
+      <div class="node primary" style="left: 600px; top: 1060px;"
+           onclick="openModal('awsservices')">Basic AWS Services</div>
+      <div class="node primary" style="left: 300px; top: 1160px;"
+           onclick="openModal('githubactions')">GitHub Actions</div>
+      <div class="checkpoint" style="left: 600px; top: 1160px;"
+           onclick="openModal('deployment')">Checkpoint — Deployment</div>
+      <div class="node primary" style="left: 900px; top: 1160px;"
+           onclick="openModal('ansible')">Ansible</div>
+      <div class="checkpoint" style="left: 300px; top: 1260px;"
+           onclick="openModal('automation')">Checkpoint — Automation</div>
+      <div class="node primary" style="left: 600px; top: 1260px;"
+           onclick="openModal('terraform')">Terraform</div>
+      <div class="checkpoint" style="left: 900px; top: 1260px;"
+           onclick="openModal('infrastructure')">Checkpoint — Infrastructure</div>
+      <div class="node primary" style="left: 600px; top: 1360px;"
+           onclick="openModal('monit')">Monit</div>
+      <div class="checkpoint" style="left: 300px; top: 1460px;"
+           onclick="openModal('monitoring')">Checkpoint — Monitoring</div>
+           
+      <!-- Advanced Paths -->
+      <div class="node primary" style="left: 600px; top: 1700px;"
+           onclick="openModal('advancedtracks')">Continue Learning</div>
+      <div class="node alternative" style="left: 300px; top: 1800px;"
+           onclick="openModal('backendtrack')">Backend Track</div>
+      <div class="node alternative" style="left: 600px; top: 1800px;"
+           onclick="openModal('frontendtrack')">Frontend Track</div>
+      <div class="node alternative" style="left: 900px; top: 1800px;"
+           onclick="openModal('devopstrack')">DevOps Track</div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2 id="modal-title"></h2>
+        <div id="modal-text"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Data for the modal
+    const nodeData = {
+      html: {
+        title: "HTML",
+        text: `
+          <p>HTML (HyperText Markup Language) is the standard markup language for creating web pages.</p>
+          <ul>
+            <li>Basic elements and structure</li>
+            <li>Document Object Model (DOM)</li>
+            <li>Semantic HTML</li>
+            <li>Forms and input elements</li>
+            <li>Accessibility</li>
+            <li>SEO basics</li>
+          </ul>
+          <p>Learning HTML is the first step in web development. It provides the structure of your web pages.</p>
+        `
+      },
+      css: {
+        title: "CSS",
+        text: `
+          <p>CSS (Cascading Style Sheets) is used to style and layout web pages.</p>
+          <ul>
+            <li>Selectors and properties</li>
+            <li>Box model</li>
+            <li>Display and positioning</li>
+            <li>Flexbox and Grid</li>
+            <li>Responsive design</li>
+            <li>CSS variables</li>
+            <li>Animations and transitions</li>
+          </ul>
+          <p>CSS allows you to create visually appealing websites and ensure they look good on all devices.</p>
+        `
+      },
+      javascript: {
+        title: "JavaScript",
+        text: `
+          <p>JavaScript is a programming language that enables interactive web pages.</p>
+          <ul>
+            <li>Variables, data types, and operators</li>
+            <li>Control flow (conditionals, loops)</li>
+            <li>Functions and scope</li>
+            <li>Arrays and objects</li>
+            <li>DOM manipulation</li>
+            <li>Events</li>
+            <li>Asynchronous JavaScript (Promises, async/await)</li>
+            <li>ES6+ features</li>
+            <li>Fetch API</li>
+          </ul>
+          <p>JavaScript adds interactivity to your web pages and is essential for both frontend and backend development.</p>
+        `
+      },
+      staticwebpages: {
+        title: "Checkpoint — Static Webpages",
+        text: `
+          <p>At this point, you should be able to create static websites using HTML, CSS, and basic JavaScript.</p>
+          
+          <h3>Project Ideas:</h3>
+          <ul>
+            <li>Personal portfolio website</li>
+            <li>Landing page for a fictional product</li>
+            <li>Restaurant menu webpage</li>
+            <li>Simple blog layout</li>
+          </ul>
+          
+          <h3>Key Skills:</h3>
+          <ul>
+            <li>Creating structured HTML documents</li>
+            <li>Styling with CSS</li>
+            <li>Adding basic interactivity with JavaScript</li>
+            <li>Responsive design for different screen sizes</li>
+          </ul>
+          
+          <p>Before moving on, make sure you're comfortable with these fundamentals as they form the foundation of web development.</p>
+        `
+      },
+      npm: {
+        title: "npm (Node Package Manager)",
+        text: `
+          <p>npm is the package manager for JavaScript and the world's largest software registry.</p>
+          <ul>
+            <li>Installing packages</li>
+            <li>package.json file</li>
+            <li>Dependencies vs. DevDependencies</li>
+            <li>Scripts</li>
+            <li>Publishing packages</li>
+            <li>Understanding versioning</li>
+          </ul>
+          <p>npm allows you to reuse code from other developers and manage your project's dependencies.</p>
+        `
+      },
+      externalpackages: {
+        title: "Checkpoint — External Packages",
+        text: `
+          <p>At this point, you should understand how to use external libraries and packages in your projects.</p>
+          
+          <h3>Project Ideas:</h3>
+          <ul>
+            <li>Build a weather app using a weather API</li>
+            <li>Create a task manager with local storage</li>
+            <li>Develop a calculator with a math library</li>
+            <li>Image gallery with a library like Lightbox</li>
+          </ul>
+          
+          <h3>Key Skills:</h3>
+          <ul>
+            <li>Finding appropriate packages for your needs</li>
+            <li>Managing dependencies with npm</li>
+            <li>Reading documentation</li>
+            <li>Integrating third-party libraries</li>
+          </ul>
+          
+          <p>These skills will help you leverage existing code to build more complex applications efficiently.</p>
+        `
+      },
+      gitgithub: {
+        title: "Git & GitHub",
+        text: `
+          <p>Git is a version control system, and GitHub is a platform for hosting and collaborating on Git repositories.</p>
+          <ul>
+            <li>Basic Git commands (init, add, commit, push, pull)</li>
+            <li>Branching and merging</li>
+            <li>Pull requests</li>
+            <li>Resolving conflicts</li>
+            <li>GitHub workflow</li>
+            <li>Collaborating with others</li>
+            <li>Issue tracking</li>
+          </ul>
+          <p>Git and GitHub are essential tools for collaborative development and managing code changes.</p>
+        `
+      },
+      collaborativework: {
+        title: "Checkpoint — Collaborative Work",
+        text: `
+          <p>At this point, you should be comfortable working with others using version control systems.</p>
+          
+          <h3>Project Ideas:</h3>
+          <ul>
+            <li>Contribute to an open-source project</li>
+            <li>Collaborate with a friend on a small web application</li>
+            <li>Create a team project with multiple branches</li>
+            <li>Set up a GitHub repository with issues and pull requests</li>
+          </ul>
+          
+          <h3>Key Skills:</h3>
+          <ul>
+            <li>Using Git for version control</li>
+            <li>Collaborating through GitHub</li>
+            <li>Managing branches and merges</li>
+            <li>Resolving conflicts</li>
+            <li>Working with pull requests</li>
+          </ul>
+          
+          <p>These skills are crucial for working in development teams and contributing to open-source projects.</p>
+        `
+      },
+      reacttailwind: {
+        title: "React & Tailwind",
+        text: `
+          <p>React is a JavaScript library for building user interfaces, and Tailwind is a utility-first CSS framework.</p>
+          <h3>React:</h3>
+          <ul>
+            <li>Components and props</li>
+            <li>State and hooks</li>
+            <li>React Router</li>
+            <li>Context API</li>
+            <li>Forms in React</li>
+            <li>React ecosystem (Next.js, CRA)</li>
+          </ul>
+          
+          <h3>Tailwind CSS:</h3>
+          <ul>
+            <li>Utility classes</li>
+            <li>Responsive design</li>
+            <li>Customization</li>
+            <li>Components with Tailwind</li>
+          </ul>
+          
+          <p>This combination allows you to build modern, responsive user interfaces efficiently.</p>
+        `
+      },
+      frontendapps: {
+        title: "Checkpoint — Frontend Apps",
+        text: `
+          <p>At this point, you should be able to build complete frontend applications with modern frameworks.</p>
+          
+          <h3>Project Ideas:</h3>
+          <ul>
+            <li>Social media dashboard</li>
+            <li>E-commerce product page</li>
+            <li>Interactive quiz application</li>
+            <li>Task management app with filtering</li>
+            <li>Recipe finder with API integration</li>
+          </ul>
+          
+          <h3>Key Skills:</h3>
+          <ul>
+            <li>Building component-based applications</li>
+            <li>Managing state</li>
+            <li>Routing between pages</li>
+            <li>Fetching and displaying data from APIs</li>
+            <li>Creating responsive UIs with Tailwind</li>
+          </ul>
+          
+          <p>These skills form the foundation of modern frontend development and prepare you for building full-stack applications.</p>
+        `
+      },
+      nodejs: {
+        title: "Node.js",
+        text: `
+          <p>Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine, allowing you to run JavaScript on the server.</p>
+          <ul>
+            <li>HTTP module</li>
+            <li>File system operations</li>
+            <li>Express.js framework</li>
+            <li>Middleware</li>
+            <li>Routing</li>
+            <li>Error handling</li>
+            <li>Authentication</li>
+            <li>Environment variables</li>
+          </ul>
+          <p>Node.js is recommended for full-stack developers because it lets you use JavaScript throughout your entire application stack.</p>
+        `
+      },
+      cliapps: {
+        title: "Checkpoint — CLI Apps",
+        text: `
+          <p>At this point, you should be able to build command-line applications with Node.js.</p>
+          
+          <h3>Project Ideas:</h3>
+          <ul>
+            <li>Task manager CLI</li>
+            <li>Weather information tool</li>
+            <li>File converter</li>
+            <li>Simple database CLI</li>
+            <li>Web scraper</li>
+          </ul

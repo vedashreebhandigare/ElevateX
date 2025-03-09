@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elevate X - News & Trends</title>
+  <style>
+    /* Overall Page Background */
+    body {
+      background-color: #1a1333; /* main background */
+      color: white;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    /* Top Bar with Darker Background */
+    .top-bar {
+      background-color: #0f0b16; /* darker background for top bar */
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      position: relative;
+      z-index: 999;
+    }
+    /* Brand Container (Logo + "Elevate X") on the Left */
+    .brand-container {
+      display: flex;
+      align-items: center;
+    }
+    .brand-logo {
+      height: 60px; /* bigger logo */
+      margin-right: 15px;
+    }
+    .brand-name {
+      font-size: 32px; /* bigger text */
+      font-weight: bold;
+      color: #ff2770; /* pinkish hue */
+    }
+    /* Home Button on the Right */
+    .home-button {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      border: 2px solid #45f3ff;
+      text-decoration: none;
+      font-size: 16px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .home-button:hover {
+      background-color: #45f3ff;
+      color: #1a1333;
+    }
+    /* "News & Trends" Title and Subtitle */
+    .page-title {
+      margin-top: 40px; /* spacing below top bar */
+      text-align: center;
+      font-size: 36px;
+      background: linear-gradient(to right, #45f3ff, #ff2770);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      text-align: center;
+      margin: 0 0 30px;
+      color: #fff;
+      font-size: 16px;
+    }
+    /* Grid Layout for Integrated Section */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+    /* Box Styles for Each Category */
+    .job-box {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: left;
+      font-size: 18px;
+      font-weight: bold;
+      position: relative;
+      border: 2px solid transparent;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.5s ease;
+      box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+    }
+    .job-box::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 2px solid #45f3ff;
+      border-radius: 10px;
+      opacity: 0.6;
+      clip-path: inset(0 0 95% 95%);
+      transition: all 0.3s ease;
+    }
+    .job-box:hover::before {
+      clip-path: inset(0);
+      opacity: 1;
+    }
+    .job-box:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #45f3ff, 0 0 40px #ff2770;
+      animation: hueRotate 1s infinite alternate;
+    }
+    @keyframes hueRotate {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
+    .icon {
+      font-size: 30px;
+      display: block;
+      margin-bottom: 10px;
+    }
+    /* Job and Trend Lists */
+    .job-list, .trend-list {
+      list-style: none;
+      padding: 0;
+      font-size: 14px;
+      margin: 0;
+    }
+    .job-list li, .trend-list li {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 8px;
+      margin: 10px 0;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .job-list li:hover, .trend-list li:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    .trend-title {
+      font-weight: bold;
+      color: #45f3ff;
+      display: block;
+    }
+    .trend-desc {
+      display: block;
+      margin-top: 5px;
+      opacity: 0.9;
+      font-size: 13px;
+    }
+    .read-more {
+      display: inline-block;
+      color: #ff2770;
+      margin-top: 5px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .read-more:hover {
+      text-decoration: underline;
+    }
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+    .modal-content {
+      background-color: #2a2238;
+      margin: 10% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      border-radius: 10px;
+      color: white;
+      text-align: left;
+    }
+    .modal-close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .modal-close:hover,
+    .modal-close:focus {
+      color: #fff;
+      text-decoration: none;
+    }
+    /* Footer Section */
+    footer {
+      margin-top: 50px;
+      text-align: center;
+      padding-bottom: 20px;
+    }
+    .footer-title {
+      color: #ff2770;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    .footer-btn {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #45f3ff;
+      padding: 10px 15px;
+      border-radius: 8px;
+      border: 2px solid #45f3ff;
+      text-decoration: none;
+      font-size: 16px;
+      margin: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .footer-btn:hover {
+      background-color: #45f3ff;
+      color: #1a1333;
+    }
+    /* Responsive Adjustments */
+    @media (max-width: 600px) {
+      .brand-logo {
+        height: 40px;
+      }
+      .brand-name {
+        font-size: 24px;
+      }
+      .page-title {
+        font-size: 28px;
+        margin-top: 40px;
+      }
+      .top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+      }
+      .home-button {
+        align-self: flex-end;
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Darker Top Bar -->
+  <div class="top-bar">
+    <!-- Brand (Logo + "Elevate X") on the Left -->
+    <div class="brand-container">
+      <img src="logo.jpg" alt="Elevate X Logo" class="brand-logo">
+      <span class="brand-name">Elevate X</span>
+    </div>
+    <!-- Home Button on the Right -->
+    <a href="index.html" class="home-button">🏠 Home</a>
+  </div>
+
+  <!-- "News & Trends" Title and Subtitle -->
+  <h1 class="page-title">News & Trends</h1>
+  <p class="subtitle">Stay updated with job trends and insights in various fields.</p>
+  
+  <!-- Integrated Jobs & Trending News Section -->
+  <div class="grid-container">
+    <!-- Web Development -->
+    <div class="job-box" id="box-webdev">
+      <span class="icon blue">👨‍💻</span>
+      <strong>Web Development</strong>
+      <ul class="job-list" id="job-list-webdev">
+        <li>Loading jobs...</li>
+      </ul>
+      <h4>Latest Trends:</h4>
+      <ul class="trend-list">
+        <li>
+          <span class="trend-title">AI-powered Code Completion</span>
+          <span class="trend-desc">GitHub Copilot is transforming coding workflows, reducing errors significantly.</span>
+          <a href="https://github.blog/" class="read-more">Read more...</a>
+        </li>
+        <li>
+          <span class="trend-title">Web3 and DeFi Development Surge</span>
+          <span class="trend-desc">Blockchain innovations continue to boost decentralized application growth.</span>
+          <a href="https://ethereum.org/" class="read-more">Read more...</a>
+        </li>
+        <li>
+          <span class="trend-title">Headless CMS Adoption Accelerates</span>
+          <span class="trend-desc">Flexible content delivery is driving a major shift in enterprise web strategies.</span>
+          <a href="https://www.contentful.com/" class="read-more">Read more...</a>
+        </li>
+      </ul>
+    </div>
+    
+    <!-- Skill-Based Development -->
+    <div class="job-box" id="box-skill">
+      <span class="icon pink">🛠️</span>
+      <strong>Skill-Based Development</strong>
+      <ul class="job-list" id="job-list-skill">
+        <li>Loading jobs...</li>
+      </ul>
+      <h4>Latest Trends:</h4>
+      <ul class="trend-list">
+        <li>
+          <span class="trend-title">AI & ML Upskilling Programs Explode</span>
+          <span class="trend-desc">Enrollments in AI and ML courses have surged, reshaping workforce skill sets.</span>
+          <a href="https://www.linkedin.com/learning/" class="read-more">Read more...</a>
+        </li>
+        <li>
+          <span class="trend-title">Freelance Developer Market Expansion</span>
+          <span class="trend-desc">Freelance platforms report increased demand for specialized tech expertise.</span>
+          <a href="https://www.toptal.com/" class="read-more">Read more...</a>
+        </li>
+        <li>
+          <span class="trend-title">VR-based Training Programs</span>
+          <span class="trend-desc">Immersive VR training is reducing training time and boosting retention.</span>
+          <a href="https://www.strivr.com/" class="read-more">Read more...</a>
+        </li>
+      </ul>
+    </div>
+    
+    <!-- Law -->
+    <div class="job-box" id="box-law">
+      <span class="icon yellow">⚖️</span>
+      <strong>Law</strong>
+      <ul class="job-list" id="job-list-law">
+        <li>Loading jobs...</li>
+      </ul>
+      <h4>Latest Trends:</h4>
+      <ul class="trend-list">
+        <li>
+          <span class="trend-title">AI Legal Research Tools Transform Practice</span>
+          <span class="trend-desc">Cutting-edge tools are slashing legal research time dramatically.</span>
+          <a href="https://www.americanbar.org/" class="read-more">Read more...</a>
+        </li>
+        <li>
+          <span class="trend-title">Cyber Law Cases Surge</span>
+          <span class="trend-desc">Increased data breaches drive demand for cybersecurity legal expertise.</span>
+          <a href="https://www.americanbar.org/" class="read-more">Read more...</a>
+        </li>
+        <li>
+          <span class="trend-title">Virtual Court Hearings Become Standard</span>
+          <span class="trend-desc">Remote court proceedings are now a permanent fixture in legal systems.</span>
+          <a href="https://www.uscourts.gov/" class="read-more">Read more...</a>
+        </li>
+      </ul>
+    </div>
+    
+    <!-- Healthcare -->
+    <div class="job-box" id="box-health">
+      <span class="icon orange">🩺</span>
+      <strong>Healthcare</strong>
+      <ul class="job-list" id="job-list-health">
+        <li>Loading jobs...</li>
+      </ul>
+      <h4>Latest Trends:</h4>
+      <ul class="trend-list">
+        <li>
+          <span class="trend-title">AI in Disease Diagnosis</span>
+          <span class="trend-desc">Deep learning models now achieve unprecedented diagnostic accuracy.</span>
+          <a href="https://deepmind.com/" class="read-more">Read more...</a>
+        </li>
+        <li>
+          <span class="trend-title">Telemedicine Growth</span>
+          <span class="trend-desc">Remote consultations are now a key component of primary care.</span>
+          <a href="https://www.mayoclinic.org/" class="read-more">Read more...</a>
+        </li>
+        <li>
+          <span class="trend-title">Wearable Health Tech Integration</span>
+          <span class="trend-desc">Devices now sync seamlessly with EHRs for proactive patient care.</span>
+          <a href="https://www.apple.com/health/" class="read-more">Read more...</a>
+        </li>
+      </ul>
+    </div>
+    
+    <!-- Psychology -->
+    <div class="job-box" id="box-psychology">
+      <span class="icon">🧠</span>
+      <strong>Psychology</strong>
+      <ul class="job-list" id="job-list-psychology">
+        <li>Loading jobs...</li>
+      </ul>
+      <h4>Latest Trends:</h4>
+      <ul class="trend-list">
+        <li>
+          <span class="trend-title">Teletherapy Services Expand</span>
+          <span class="trend-desc">Online platforms are increasing access to mental health care.</span>
+          <a href="https://www.apa.org/" class="read-more">Read more...</a>
+        </li>
+        <li>
+          <span class="trend-title">Mindfulness in the Workplace</span>
+          <span class="trend-desc">Corporate mindfulness programs improve well-being and productivity.</span>
+          <a href="https://hbr.org/" class="read-more">Read more...</a>
+        </li>
+        <li>
+          <span class="trend-title">VR for Phobia Treatment</span>
+          <span class="trend-desc">Virtual reality is revolutionizing exposure therapy for mental health.</span>
+          <a href="https://www.psychiatry.org/" class="read-more">Read more...</a>
+        </li>
+      </ul>
+    </div>
+    
+    <!-- Management -->
+    <div class="job-box" id="box-management">
+      <span class="icon">📊</span>
+      <strong>Management</strong>
+      <ul class="job-list" id="job-list-management">
+        <li>Loading jobs...</li>
+      </ul>
+      <h4>Latest Trends:</h4>
+      <ul class="trend-list">
+        <li>
+          <span class="trend-title">Hybrid Work Models Become Permanent</span>
+          <span class="trend-desc">Flexible work arrangements are now standard in many organizations.</span>
+          <a href="https://www.microsoft.com/" class="read-more">Read more...</a>
+        </li>
+        <li>
+          <span class="trend-title">Data-Driven Decision Making Transforms Leadership</span>
+          <span class="trend-desc">Analytics are becoming crucial for strategic decision-making in business.</span>
+          <a href="https://www.mckinsey.com/" class="read-more">Read more...</a>
+        </li>
+        <li>
+          <span class="trend-title">Diversity & Inclusion Drive Innovation</span>
+          <span class="trend-desc">Inclusive hiring practices are linked to improved financial performance.</span>
+          <a href="https://www2.deloitte.com/" class="read-more">Read more...</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  
+  <!-- Modal for Detailed Info -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span id="modalClose" class="modal-close">&times;</span>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+  
+  <!-- Footer Section -->
+  <footer>
+    <h2 class="footer-title">Elevate X</h2>
+    <button class="footer-btn">About Us</button>
+    <button class="footer-btn">Careers</button>
+  </footer>
+  
+  <script>
+    // Generate job insights (2-line description) for each role
+    function generateJobInsights(job) {
+      const title = job.title ? job.title.toLowerCase() : "";
+      if (title.includes("web") || title.includes("frontend") || title.includes("backend") ||
+          title.includes("full-stack") || title.includes("javascript") || title.includes("react") ||
+          title.includes("vue") || title.includes("node")) {
+        return "Modern frameworks are in high demand as companies focus on agile development. This trend boosts responsiveness and user experience.";
+      } else if (title.includes("marketing") || title.includes("data") || title.includes("analytics") ||
+                 title.includes("cybersecurity") || title.includes("freelance")) {
+        return "Specialized digital skills are reshaping industries with data-driven strategies. Employers are investing heavily in technical expertise.";
+      } else if (title.includes("law") || title.includes("attorney") || title.includes("legal") ||
+                 title.includes("lawyer")) {
+        return "Legal tech innovations are streamlining case research and compliance. Firms increasingly rely on AI tools for faster, accurate insights.";
+      } else if (title.includes("nurse") || title.includes("doctor") || title.includes("medical") ||
+                 title.includes("health") || title.includes("telemedicine")) {
+        return "Healthcare is rapidly evolving through digital transformation. Telemedicine and AI diagnostics are revolutionizing patient care.";
+      } else if (title.includes("psych") || title.includes("counselor") || title.includes("therapist")) {
+        return "Digital platforms and innovative therapies are enhancing mental health care. Teletherapy and VR are leading the change.";
+      } else if (title.includes("manager") || title.includes("executive") || title.includes("director") ||
+                 title.includes("leadership")) {
+        return "Data-driven decision making and hybrid work models are defining modern leadership. Effective managers balance innovation with operational efficiency.";
+      } else {
+        return job.details || "Insight data not available.";
+      }
+    }
+
+    // Populate a job list element with up to three jobs
+    function populateJobList(listId, jobs) {
+      const ul = document.getElementById(listId);
+      if (!jobs || jobs.length === 0) {
+        ul.innerHTML = `<li>No jobs found.</li>`;
+        return;
+      }
+      let html = "";
+      jobs.slice(0, 3).forEach(job => {
+        const insight = generateJobInsights(job);
+        html += `<li onclick="event.stopPropagation(); showModal({title: '${job.title}', details: '${insight}'})">🔹 ${job.title}</li>`;
+      });
+      ul.innerHTML = html;
+    }
+
+    // Show modal with detailed info
+    function showModal(item) {
+      const modal = document.getElementById("modal");
+      const modalBody = document.getElementById("modalBody");
+      modalBody.innerHTML = `<h2>${item.title}</h2><p>${item.details || "No further details available."}</p>`;
+      modal.style.display = "block";
+    }
+
+    // Attach click listeners to trend items for more info
+    function attachTrendListeners() {
+      const trendItems = document.querySelectorAll('.trend-list li');
+      trendItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const trendTitle = item.querySelector('.trend-title')?.textContent || "Trend";
+          const trendDesc = item.querySelector('.trend-desc')?.textContent || "Evolving market dynamics and technological advancements.";
+          showModal({ title: trendTitle, details: trendDesc });
+        });
+      });
+    }
+
+    // Attach click listeners to category boxes for full category insights
+    function attachCategoryListeners() {
+      document.getElementById("box-webdev").addEventListener("click", () => {
+        let allJobs = "";
+        webDevJobs.forEach(job => {
+          allJobs += `<li>🔹 ${job.title} - ${generateJobInsights(job)}</li>`;
+        });
+        showModal({
+          title: "Web Development Insights",
+          details: `<h3>Job Listings:</h3><ul>${allJobs}</ul>
+                    <h3>Latest Trends:</h3>
+                    <ul>
+                      <li><strong>AI-powered Code Completion</strong><br>Transforming coding workflows.</li>
+                      <li><strong>Web3 and DeFi Development Surge</strong><br>Boosting decentralized growth.</li>
+                      <li><strong>Headless CMS Adoption</strong><br>Shaping enterprise web strategies.</li>
+                    </ul>`
+        });
+      });
+      document.getElementById("box-skill").addEventListener("click", () => {
+        let allJobs = "";
+        skillJobs.forEach(job => {
+          allJobs += `<li>🔹 ${job.title} - ${generateJobInsights(job)}</li>`;
+        });
+        showModal({
+          title: "Skill-Based Development Insights",
+          details: `<h3>Job Listings:</h3><ul>${allJobs}</ul>
+                    <h3>Latest Trends:</h3>
+                    <ul>
+                      <li><strong>AI & ML Upskilling</strong><br>Surging enrollments for specialized training.</li>
+                      <li><strong>Freelance Developer Market</strong><br>High demand for specialized expertise.</li>
+                      <li><strong>VR-based Training</strong><br>Reducing time and improving retention.</li>
+                    </ul>`
+        });
+      });
+      document.getElementById("box-law").addEventListener("click", () => {
+        let allJobs = "";
+        lawJobs.forEach(job => {
+          allJobs += `<li>🔹 ${job.title} - ${generateJobInsights(job)}</li>`;
+        });
+        showModal({
+          title: "Law Insights",
+          details: `<h3>Job Listings:</h3><ul>${allJobs}</ul>
+                    <h3>Latest Trends:</h3>
+                    <ul>
+                      <li><strong>AI Legal Research Tools</strong><br>Slashing research time.</li>
+                      <li><strong>Cyber Law Cases Surge</strong><br>Data breaches drive new expertise.</li>
+                      <li><strong>Virtual Court Hearings</strong><br>Remote proceedings are now standard.</li>
+                    </ul>`
+        });
+      });
+      document.getElementById("box-health").addEventListener("click", () => {
+        let allJobs = "";
+        healthJobs.forEach(job => {
+          allJobs += `<li>🔹 ${job.title} - ${generateJobInsights(job)}</li>`;
+        });
+        showModal({
+          title: "Healthcare Insights",
+          details: `<h3>Job Listings:</h3><ul>${allJobs}</ul>
+                    <h3>Latest Trends:</h3>
+                    <ul>
+                      <li><strong>AI in Disease Diagnosis</strong><br>Unprecedented accuracy.</li>
+                      <li><strong>Telemedicine Growth</strong><br>A key component of primary care.</li>
+                      <li><strong>Wearable Health Tech</strong><br>Seamless EHR integration.</li>
+                    </ul>`
+        });
+      });
+      document.getElementById("box-psychology").addEventListener("click", () => {
+        let allJobs = "";
+        psychologyJobs.forEach(job => {
+          allJobs += `<li>🔹 ${job.title} - ${generateJobInsights(job)}</li>`;
+        });
+        showModal({
+          title: "Psychology Insights",
+          details: `<h3>Job Listings:</h3><ul>${allJobs}</ul>
+                    <h3>Latest Trends:</h3>
+                    <ul>
+                      <li><strong>Teletherapy Services Expand</strong><br>Increasing access to mental health care.</li>
+                      <li><strong>Mindfulness in the Workplace</strong><br>Boosting well-being and productivity.</li>
+                      <li><strong>VR for Phobia Treatment</strong><br>Revolutionizing exposure therapy.</li>
+                    </ul>`
+        });
+      });
+      document.getElementById("box-management").addEventListener("click", () => {
+        let allJobs = "";
+        managementJobs.forEach(job => {
+          allJobs += `<li>🔹 ${job.title} - ${generateJobInsights(job)}</li>`;
+        });
+        showModal({
+          title: "Management Insights",
+          details: `<h3>Job Listings:</h3><ul>${allJobs}</ul>
+                    <h3>Latest Trends:</h3>
+                    <ul>
+                      <li><strong>Hybrid Work Models</strong><br>Now standard in many organizations.</li>
+                      <li><strong>Data-Driven Leadership</strong><br>Analytics shape decisions.</li>
+                      <li><strong>Diversity & Inclusion</strong><br>Key to stronger performance.</li>
+                    </ul>`
+        });
+      });
+    }
+   // Fetch jobs from the API and categorize them
+const url = "https://job-posting-feed-api.p.rapidapi.com/active-ats-meili?title_search=false&description_type=html";
+const options = {
+  method: "GET",
+  headers: {
+    "x-rapidapi-host": "job-posting-feed-api.p.rapidapi.com",
+    "x-rapidapi-key": "f411ab9509mshfdade99a330f3e3p1a3bf7jsnfe99610925da" // Updated API key
+  }
+};
+
+fetch(url, options)
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    const jobs = data.hits || data;
+    
+    const webDevJobs = [];
+    const skillJobs = [];
+    const lawJobs = [];
+    const healthJobs = [];
+    const psychologyJobs = [];
+    const managementJobs = [];
+
+    jobs.forEach(job => {
+      const title = job.title ? job.title.toLowerCase() : "";
+      
+      if (title.includes("web") || title.includes("frontend") || title.includes("backend") ||
+          title.includes("full-stack") || title.includes("javascript") || title.includes("react") ||
+          title.includes("vue") || title.includes("node")) {
+        webDevJobs.push(job);
+      } else if (title.includes("marketing") || title.includes("data") || title.includes("analytics") ||
+                 title.includes("cybersecurity") || title.includes("freelance")) {
+        skillJobs.push(job);
+      } else if (title.includes("law") || title.includes("attorney") || title.includes("legal") ||
+                 title.includes("lawyer")) {
+        lawJobs.push(job);
+      } else if (title.includes("nurse") || title.includes("doctor") || title.includes("medical") ||
+                 title.includes("health") || title.includes("telemedicine")) {
+        healthJobs.push(job);
+      } else if (title.includes("psych") || title.includes("counselor") || title.includes("therapist")) {
+        psychologyJobs.push(job);
+      } else if (title.includes("manager") || title.includes("executive") || title.includes("director") ||
+                 title.includes("leadership")) {
+        managementJobs.push(job);
+      }
+    });
+
+    // Populate the short job lists
+    populateJobList("job-list-webdev", webDevJobs);
+    populateJobList("job-list-skill", skillJobs);
+    populateJobList("job-list-law", lawJobs);
+    populateJobList("job-list-health", healthJobs);
+    populateJobList("job-list-psychology", psychologyJobs);
+    populateJobList("job-list-management", managementJobs);
+
+    // Attach event listeners
+    attachCategoryListeners();
+    attachTrendListeners();
+  })
+  .catch(error => {
+    console.error("Error fetching jobs:", error);
+    ["job-list-webdev", "job-list-skill", "job-list-law", "job-list-health", "job-list-psychology", "job-list-management"]
+      .forEach(id => {
+        document.getElementById(id).innerHTML = `<li>Error loading jobs.</li>`;
+      });
+  });
+
+// Close modal when clicking the 'X' or outside the modal
+document.getElementById("modalClose").addEventListener("click", () => {
+  document.getElementById("modal").style.display = "none";
+});
+window.addEventListener("click", (event) => {
+  if (event.target === document.getElementById("modal")) {
+    document.getElementById("modal").style.display = "none";
+  }
+});

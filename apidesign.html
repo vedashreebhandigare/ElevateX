@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>API Design Roadmap</title>
+  <style>
+    body {
+      background-color: #25252b;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid #45f3ff;
+    }
+
+    h1 {
+      color: #ff2770;
+      margin: 0;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: #45f3ff;
+      text-decoration: none;
+      font-weight: bold;
+      border: 1px solid #45f3ff;
+      padding: 5px 10px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background-color: #45f3ff;
+      color: #25252b;
+    }
+
+    /* Container for the roadmap diagram */
+    .roadmap-container {
+      position: relative;
+      width: 90%;
+      max-width: 1200px;
+      height: 2100px; /* Adjusted height to accommodate all nodes */
+      margin: 40px auto;
+      background-color: #25252b;
+      border: 2px solid #45f3ff;
+      border-radius: 8px;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    /* The SVG lines are placed behind the nodes */
+    .roadmap-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1; /* behind the nodes */
+    }
+
+    /* Each clickable node (box) */
+    .node {
+      position: absolute;
+      z-index: 2; /* above lines */
+      width: 180px; /* slightly wider for better content fit */
+      height: 40px; /* fixed height for better alignment */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: #333;
+      border: 2px solid #ff2770;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      color: #fff;
+      font-weight: bold;
+      /* Center the node around its position */
+      transform: translate(-50%, -50%);
+    }
+
+    /* Hover effect: glow + slight lift */
+    .node:hover {
+      background: #ff2770;
+      color: #25252b;
+      transform: translate(-50%, -50%) translateY(-3px);
+      box-shadow: 0 0 15px #ff2770;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: #25252b;
+      border: 2px solid #45f3ff;
+      border-radius: 8px;
+      padding: 20px;
+      width: 80%;
+      max-width: 600px;
+      position: relative;
+      text-align: left;
+      max-height: 70vh;
+      overflow-y: auto;
+      color: #fff;
+    }
+
+    .close {
+      color: #45f3ff;
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #ff2770;
+    }
+
+    #modal-title {
+      color: #ff2770;
+      margin-top: 0;
+      border-bottom: 1px solid #45f3ff;
+      padding-bottom: 10px;
+    }
+
+    /* Category label styles */
+    .category-label {
+      position: absolute;
+      font-size: 20px;
+      font-weight: bold;
+      color: #45f3ff;
+      z-index: 2;
+    }
+
+    /* Alternate node styles */
+    .node.primary {
+      border-color: #ff2770;
+    }
+
+    .node.alternative {
+      border-color: #45f3ff;
+      background: #2a2a33;
+    }
+    
+    .node.alternative:hover {
+      background: #45f3ff;
+      color: #25252b;
+      box-shadow: 0 0 15px #45f3ff;
+    }
+    
+    .node.optional {
+      border-style: dashed;
+      opacity: 0.9;
+    }
+    
+    /* Personal recommendation tag */
+    .recommendation {
+      position: absolute;
+      background-color: #ff2770;
+      color: #25252b;
+      font-size: 10px;
+      padding: 2px 5px;
+      border-radius: 4px;
+      top: -10px;
+      right: -10px;
+      transform: rotate(10deg);
+      z-index: 3;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>API Design Roadmap</h1>
+    <a href="index.html" class="back-btn">← Back</a>
+  </header>
+
+  <main>
+    <div class="roadmap-container">
+      <!-- Category Labels -->
+      <div class="category-label" style="left: 50px; top: 80px;">Fundamentals</div>
+      <div class="category-label" style="left: 50px; top: 440px;">API Styles</div>
+      <div class="category-label" style="left: 50px; top: 800px;">API Implementation</div>
+      <div class="category-label" style="left: 50px; top: 1160px;">Security & Auth</div>
+      <div class="category-label" style="left: 50px; top: 1520px;">Advanced Topics</div>
+      
+      <!-- SVG for connecting lines - Using absolute coordinates that match node positions -->
+      <svg class="roadmap-svg" viewBox="0 0 1200 2100">
+        <defs>
+          <!-- Arrowhead marker -->
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+                  refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#45f3ff" />
+          </marker>
+          <!-- Dashed line marker for optional paths -->
+          <pattern id="dashed" patternUnits="userSpaceOnUse" width="6" height="1">
+            <line x1="0" y1="0" x2="3" y2="0" stroke="#45f3ff" stroke-width="1" />
+          </pattern>
+        </defs>
+
+        <!-- Fundamentals Section -->
+        <!-- What are APIs to HTTP Protocol -->
+        <line x1="600" y1="100" x2="300" y2="220" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="100" x2="900" y2="220" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+              
+        <!-- HTTP Protocol, Network Basics to HTTP Details -->
+        <line x1="300" y1="220" x2="600" y2="340" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="220" x2="600" y2="340" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- API Styles Section -->
+        <!-- HTTP Details to API Styles -->
+        <line x1="600" y1="340" x2="300" y2="460" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="340" x2="900" y2="460" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+              
+        <!-- RESTful APIs to JSON APIs, GraphQL -->
+        <line x1="300" y1="460" x2="300" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="460" x2="600" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="460" x2="900" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- API Implementation Section -->
+        <!-- RESTful Design, JSON APIs, GraphQL to URI Design -->
+        <line x1="300" y1="580" x2="300" y2="700"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="580" x2="300" y2="700"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="580" x2="300" y2="700"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- URI Design to Error Handling -->
+        <line x1="300" y1="700" x2="900" y2="820"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Error Handling to API Documentation -->
+        <line x1="900" y1="820" x2="600" y2="940"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Security Section -->
+        <!-- API Documentation to Auth Methods -->
+        <line x1="600" y1="940" x2="300" y2="1060"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="940" x2="900" y2="1060"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Auth Methods, API Security to Caching, Metrics -->
+        <line x1="300" y1="1060" x2="300" y2="1180"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1060" x2="900" y2="1180"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Advanced Topics Section -->
+        <!-- Caching, Performance Metrics to API Integration -->
+        <line x1="300" y1="1180" x2="300" y2="1300"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1180" x2="900" y2="1300"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- API Integration, API Testing to Real-time -->
+        <line x1="300" y1="1300" x2="300" y2="1420"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1300" x2="900" y2="1420"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Real-time APIs, API Testing to Standards -->
+        <line x1="300" y1="1420" x2="600" y2="1540"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1420" x2="600" y2="1540"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Standards to API Lifecycle -->
+        <line x1="600" y1="1540" x2="600" y2="1660"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- API Lifecycle to Optional Connection (dashed) -->
+        <line x1="600" y1="1660" x2="600" y2="1780"
+              stroke="#45f3ff" stroke-width="2" stroke-dasharray="5,5"
+              marker-end="url(#arrowhead)"/>
+      </svg>
+
+      <!-- Nodes (boxes) - Using absolute positioning -->
+      <!-- Fundamentals -->
+      <div class="node primary" style="left: 600px; top: 100px;"
+           onclick="openModal('what-are-apis')">What Are APIs</div>
+      <div class="node primary" style="left: 300px; top: 220px;"
+           onclick="openModal('http-protocol')">HTTP Protocol</div>
+      <div class="node primary" style="left: 900px; top: 220px;"
+           onclick="openModal('network-basics')">Network Basics</div>
+      <div class="node primary" style="left: 600px; top: 340px;"
+           onclick="openModal('http-details')">HTTP Details</div>
+           
+      <!-- API Styles -->
+      <div class="node primary" style="left: 300px; top: 460px;"
+           onclick="openModal('restful-apis')">RESTful APIs
+           <span class="recommendation">♦</span>
+      </div>
+      <div class="node primary" style="left: 900px; top: 460px;"
+           onclick="openModal('api-styles')">API Styles</div>
+      <div class="node primary" style="left: 300px; top: 580px;"
+           onclick="openModal('restful-design')">RESTful Design</div>
+      <div class="node primary" style="left: 600px; top: 580px;"
+           onclick="openModal('json-apis')">JSON APIs</div>
+      <div class="node alternative" style="left: 900px; top: 580px;"
+           onclick="openModal('graphql')">GraphQL</div>
+           
+      <!-- API Implementation -->
+      <div class="node primary" style="left: 300px; top: 700px;"
+           onclick="openModal('uri-design')">URI Design</div>
+      <div class="node primary" style="left: 900px; top: 820px;"
+           onclick="openModal('error-handling')">Error Handling</div>
+      <div class="node primary" style="left: 600px; top: 940px;"
+           onclick="openModal('api-documentation')">API Documentation
+           <span class="recommendation">♦</span>
+      </div>
+           
+      <!-- Security & Auth -->
+      <div class="node primary" style="left: 300px; top: 1060px;"
+           onclick="openModal('auth-methods')">Authentication Methods</div>
+      <div class="node primary" style="left: 900px; top: 1060px;"
+           onclick="openModal('api-security')">API Security</div>
+      <div class="node primary" style="left: 300px; top: 1180px;"
+           onclick="openModal('caching')">Caching</div>
+      <div class="node primary" style="left: 900px; top: 1180px;"
+           onclick="openModal('performance-metrics')">Performance Metrics</div>
+           
+      <!-- Advanced Topics -->
+      <div class="node primary" style="left: 300px; top: 1300px;"
+           onclick="openModal('api-integration')">API Integration</div>
+      <div class="node primary" style="left: 900px; top: 1300px;"
+           onclick="openModal('api-testing')">API Testing</div>
+      <div class="node primary" style="left: 300px; top: 1420px;"
+           onclick="openModal('realtime-apis')">Real-time APIs</div>
+      <div class="node primary" style="left: 900px; top: 1420px;"
+           onclick="openModal('api-patterns')">API Patterns</div>
+      <div class="node primary" style="left: 600px; top: 1540px;"
+           onclick="openModal('standards')">Standards & Compliance</div>
+      <div class="node primary" style="left: 600px; top: 1660px;"
+           onclick="openModal('api-lifecycle')">API Lifecycle Management</div>
+      <div class="node optional" style="left: 600px; top: 1780px;"
+           onclick="openModal('api-gateway')">API Gateways</div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2 id="modal-title"></h2>
+        <div id="modal-text"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Data for each node
+    const nodeData = {
+      "what-are-apis": {
+        title: "What Are APIs",
+        text: `
+          <p>APIs (Application Programming Interfaces) are sets of rules and protocols that allow different software applications to communicate with each other.</p>
+          <ul>
+            <li>Basic concepts of APIs</li>
+            <li>Different types of APIs</li>
+            <li>Why APIs are important</li>
+            <li>Common API use cases</li>
+            <li>API integration overview</li>
+          </ul>
+        `
+      },
+      "http-protocol": {
+        title: "HTTP Protocol",
+        text: `
+          <p>HTTP (Hypertext Transfer Protocol) is the foundation of data communication on the web.</p>
+          <ul>
+            <li>HTTP Request/Response Cycle</li>
+            <li>Client-Server Architecture</li>
+            <li>Statelessness</li>
+            <li>HTTP Versions
+              <ul>
+                <li>HTTP/1.0</li>
+                <li>HTTP/1.1</li>
+                <li>HTTP/2</li>
+                <li>HTTP/3</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      "network-basics": {
+        title: "Network Basics",
+        text: `
+          <ul>
+            <li>TCP/IP Understanding</li>
+            <li>DNS (Domain Name System)</li>
+            <li>Ports & Sockets</li>
+            <li>Firewalls</li>
+            <li>Load Balancers</li>
+            <li>Network Address Translation (NAT)</li>
+          </ul>
+        `
+      },
+      "http-details": {
+        title: "HTTP Details",
+        text: `
+          <ul>
+            <li>HTTP Methods
+              <ul>
+                <li>GET</li>
+                <li>POST</li>
+                <li>PUT</li>
+                <li>PATCH</li>
+                <li>DELETE</li>
+                <li>OPTIONS</li>
+                <li>HEAD</li>
+              </ul>
+            </li>
+            <li>HTTP Status Codes</li>
+            <li>HTTP Headers</li>
+            <li>URL, Query & Path Parameters</li>
+            <li>Cookies</li>
+            <li>Content Negotiation</li>
+            <li>CORS (Cross-Origin Resource Sharing)</li>
+          </ul>
+        `
+      },
+      "restful-apis": {
+        title: "RESTful APIs",
+        text: `
+          <p>REST (Representational State Transfer) is an architectural style for designing networked applications.</p>
+          <ul>
+            <li>REST Architectural Constraints</li>
+            <li>Resource-Based Architecture</li>
+            <li>Statelessness</li>
+            <li>Uniform Interface</li>
+            <li>Client-Server Separation</li>
+            <li>Layered System</li>
+            <li>Code on Demand (optional)</li>
+            <li>RESTful API Best Practices <span style="color: #ff2770;">(Recommended)</span></li>
+          </ul>
+        `
+      },
+      "api-styles": {
+        title: "API Styles",
+        text: `
+          <p>There are multiple approaches to designing and building APIs:</p>
+          <ul>
+            <li>RESTful APIs</li>
+            <li>Simple JSON APIs</li>
+            <li>SOAP APIs</li>
+            <li>GraphQL APIs</li>
+            <li>gRPC</li>
+            <li>WebSockets</li>
+            <li>Server-Sent Events</li>
+          </ul>
+        `
+      },
+      "restful-design": {
+        title: "RESTful Design",
+        text: `
+          <ul>
+            <li>REST Principles</li>
+            <li>Resource Modeling</li>
+            <li>Collection + Item Pattern</li>
+            <li>HTTP Methods for CRUD Operations</li>
+            <li>Idempotency</li>
+            <li>HATEOAS (Hypermedia as the Engine of Application State)</li>
+            <li>API Versioning Strategies</li>
+            <li>Pagination</li>
+            <li>Rate Limiting</li>
+          </ul>
+        `
+      },
+      "json-apis": {
+        title: "JSON APIs",
+        text: `
+          <ul>
+            <li>JSON Structure and Syntax</li>
+            <li>JSON Schema</li>
+            <li>Content Types (application/json)</li>
+            <li>Common JSON Formats:</li>
+              <ul>
+                <li>JSON:API</li>
+                <li>OData</li>
+                <li>JSONPath</li>
+              </ul>
+            <li>JSON Serialization/Deserialization</li>
+            <li>JSON Parsing Best Practices</li>
+          </ul>
+        `
+      },
+      "graphql": {
+        title: "GraphQL",
+        text: `
+          <p>GraphQL is a query language for APIs and a runtime for executing those queries.</p>
+          <ul>
+            <li>GraphQL Schemas</li>
+            <li>Queries</li>
+            <li>Mutations</li>
+            <li>Subscriptions</li>
+            <li>Resolvers</li>
+            <li>Type System</li>
+            <li>GraphQL Clients:</li>
+              <ul>
+                <li>Apollo</li>
+                <li>Relay Modern</li>
+              </ul>
+            <li>GraphQL vs REST</li>
+          </ul>
+        `
+      },
+      "uri-design": {
+        title: "URI Design",
+        text: `
+          <p>Uniform Resource Identifier design is crucial for building intuitive and consistent APIs.</p>
+          <ul>
+            <li>Resource Naming Conventions</li>
+            <li>URI Path Structure</li>
+            <li>Query Parameters</li>
+            <li>Path Parameters</li>
+            <li>URI Templates</li>
+            <li>Hierarchy and Nesting</li>
+            <li>Filtering, Sorting, and Searching</li>
+            <li>Versioning in URIs</li>
+            <li>Clean URL Design</li>
+          </ul>
+        `
+      },
+      "error-handling": {
+        title: "Error Handling",
+        text: `
+          <ul>
+            <li>HTTP Status Codes for Errors</li>
+            <li>Error Response Format</li>
+            <li>RFC 7807 - Problem Details for APIs</li>
+            <li>Validation Errors</li>
+            <li>Business Logic Errors</li>
+            <li>Server Errors</li>
+            <li>Client Errors</li>
+            <li>Debugging Information</li>
+            <li>Error Logging</li>
+          </ul>
+        `
+      },
+      "api-documentation": {
+        title: "API Documentation",
+        text: `
+          <p>Good documentation is essential for API adoption and usability.</p>
+          <ul>
+            <li>Documentation Tools: <span style="color: #ff2770;">(Recommended)</span>
+              <ul>
+                <li>Swagger / OpenAPI <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>Postman</li>
+                <li>Readme.io</li>
+                <li>Stoplight</li>
+              </ul>
+            </li>
+            <li>API Specification Formats</li>
+            <li>Interactive Documentation</li>
+            <li>Code Examples</li>
+            <li>SDK Generation</li>
+            <li>Documentation Best Practices</li>
+          </ul>
+        `
+      },
+      "auth-methods": {
+        title: "Authentication Methods",
+        text: `
+          <ul>
+            <li>Basic Auth</li>
+            <li>Token Based Auth</li>
+            <li>JWT (JSON Web Tokens)</li>
+            <li>OAuth 2.0 <span style="color: #ff2770;">(Recommended)</span></li>
+            <li>OpenID Connect</li>
+            <li>Session Based Authentication</li>
+            <li>API Keys</li>
+            <li>HMAC Authentication</li>
+            <li>Multi-factor Authentication</li>
+          </ul>
+        `
+      },
+      "api-security": {
+        title: "API Security",
+        text: `
+          <ul>
+            <li>Common Vulnerabilities:
+              <ul>
+                <li>Injection Attacks</li>
+                <li>Broken Authentication</li>
+                <li>Sensitive Data Exposure</li>
+                <li>XML External Entities</li>
+                <li>Broken Access Control</li>
+                <li>Security Misconfiguration</li>
+                <li>Cross-Site Scripting</li>
+                <li>Insecure Deserialization</li>
+                <li>Using Components with Known Vulnerabilities</li>
+                <li>Insufficient Logging & Monitoring</li>
+              </ul>
+            </li>
+            <li>Authorization Methods:
+              <ul>
+                <li>Role Based Access Control (RBAC)</li>
+                <li>Attribute Based Access Control (ABAC)</li>
+              </ul>
+            </li>
+            <li>Transport Layer Security (TLS/SSL)</li>
+            <li>API Security Best Practices</li>
+          </ul>
+        `
+      },
+      "caching": {
+        title: "Caching",
+        text: `
+          <ul>
+            <li>HTTP Caching</li>
+            <li>Cache Headers
+              <ul>
+                <li>Cache-Control</li>
+                <li>ETag</li>
+                <li>Last-Modified</li>
+                <li>Expires</li>
+              </ul>
+            </li>
+            <li>Caching Strategies
+              <ul>
+                <li>Client-side Caching</li>
+                <li>CDN Caching</li>
+                <li>Proxy Caching</li>
+                <li>Server-side Caching</li>
+              </ul>
+            </li>
+            <li>Cache Invalidation</li>
+            <li>Conditional Requests</li>
+          </ul>
+        `
+      },
+      "performance-metrics": {
+        title: "Performance Metrics",
+        text: `
+          <ul>
+            <li>Performance Metrics:
+              <ul>
+                <li>Response Time</li>
+                <li>Throughput</li>
+                <li>Error Rate</li>
+                <li>CPU/Memory Usage</li>
+                <li>Latency</li>
+                <li>Concurrency</li>
+              </ul>
+            </li>
+            <li>Load Balancing</li>
+            <li>Rate Limiting / Throttling</li>
+            <li>Profiling and Monitoring</li>
+            <li>Performance Testing:
+              <ul>
+                <li>Load Testing</li>
+                <li>Stress Testing</li>
+                <li>Endurance Testing</li>
+              </ul>
+            </li>
+            <li>API Performance Best Practices</li>
+          </ul>
+        `
+      },
+      "api-integration": {
+        title: "API Integration",
+        text: `
+          <ul>
+            <li>API Integration Patterns:
+              <ul>
+                <li>Synchronous vs Asynchronous APIs</li>
+                <li>Event-Driven Architecture</li>
+                <li>API Gateways</li>
+                <li>Microservices Architecture</li>
+                <li>Service Mesh</li>
+              </ul>
+            </li>
+            <li>Messaging Queues:
+              <ul>
+                <li>RabbitMQ</li>
+                <li>Kafka <span style="color: #ff2770;">(Recommended)</span></li>
+              </ul>
+            </li>
+            <li>Webhooks vs Polling</li>
+            <li>Batch Processing</li>
+            <li>Handling Retries & Circuit Breaking</li>
+          </ul>
+        `
+      },
+      "api-testing": {
+        title: "API Testing",
+        text: `
+          <ul>
+            <li>Types of API Tests:
+              <ul>
+                <li>Unit Testing</li>
+                <li>Integration Testing</li>
+                <li>Functional Testing</li>
+                <li>Load Testing</li>
+                <li>Security Testing</li>
+              </ul>
+            </li>
+            <li>Mocking APIs</li>
+            <li>Contract Testing</li>
+            <li>API Test Automation</li>
+            <li>Test Data Management</li>
+            <li>Error Handling & Retries</li>
+            <li>Testing Tools:
+              <ul>
+                <li>Postman</li>
+                <li>JMeter</li>
+                <li>SoapUI</li>
+                <li>REST-assured</li>
+                <li>Pact</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      "realtime-apis": {
+        title: "Real-time APIs",
+        text: `
+          <ul>
+            <li>WebSockets <span style="color: #ff2770;">(Recommended)</span></li>
+            <li>Server-Sent Events (SSE)</li>
+            <li>Long Polling</li>

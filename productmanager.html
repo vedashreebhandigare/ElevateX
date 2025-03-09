@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Product Manager Roadmap</title>
+  <style>
+    body {
+      background-color: #25252b;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid #45f3ff;
+    }
+
+    h1 {
+      color: #ff2770;
+      margin: 0;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: #45f3ff;
+      text-decoration: none;
+      font-weight: bold;
+      border: 1px solid #45f3ff;
+      padding: 5px 10px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background-color: #45f3ff;
+      color: #25252b;
+    }
+
+    /* Container for the roadmap diagram */
+    .roadmap-container {
+      position: relative;
+      width: 90%;
+      max-width: 1200px;
+      height: 2100px; /* Increased height to accommodate all nodes */
+      margin: 40px auto;
+      background-color: #25252b;
+      border: 2px solid #45f3ff;
+      border-radius: 8px;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    /* The SVG lines are placed behind the nodes */
+    .roadmap-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1; /* behind the nodes */
+    }
+
+    /* Each clickable node (box) */
+    .node {
+      position: absolute;
+      z-index: 2; /* above lines */
+      width: 180px; /* slightly wider for better content fit */
+      height: 40px; /* fixed height for better alignment */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: #333;
+      border: 2px solid #ff2770;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      color: #fff;
+      font-weight: bold;
+      /* Center the node around its position */
+      transform: translate(-50%, -50%);
+    }
+
+    /* Hover effect: glow + slight lift */
+    .node:hover {
+      background: #ff2770;
+      color: #25252b;
+      transform: translate(-50%, -50%) translateY(-3px);
+      box-shadow: 0 0 15px #ff2770;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: #25252b;
+      border: 2px solid #45f3ff;
+      border-radius: 8px;
+      padding: 20px;
+      width: 80%;
+      max-width: 600px;
+      position: relative;
+      text-align: left;
+      max-height: 70vh;
+      overflow-y: auto;
+      color: #fff;
+    }
+
+    .close {
+      color: #45f3ff;
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #ff2770;
+    }
+
+    #modal-title {
+      color: #ff2770;
+      margin-top: 0;
+      border-bottom: 1px solid #45f3ff;
+      padding-bottom: 10px;
+    }
+
+    /* Category label styles */
+    .category-label {
+      position: absolute;
+      font-size: 20px;
+      font-weight: bold;
+      color: #45f3ff;
+      z-index: 2;
+    }
+
+    /* Alternate node styles */
+    .node.primary {
+      border-color: #ff2770;
+    }
+
+    .node.alternative {
+      border-color: #45f3ff;
+      background: #2a2a33;
+    }
+    
+    .node.alternative:hover {
+      background: #45f3ff;
+      color: #25252b;
+      box-shadow: 0 0 15px #45f3ff;
+    }
+    
+    .node.optional {
+      border-style: dashed;
+      opacity: 0.9;
+    }
+    
+    /* Personal recommendation tag */
+    .recommendation {
+      position: absolute;
+      background-color: #ff2770;
+      color: #25252b;
+      font-size: 10px;
+      padding: 2px 5px;
+      border-radius: 4px;
+      top: -10px;
+      right: -10px;
+      transform: rotate(10deg);
+      z-index: 3;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Product Manager Roadmap</h1>
+    <a href="index.html" class="back-btn">← Back</a>
+  </header>
+
+  <main>
+    <div class="roadmap-container">
+      <!-- Category Labels -->
+      <div class="category-label" style="left: 50px; top: 80px;">Fundamentals</div>
+      <div class="category-label" style="left: 50px; top: 440px;">Discovery & Strategy</div>
+      <div class="category-label" style="left: 50px; top: 800px;">Planning & Execution</div>
+      <div class="category-label" style="left: 50px; top: 1160px;">Metrics & Management</div>
+      <div class="category-label" style="left: 50px; top: 1520px;">Advanced Skills</div>
+      
+      <!-- SVG for connecting lines - Using absolute coordinates that match node positions -->
+      <svg class="roadmap-svg" viewBox="0 0 1200 2100">
+        <defs>
+          <!-- Arrowhead marker -->
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+                  refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#45f3ff" />
+          </marker>
+          <!-- Dashed line marker for optional paths -->
+          <pattern id="dashed" patternUnits="userSpaceOnUse" width="6" height="1">
+            <line x1="0" y1="0" x2="3" y2="0" stroke="#45f3ff" stroke-width="1" />
+          </pattern>
+        </defs>
+
+        <!-- Fundamentals Section -->
+        <!-- PM Fundamentals to Role & Responsibilities -->
+        <line x1="600" y1="100" x2="300" y2="220" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="100" x2="900" y2="220" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+              
+        <!-- Role & Responsibilities, Product Lifecycle to Key Skills -->
+        <line x1="300" y1="220" x2="600" y2="340" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="220" x2="600" y2="340" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- Discovery & Strategy Section -->
+        <!-- Key Skills to Market Analysis, Idea Generation -->
+        <line x1="600" y1="340" x2="300" y2="460" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="340" x2="900" y2="460" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+              
+        <!-- Market Analysis, Idea Generation to User Research -->
+        <line x1="300" y1="460" x2="300" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="460" x2="600" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="300" y1="460" x2="600" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- Planning & Execution Section -->
+        <!-- User Research, Product Strategy to Product Requirements -->
+        <line x1="300" y1="580" x2="300" y2="700"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="580" x2="300" y2="700"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Product Requirements to Product Roadmap -->
+        <line x1="300" y1="700" x2="900" y2="820"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Product Roadmap to Agile Methodology -->
+        <line x1="900" y1="820" x2="600" y2="940"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Metrics & Management Section -->
+        <!-- Agile Methodology to Product Metrics -->
+        <line x1="600" y1="940" x2="300" y2="1060"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="940" x2="900" y2="1060"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Product Metrics, Data-Driven Decision to Stakeholder Management, Risk Management -->
+        <line x1="300" y1="1060" x2="300" y2="1180"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1060" x2="900" y2="1180"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Advanced Skills Section -->
+        <!-- Stakeholder Management, Risk Management to Product Management Tools -->
+        <line x1="300" y1="1180" x2="300" y2="1300"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1180" x2="900" y2="1300"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Product Management Tools, Communication to Leadership -->
+        <line x1="300" y1="1300" x2="300" y2="1420"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1300" x2="600" y2="1420"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Leadership to Advanced Topics -->
+        <line x1="300" y1="1420" x2="600" y2="1540"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="1420" x2="600" y2="1540"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Advanced Topics to Optional Connection (dashed) -->
+        <line x1="600" y1="1540" x2="600" y2="1660"
+              stroke="#45f3ff" stroke-width="2" stroke-dasharray="5,5"
+              marker-end="url(#arrowhead)"/>
+      </svg>
+
+      <!-- Nodes (boxes) - Using absolute positioning -->
+      <!-- Fundamentals -->
+      <div class="node primary" style="left: 600px; top: 100px;"
+           onclick="openModal('fundamentals')">PM Fundamentals</div>
+      <div class="node primary" style="left: 300px; top: 220px;"
+           onclick="openModal('roles')">Roles & Responsibilities</div>
+      <div class="node primary" style="left: 900px; top: 220px;"
+           onclick="openModal('lifecycle')">Product Lifecycle</div>
+      <div class="node primary" style="left: 600px; top: 340px;"
+           onclick="openModal('skills')">Key Skills</div>
+           
+      <!-- Discovery & Strategy -->
+      <div class="node primary" style="left: 300px; top: 460px;"
+           onclick="openModal('market')">Market Analysis</div>
+      <div class="node primary" style="left: 900px; top: 460px;"
+           onclick="openModal('ideation')">Idea Generation</div>
+      <div class="node primary" style="left: 300px; top: 580px;"
+           onclick="openModal('user')">User Research</div>
+      <div class="node primary" style="left: 600px; top: 580px;"
+           onclick="openModal('strategy')">Product Strategy</div>
+           
+      <!-- Planning & Execution -->
+      <div class="node primary" style="left: 300px; top: 700px;"
+           onclick="openModal('requirements')">Product Requirements
+           <span class="recommendation">♦</span>
+      </div>
+      <div class="node primary" style="left: 900px; top: 820px;"
+           onclick="openModal('roadmap')">Product Roadmap</div>
+      <div class="node primary" style="left: 600px; top: 940px;"
+           onclick="openModal('agile')">Agile Methodology</div>
+           
+      <!-- Metrics & Management -->
+      <div class="node primary" style="left: 300px; top: 1060px;"
+           onclick="openModal('metrics')">Product Metrics</div>
+      <div class="node primary" style="left: 900px; top: 1060px;"
+           onclick="openModal('data')">Data-Driven Decision</div>
+      <div class="node primary" style="left: 300px; top: 1180px;"
+           onclick="openModal('stakeholder')">Stakeholder Management</div>
+      <div class="node primary" style="left: 900px; top: 1180px;"
+           onclick="openModal('risk')">Risk Management</div>
+           
+      <!-- Advanced Skills -->
+      <div class="node primary" style="left: 300px; top: 1300px;"
+           onclick="openModal('tools')">PM Tools</div>
+      <div class="node alternative" style="left: 900px; top: 1300px;"
+           onclick="openModal('communication')">Communication Skills</div>
+      <div class="node primary" style="left: 300px; top: 1420px;"
+           onclick="openModal('leadership')">Leadership & Influence</div>
+      <div class="node primary" style="left: 600px; top: 1420px;"
+           onclick="openModal('growth')">Growth Strategies</div>
+      <div class="node primary" style="left: 600px; top: 1540px;"
+           onclick="openModal('advanced')">Advanced Topics</div>
+      <div class="node optional" style="left: 600px; top: 1660px;"
+           onclick="openModal('learning')">Continuous Learning</div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2 id="modal-title"></h2>
+        <div id="modal-text"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Data for nodes
+    const nodeData = {
+      fundamentals: {
+        title: "Product Management Fundamentals",
+        text: `
+          <ul>
+            <li>What is Product Management?</li>
+            <li>Product vs. Product Management</li>
+            <li>The Product Mindset</li>
+            <li>Core Product Management Principles</li>
+            <li>Product Management vs. Project Management</li>
+            <li>Types of Product Managers (Technical, Growth, etc.)</li>
+            <li>History and Evolution of Product Management</li>
+          </ul>
+        `
+      },
+      roles: {
+        title: "Roles & Responsibilities",
+        text: `
+          <ul>
+            <li>Product Manager Responsibilities</li>
+            <li>Working with:
+              <ul>
+                <li>Design Teams</li>
+                <li>Engineering Teams</li>
+                <li>Marketing Teams</li>
+                <li>Sales Teams</li>
+                <li>Customer Support</li>
+              </ul>
+            </li>
+            <li>Internal vs. External Focus</li>
+            <li>Strategic vs. Tactical Responsibilities</li>
+            <li>Product Management Career Ladder</li>
+          </ul>
+        `
+      },
+      lifecycle: {
+        title: "Product Lifecycle",
+        text: `
+          <ul>
+            <li>Product Development Lifecycle</li>
+            <li>Introduction Phase</li>
+            <li>Growth Phase</li>
+            <li>Maturity Phase</li>
+            <li>Decline Phase</li>
+            <li>Mapping Features to Lifecycle</li>
+            <li>Development Methodologies
+              <ul>
+                <li>Waterfall</li>
+                <li>Agile <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>Lean</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      skills: {
+        title: "Key Skills",
+        text: `
+          <ul>
+            <li>Technical Skills (Basic understanding of tech)</li>
+            <li>Business Acumen</li>
+            <li>Customer Empathy</li>
+            <li>Analytical Thinking</li>
+            <li>Communication
+              <ul>
+                <li>Written Communication</li>
+                <li>Verbal Communication</li>
+                <li>Visual Communication</li>
+              </ul>
+            </li>
+            <li>Prioritization Techniques</li>
+            <li>Stakeholder Management</li>
+          </ul>
+        `
+      },
+      market: {
+        title: "Market Analysis",
+        text: `
+          <ul>
+            <li>Identifying Market Needs</li>
+            <li>Competitive Analysis
+              <ul>
+                <li>Direct Competitors</li>
+                <li>Indirect Competitors</li>
+                <li>Potential Entrants</li>
+              </ul>
+            </li>
+            <li>Emerging Market Trends</li>
+            <li>Market Segmentation</li>
+            <li>Market Sizing (TAM, SAM, SOM)</li>
+            <li>Competition Frameworks
+              <ul>
+                <li>Porter's Five Forces <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>SWOT Analysis</li>
+                <li>PESTEL Analysis</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      ideation: {
+        title: "Idea Generation",
+        text: `
+          <ul>
+            <li>Problem Framing</li>
+            <li>Brainstorming Techniques
+              <ul>
+                <li>Mind Mapping</li>
+                <li>Brainwriting</li>
+                <li>SCAMPER</li>
+              </ul>
+            </li>
+            <li>Idea Selection</li>
+            <li>Idea Validation</li>
+            <li>Iterative Process
+              <ul>
+                <li>Build</li>
+                <li>Measure</li>
+                <li>Learn</li>
+              </ul>
+            </li>
+            <li>Blue Ocean Strategy</li>
+            <li>TRIZ (Theory of Inventive Problem Solving)</li>
+          </ul>
+        `
+      },
+      user: {
+        title: "User Research",
+        text: `
+          <ul>
+            <li>User Personas
+              <ul>
+                <li>Creating Effective Personas</li>
+                <li>Proto-Personas</li>
+                <li>Jobs-to-be-Done Framework</li>
+              </ul>
+            </li>
+            <li>Research Methods
+              <ul>
+                <li>User Interviews <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>Surveys and Questionnaires</li>
+                <li>Ethnographic Research</li>
+                <li>Contextual Inquiry</li>
+                <li>Focus Groups</li>
+              </ul>
+            </li>
+            <li>Customer Journey Mapping</li>
+            <li>Empathy Mapping</li>
+            <li>Value Proposition Canvas</li>
+            <li>Research Synthesis Methods</li>
+          </ul>
+        `
+      },
+      strategy: {
+        title: "Product Strategy",
+        text: `
+          <ul>
+            <li>Vision & Mission
+              <ul>
+                <li>Product Vision Statement</li>
+                <li>Product Mission Statement</li>
+              </ul>
+            </li>
+            <li>Strategic Frameworks
+              <ul>
+                <li>Positioning</li>
+                <li>USP (Unique Selling Proposition)</li>
+                <li>Value Proposition</li>
+              </ul>
+            </li>
+            <li>Defining Goals
+              <ul>
+                <li>Target</li>
+                <li>Baseline</li>
+                <li>Trend</li>
+                <li>Timeframe</li>
+              </ul>
+            </li>
+            <li>Strategic Thinking
+              <ul>
+                <li>Competitive Strategy</li>
+                <li>Strategic Partners</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      requirements: {
+        title: "Product Requirements",
+        text: `
+          <ul>
+            <li>Writing PRDs (Product Requirement Documents) <span style="color: #ff2770;">(Recommended)</span></li>
+            <li>User Stories
+              <ul>
+                <li>User Story Format</li>
+                <li>Acceptance Criteria</li>
+                <li>INVEST Criteria</li>
+              </ul>
+            </li>
+            <li>Job Stories</li>
+            <li>Feature Specifications</li>
+            <li>Technical Requirements</li>
+            <li>Non-Functional Requirements</li>
+            <li>Product Scope Management</li>
+            <li>MoSCoW Prioritization</li>
+          </ul>
+        `
+      },
+      roadmap: {
+        title: "Product Roadmap",
+        text: `
+          <ul>
+            <li>Creating a Roadmap</li>
+            <li>Roadmap Types
+              <ul>
+                <li>Feature-Based</li>
+                <li>Outcome-Based <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>Theme-Based</li>
+                <li>Time-Based</li>
+              </ul>
+            </li>
+            <li>Prioritizing Features
+              <ul>
+                <li>RICE Framework</li>
+                <li>Kano Model</li>
+                <li>Value vs Effort</li>
+                <li>Opportunity Scoring</li>
+              </ul>
+            </li>
+            <li>Continuous Roadmapping</li>
+            <li>Communicating the Roadmap</li>
+            <li>Backlog Management
+              <ul>
+                <li>Grooming Sessions</li>
+                <li>User Story Mapping</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      agile: {
+        title: "Agile Methodology",
+        text: `
+          <ul>
+            <li>Agile Principles</li>
+            <li>Working with Engineering Teams</li>
+            <li>Agile Frameworks
+              <ul>
+                <li>Scrum Basics <span style="color: #ff2770;">(Recommended)</span>
+                  <ul>
+                    <li>Sprint Planning</li>
+                    <li>Daily Standups</li>
+                    <li>Sprint Reviews</li>
+                    <li>Retrospectives</li>
+                  </ul>
+                </li>
+                <li>Kanban Basics</li>
+                <li>Scrumban</li>
+                <li>SAFe (Scaled Agile Framework)</li>
+              </ul>
+            </li>
+            <li>Minimum Viable Product (MVP)</li>
+            <li>Go-to-Market Strategy</li>
+            <li>Launch Planning</li>
+            <li>Release Strategies
+              <ul>
+                <li>Feature Toggles</li>
+                <li>Phased Rollouts</li>
+                <li>Dark Launches</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      metrics: {
+        title: "Product Metrics",
+        text: `
+          <ul>
+            <li>Key Product Metrics
+              <ul>
+                <li>DAU (Daily Active Users)</li>
+                <li>MAU (Monthly Active Users)</li>
+                <li>Conversion Rate</li>
+                <li>Retention Rate</li>
+                <li>Churn Rate</li>
+                <li>LTV (Lifetime Value)</li>
+                <li>CAC (Customer Acquisition Cost)</li>
+              </ul>
+            </li>
+            <li>North Star Metric <span style="color: #ff2770;">(Recommended)</span></li>
+            <li>AARRR Framework (Pirate Metrics)</li>
+            <li>Feature Adoption Metrics</li>
+            <li>Usage Analytics</li>
+            <li>Product Health Metrics</li>
+            <li>Business Metrics (ROI, Revenue)</li>
+          </ul>
+        `
+      },
+      data: {
+        title: "Data-Driven Decision Making",
+        text: `
+          <ul>
+            <li>A/B Testing
+              <ul>
+                <li>Setting Up Tests</li>
+                <li>Statistical Significance</li>
+                <li>Interpreting Results</li>
+              </ul>
+            </li>
+            <li>User Analytics
+              <ul>
+                <li>Google Analytics</li>
+                <li>Mixpanel</li>
+                <li>Amplitude <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>FullStory</li>
+              </ul>
+            </li>
+            <li>Cohort Analysis</li>
+            <li>Funnel Analysis</li>
+            <li>Predictive Analytics</li>
+            <li>Qualitative vs Quantitative Data</li>
+            <li>Customer Feedback Loops</li>
+          </ul>
+        `
+      },
+      stakeholder: {
+        title: "Stakeholder Management",
+        text: `
+          <ul>
+            <li>Identifying Stakeholders</li>
+            <li>Stakeholder Mapping</li>
+            <li>Stakeholder Communication
+              <ul>
+                <li>Communication Techniques</li>
+                <li>Difficult Conversations</li>
+                <li>Active Listening</li>
+                <li>Conflict Resolution</li>
+              </ul>
+            </li>
+            <li>Building Alignment & Buy-In</li>
+            <li>Managing Expectations</li>
+            <li>Showing Impact</li>
+            <li>Stakeholder Engagement Strategies</li>
+            <li>Working with Remote Stakeholders</li>
+          </ul>
+        `
+      },
+      risk: {
+        title: "Risk Management",
+        text: `
+          <ul>
+            <li>Identifying Risks
+              <ul>
+                <li>Risk Identification Techniques</li>
+                <li>Risk Register</li>
+              </ul>
+            </li>
+            <li>Risk Assessment
+              <ul>
+                <li>Qualitative Risk Assessment</li>
+                <li>Quantitative Risk Assessment</li>
+                <li>Risk Matrix</li>
+              </ul>
+            </li>
+            <li>Risk Mitigation
+              <ul>
+                <li>Mitigation Strategies</li>
+                <li>Contingency Planning</li>
+                <li>Fallback Planning</li>
+              </ul>
+            </li>
+            <li>Monitoring and Controlling Risks
+              <ul>
+                <li>Risk Monitoring Tools</li>
+                <li>Risk Audits</li>
+                <li>Risk Reviews</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      tools: {
+        title: "Product Management Tools",
+        text: `
+          <ul>
+            <li>Roadmapping Tools
+              <ul>
+                <li>ProductBoard <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>Aha!</li>
+                <li>Roadmunk</li>
+              </ul>
+            </li>
+            <li>Project Management Tools
+              <ul>
+                <li>Jira</li>
+                <li>Asana</li>
+                <li>Trello</li>
+                <li>Linear</li>
+                <li>Notion</li>
+              </ul>
+            </li>
+            <li>Analytics Tools
+              <ul>
+                <li>Amplitude</li>
+                <li>Mixpanel</li>
+                <li>Heap</li>
+                <li>Looker</li>
+              </ul>
+            </li>
+            <li>Communication Tools
+              <ul>
+                <li>Slack</li>
+                <li>Microsoft Teams</li>
+                <li>Discord</li>
+              </ul>
+            </li>
+            <li>User Research Tools
+              <ul>
+                <li>UserTesting</li>

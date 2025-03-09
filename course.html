@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vertical Career Roadmap</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #45f3ff;
+      --dark: #121212;
+      --light: #f8f9fa;
+      --step1-color: #ff6b81; /* Pink */
+      --step2-color: #1dd1a1; /* Green */
+      --step3-color: #a55eea; /* Purple */
+      --step4-color: #ff9f43; /* Orange */
+      --step5-color: #54a0ff; /* Blue */
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --card-shadow: rgba(0, 0, 0, 0.2);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #1e1e1e, #121212);
+      color: var(--light);
+      line-height: 1.6;
+      padding: 40px 0;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .roadmap-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    
+    .roadmap-header h2 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      /* Colorful gradient text */
+      background: linear-gradient(90deg, #ff6b81, #1dd1a1, #a55eea, #ff9f43, #54a0ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .roadmap-header p {
+      color: #ccc;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .roadmap-container {
+      position: relative;
+      padding: 20px 0;
+    }
+    
+    /* Vertical line */
+    .roadmap-line {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 6px;
+      height: 100%;
+      background: #000;
+      transform: translateX(-50%);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    
+    /* Line progress animation */
+    .roadmap-line-progress {
+      position: relative;
+      top: 0;
+      left: 0;
+      width: 50%;
+      height: 0%;
+      background: linear-gradient(to bottom, #ff6b81, #1dd1a1, #a55eea, #ff9f43, #54a0ff);
+      transition: height 1.5s ease-in-out;
+    }
+    
+    .roadmap-step {
+      position: relative;
+      display: flex;
+      margin-bottom: 80px;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    
+    .roadmap-step.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .roadmap-step:last-child {
+      margin-bottom: 0;
+    }
+    
+    /* Marker styles */
+    .roadmap-marker {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      z-index: 2;
+    }
+    
+    .marker-circle {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      color: white;
+      font-weight: bold;
+      font-size: 24px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Content box styles */
+    .roadmap-content {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      padding: 25px;
+      width: 40%;
+      box-shadow: 0 10px 30px var(--card-shadow);
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+    
+    .roadmap-content:hover {
+      transform: translateY(-5px);
+    }
+    
+    /* Right content - for odd steps */
+    .roadmap-step:nth-child(odd) .roadmap-content {
+      margin-right: auto;
+      margin-left: 60px;
+    }
+    
+    /* Left content - for even steps */
+    .roadmap-step:nth-child(even) .roadmap-content {
+      margin-left: auto;
+      margin-right: 60px;
+    }
+    
+    .step-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    
+    .step-description {
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    /* Icon styles */
+    .step-icon {
+      margin-right: 10px;
+      font-size: 1.2rem;
+    }
+    
+    /* Roadmap footer */
+    .roadmap-footer {
+      text-align: center;
+      margin-top: 50px;
+    }
+    
+    .roadmap-btn {
+      display: inline-block;
+      padding: 14px 30px;
+      background: linear-gradient(45deg, var(--primary), #3a86ff);
+      color: var(--dark);
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 15px rgba(69, 243, 255, 0.3);
+    }
+    
+    .roadmap-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(69, 243, 255, 0.4);
+    }
+    
+    /* Connector lines */
+    .connector {
+      position: absolute;
+      top: 30px;
+      width: 60px;
+      height: 2px;
+    }
+    
+    .roadmap-step:nth-child(odd) .connector {
+      right: 60px;
+    }
+    
+    .roadmap-step:nth-child(even) .connector {
+      left: 60px;
+    }
+    
+    /* Responsive styles */
+    @media screen and (max-width: 768px) {
+      .roadmap-line {
+        left: 40px;
+      }
+      
+      .roadmap-marker {
+        left: 40px;
+      }
+      
+      .roadmap-content {
+        width: calc(100% - 90px);
+        margin-left: 90px !important;
+        margin-right: 0 !important;
+      }
+      
+      .connector {
+        width: 40px;
+      }
+      
+      .roadmap-step:nth-child(odd) .connector,
+      .roadmap-step:nth-child(even) .connector {
+        left: 50px;
+      }
+      
+      .roadmap-header h2 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="roadmap-header">
+      <h2>Your Career Development Roadmap</h2>
+      <p>Follow these steps to enhance your skills and advance your career based on our personalized analysis</p>
+    </div>
+    
+    <div class="roadmap-container">
+      <div class="roadmap-line">
+        <div class="roadmap-line-progress" id="lineProgress"></div>
+      </div>
+      
+      <!-- Steps will be dynamically inserted here -->
+      <div id="roadmapSteps"></div>
+    </div>
+    
+    <div class="roadmap-footer">
+      <button class="roadmap-btn" id="startBtn">Start Your Journey</button>
+    </div>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Roadmap data
+      const roadmapData = [
+        {
+          step: 1,
+          title: "Upload Resume",
+          description: "Upload your resume in PDF, DOCX, or TXT format to begin your career development journey.",
+          color: "var(--step1-color)",
+          icon: "fa-file-upload"
+        },
+        {
+          step: 2,
+          title: "Skills Analysis",
+          description: "Our system analyzes your current skills, identifies potential skill gaps, and determines your experience level.",
+          color: "var(--step2-color)",
+          icon: "fa-magnifying-glass-chart"
+        },
+        {
+          step: 3,
+          title: "Career Path",
+          description: "Based on your resume and skills, we map out possible career trajectories and opportunities for growth.",
+          color: "var(--step3-color)",
+          icon: "fa-road"
+        },
+        {
+          step: 4,
+          title: "Course Recommendations",
+          description: "Receive tailored course recommendations to help you address skill gaps and advance your career.",
+          color: "var(--step4-color)",
+          icon: "fa-graduation-cap"
+        },
+        {
+          step: 5,
+          title: "Skill Development",
+          description: "Track your progress as you complete courses and develop new skills to enhance your professional profile.",
+          color: "var(--step5-color)",
+          icon: "fa-chart-line"
+        }
+      ];
+      
+      const roadmapSteps = document.getElementById('roadmapSteps');
+      const lineProgress = document.getElementById('lineProgress');
+      const startBtn = document.getElementById('startBtn');
+      
+      // Generate roadmap steps
+      function generateRoadmap() {
+        roadmapSteps.innerHTML = '';
+        
+        roadmapData.forEach(data => {
+          const step = document.createElement('div');
+          step.className = 'roadmap-step';
+          step.innerHTML = `
+            <div class="roadmap-marker">
+              <div class="marker-circle" style="background-color: ${data.color}">
+                ${data.step}
+              </div>
+              <div class="connector" style="background-color: ${data.color}"></div>
+            </div>
+            <div class="roadmap-content">
+              <h3 class="step-title" style="color: ${data.color}">
+                <i class="fas ${data.icon} step-icon"></i>${data.title}
+              </h3>
+              <p class="step-description">${data.description}</p>
+            </div>
+          `;
+          
+          roadmapSteps.appendChild(step);
+        });
+      }
+      
+      // Animate the roadmap
+      function animateRoadmap() {
+        const steps = document.querySelectorAll('.roadmap-step');
+        
+        // Reset animation
+        steps.forEach(step => {
+          step.classList.remove('active');
+        });
+        lineProgress.style.height = '0%';
+        
+        // Start animation
+        setTimeout(() => {
+          lineProgress.style.height = '100%';
+          
+          steps.forEach((step, index) => {
+            setTimeout(() => {
+              step.classList.add('active');
+            }, 300 * (index + 1));
+          });
+        }, 300);
+      }
+      
+      // Initialize roadmap
+      generateRoadmap();
+      
+      // Handle start button click
+      startBtn.addEventListener('click', animateRoadmap);
+      
+      // Initial animation
+      setTimeout(animateRoadmap, 500);
+      
+      // Detect when elements enter viewport for animation
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            animateRoadmap();
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.3 });
+      
+      observer.observe(document.querySelector('.roadmap-container'));
+    });
+  </script>
+</body>
+</html>

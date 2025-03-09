@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Data Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #25252b;
+            color: white;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        button {
+            background-color: #ff2770;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background-color: #45f3ff;
+            color: #25252b;
+            box-shadow: 0 0 10px #45f3ff;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            display: none;
+            border: 1px solid #45f3ff;
+        }
+        th, td {
+            border: 1px solid #45f3ff;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #ff2770;
+            cursor: pointer;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #2d2d33;
+        }
+        tr:hover {
+            background-color: #3a3a42;
+        }
+        .loading {
+            display: none;
+            margin: 20px 0;
+            color: #45f3ff;
+        }
+        .error-message {
+            color: #ff2770;
+            margin-top: 10px;
+            display: none;
+            border-left: 4px solid #ff2770;
+            padding: 10px;
+            background-color: rgba(255, 39, 112, 0.1);
+        }
+        .dataset-path {
+            background-color: #2d2d33;
+            padding: 10px;
+            border-radius: 4px;
+            border-left: 4px solid #45f3ff;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 600px;
+            word-break: break-all;
+        }
+        h1 {
+            color: #45f3ff;
+            text-shadow: 0 0 5px rgba(69, 243, 255, 0.5);
+        }
+        .file-input {
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .file-input input {
+            margin-top: 10px;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+        .pagination button {
+            padding: 8px 12px;
+            margin: 0;
+        }
+        .page-info {
+            color: #45f3ff;
+            margin-top: 10px;
+        }
+        .controls {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .rows-per-page {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .rows-per-page select {
+            background-color: #2d2d33;
+            color: white;
+            border: 1px solid #45f3ff;
+            padding: 5px;
+            border-radius: 4px;
+        }
+        /* Styles for filters */
+        .filters {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin: 20px 0;
+            background-color: #2d2d33;
+            padding: 15px;
+            border-radius: 4px;
+            border-left: 4px solid #45f3ff;
+        }
+        .filter-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 15px;
+        }
+        .filter-label {
+            min-width: 120px;
+            color: #45f3ff;
+        }
+        .filter-control {
+            flex-grow: 1;
+        }
+        select.filter-control {
+            background-color: #25252b;
+            color: white;
+            border: 1px solid #45f3ff;
+            padding: 8px;
+            border-radius: 4px;
+            width: 100%;
+        }
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        .slider-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+        }
+        input[type="range"] {
+            width: 100%;
+            background-color: #25252b;
+            height: 5px;
+            -webkit-appearance: none;
+            appearance: none;
+            border-radius: 5px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ff2770;
+            cursor: pointer;
+        }
+        .apply-filters {
+            align-self: flex-end;
+            padding: 8px 15px;
+            margin: 0;
+        }
+        .budget-display {
+            margin-left: 10px;
+            font-weight: bold;
+            color: #45f3ff;
+        }
+        .filter-count {
+            background-color: #ff2770;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Courses</h1>
+        
+        <div class="dataset-path" id="pathDisplay"></div>
+        
+        <div class="file-input">
+            <label for="csvFileInput">Select a CSV file:</label>
+            <input type="file" id="csvFileInput" accept=".csv" />
+        </div>
+        
+        <button id="loadButton">Load CSV Data</button>
+        
+        <div id="loading" class="loading">Loading data...</div>
+        <div id="errorMessage" class="error-message"></div>
+        
+        <!-- Filters Section -->
+        <div id="filters" class="filters" style="display: none;">
+            <h3>Filter Courses <span id="filterCount" class="filter-count">0 filters applied</span></h3>
+            
+            <div class="filter-row">
+                <div class="filter-label">Subject:</div>
+                <select id="subjectFilter" class="filter-control">
+                    <option value="">All Subjects</option>
+                    <!-- Subject options will be added dynamically -->
+                </select>
+            </div>
+            
+            <div class="filter-row">
+                <div class="filter-label">Price Range:</div>
+                <div class="slider-container filter-control">
+                    <input type="range" id="priceSlider" min="0" max="200" step="5" value="200">
+                    <div class="slider-info">
+                        <span>₹0</span>
+                        <span>Budget: <span id="priceDisplay">₹200</span></span>
+                        <span>₹200</span>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="applyFilters" class="apply-filters">Apply Filters</button>
+        </div>
+        
+        <div id="tableControls" class="controls" style="display: none;">
+            <div class="rows-per-page">
+                <label for="rowsPerPage">Rows per page:</label>
+                <select id="rowsPerPage">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50" selected>50</option>
+                    <option value="100">100</option>
+                    <option value="all">All</option>
+                </select>
+            </div>
+            <div class="page-info" id="pageInfo"></div>
+        </div>
+        
+        <div id="tableContainer"></div>
+        
+        <div id="pagination" class="pagination" style="display: none;">
+            <button id="prevPage">Previous</button>
+            <button id="nextPage">Next</button>
+        </div>
+    </div>
+
+    <script>
+        // Specified CSV File Path
+        const csvFilePath = "C:\\Users\\Admin\\Desktop\\Sources\\udemy_courses.csv";
+        
+        // Columns to exclude
+        const excludeColumns = ["is_paid", "num_reviews", "published_timestamp"];
+        
+        // Pagination variables
+        let currentPage = 1;
+        let rowsPerPage = 50;
+        let allRows = [];
+        let filteredRows = [];
+        
+        // Filter variables
+        let selectedSubject = "";
+        let maxPrice = 200;
+        
+        // Update the path display
+        document.getElementById('pathDisplay').textContent = `Dataset Path: ${csvFilePath}`;
+        
+        // Load data when button is clicked
+        document.getElementById('loadButton').addEventListener('click', function() {
+            const fileInput = document.getElementById('csvFileInput');
+            if (fileInput.files.length > 0) {
+                loadCSVFromFile(fileInput.files[0]);
+            } else {
+                // Show message to select file instead of trying to load from path
+                showError("Please select a CSV file using the file input above.");
+            }
+        });
+        
+        // Load data when file is selected
+        document.getElementById('csvFileInput').addEventListener('change', function(event) {
+            if (event.target.files.length > 0) {
+                // Automatically load the file when selected
+                loadCSVFromFile(event.target.files[0]);
+            }
+        });
+        
+        // Update rows per page
+        document.getElementById('rowsPerPage').addEventListener('change', function(event) {
+            const value = event.target.value;
+            if (value === 'all') {
+                rowsPerPage = filteredRows.length;
+            } else {
+                rowsPerPage = parseInt(value);
+            }
+            currentPage = 1;
+            displayPage();
+        });
+        
+        // Navigation buttons
+        document.getElementById('prevPage').addEventListener('click', function() {
+            if (currentPage > 1) {
+                currentPage--;
+                displayPage();
+            }
+        });
+        
+        document.getElementById('nextPage').addEventListener('click', function() {
+            const maxPages = Math.ceil(filteredRows.length / rowsPerPage);
+            if (currentPage < maxPages) {
+                currentPage++;
+                displayPage();
+            }
+        });
+        
+        // Price slider events
+        document.getElementById('priceSlider').addEventListener('input', function(event) {
+            maxPrice = parseInt(event.target.value);
+            document.getElementById('priceDisplay').textContent = `₹${maxPrice}`;
+        });
+        
+        // Apply filters
+        document.getElementById('applyFilters').addEventListener('click', function() {
+            applyFilters();
+        });
+        
+        function loadCSVFromFile(file) {
+            showLoading();
+            hideError();
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const csvData = event.target.result;
+                processCSVData(csvData);
+                hideLoading();
+            };
+            reader.onerror = function(event) {
+                console.error("Error reading file:", event);
+                showError(`Error reading file: ${event.target.error}`);
+                hideLoading();
+            };
+            reader.readAsText(file);
+            
+            // Update path display
+            document.getElementById('pathDisplay').textContent = `Dataset: ${file.name}`;
+        }
+
+        function processCSVData(csv) {
+            try {
+                // Parse CSV data and prepare for display
+                const parsedData = parseCSV(csv);
+                allRows = parsedData;
+                
+                // Initialize filteredRows with all rows
+                filteredRows = [...allRows];
+                
+                // Show table controls and filters
+                document.getElementById('tableControls').style.display = 'flex';
+                document.getElementById('pagination').style.display = 'flex';
+                document.getElementById('filters').style.display = 'block';
+                
+                // Populate subject filter options, keeping original subject names
+                populateSubjectFilter();
+                
+                // Display the first page
+                displayPage();
+                
+                // Log the number of rows loaded
+                console.log(`Successfully loaded ${allRows.length} rows from CSV`);
+            } catch (error) {
+                console.error("Error processing CSV:", error);
+                showError(`Error processing CSV: ${error.message}`);
+            }
+        }
+        
+        function parseCSV(csv) {
+            // Parse CSV
+            const lines = csv.trim().split('\n');
+            if (lines.length < 2) {
+                throw new Error("CSV file appears to be empty or invalid");
+            }
+            
+            // Get headers and filter out excluded columns
+            const allHeaders = lines[0].split(',').map(header => header.trim());
+            const headers = allHeaders.filter(header => !excludeColumns.includes(header));
+            
+            // Get indices of excluded columns
+            const excludedIndices = excludeColumns.map(col => allHeaders.indexOf(col)).filter(index => index !== -1);
+            
+            let rows = [];
+            for (let i = 1; i < lines.length; i++) {
+                // Handle CSV line with proper quote handling
+                let row = parseCSVLine(lines[i]);
+                
+                // Filter out excluded columns
+                const filteredValues = row.filter((_, index) => !excludedIndices.includes(index));
+                
+                // Create row object with filtered values
+                let rowObject = {};
+                for (let j = 0; j < headers.length && j < filteredValues.length; j++) {
+                    rowObject[headers[j]] = filteredValues[j];
+                }
+                
+                // Add row to rows array
+                rows.push(rowObject);
+            }
+            
+            // Store headers in a global variable for later use
+            window.tableHeaders = headers;
+            
+            return rows;
+        }
+        
+        function parseCSVLine(line) {
+            // This function handles quotes and commas in CSV properly
+            const result = [];
+            let currentValue = '';
+            let insideQuotes = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                
+                if (char === '"') {
+                    // Handle escaped quotes (double quotes inside quotes)
+                    if (insideQuotes && i + 1 < line.length && line[i + 1] === '"') {
+                        currentValue += '"';
+                        i++; // Skip the next quote
+                    } else {
+                        // Toggle quote state
+                        insideQuotes = !insideQuotes;
+                    }
+                } else if (char === ',' && !insideQuotes) {
+                    // End of field
+                    result.push(currentValue);
+                    currentValue = '';
+                } else {
+                    // Add character to current field
+                    currentValue += char;
+                }
+            }
+            
+            // Add the last field
+            result.push(currentValue);
+            
+            return result;
+        }
+        
+        function populateSubjectFilter() {
+            // Get unique subjects, preserving original names
+            const subjects = new Set();
+            allRows.forEach(row => {
+                if (row.subject) {
+                    subjects.add(row.subject);
+                }
+            });
+            
+            // Sort subjects alphabetically
+            const sortedSubjects = Array.from(subjects).sort();
+            
+            // Get the select element
+            const subjectSelect = document.getElementById('subjectFilter');
+            
+            // Clear existing options (except the first one)
+            while (subjectSelect.options.length > 1) {
+                subjectSelect.remove(1);
+            }
+            
+            // Add subject options
+            sortedSubjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject;
+                option.textContent = subject;
+                subjectSelect.appendChild(option);
+            });
+        }
+        
+        function applyFilters() {
+            // Get filter values
+            selectedSubject = document.getElementById('subjectFilter').value;
+            
+            // Apply filters
+            filteredRows = allRows.filter(row => {
+                // Filter by subject
+                if (selectedSubject && row.subject !== selectedSubject) {
+                    return false;
+                }
+                
+                // Filter by price (convert to number first)
+                const price = parseFloat(row.price) || 0;
+                if (price > maxPrice) {
+                    return false;
+                }
+                
+                return true;
+            });
+            
+            // Update filter count
+            const filterCount = (selectedSubject ? 1 : 0) + (maxPrice < 200 ? 1 : 0);
+            document.getElementById('filterCount').textContent = `${filterCount} filter${filterCount !== 1 ? 's' : ''} applied`;
+            
+            // Reset to first page
+            currentPage = 1;
+            
+            // Update rows per page in case "all" is selected
+            const rowsPerPageSelect = document.getElementById('rowsPerPage');
+            if (rowsPerPageSelect.value === 'all') {
+                rowsPerPage = filteredRows.length;
+            }
+            
+            // Display filtered results
+            displayPage();
+        }
+        
+        function displayPage() {
+            const startIndex = (currentPage - 1) * rowsPerPage;
+            const endIndex = Math.min(startIndex + rowsPerPage, filteredRows.length);
+            const rowsToDisplay = filteredRows.slice(startIndex, endIndex);
+            
+            // Create table
+            const table = document.createElement('table');
+            table.id = 'csvTable';
+            
+            // Create table header
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            
+            window.tableHeaders.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header;
+                th.addEventListener('click', () => sortTable(header));
+                headerRow.appendChild(th);
+            });
+            
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+            
+            // Create table body
+            const tbody = document.createElement('tbody');
+            
+            rowsToDisplay.forEach(row => {
+                const tr = document.createElement('tr');
+                
+                window.tableHeaders.forEach(header => {
+                    const td = document.createElement('td');
+                    td.textContent = row[header] || "";
+                    tr.appendChild(td);
+                });
+                
+                tbody.appendChild(tr);
+            });
+            
+            table.appendChild(tbody);
+            
+            // Clear previous table if exists
+            const tableContainer = document.getElementById('tableContainer');
+            tableContainer.innerHTML = '';
+            tableContainer.appendChild(table);
+            
+            // Show the table
+            table.style.display = 'table';
+            
+            // Update page info
+            const maxPages = Math.ceil(filteredRows.length / rowsPerPage);
+            document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${maxPages} (${filteredRows.length} total rows)`;
+            
+            // Update button states
+            document.getElementById('prevPage').disabled = currentPage === 1;
+            document.getElementById('nextPage').disabled = currentPage === maxPages;
+        }
+        
+        function sortTable(column) {
+            const columnIndex = window.tableHeaders.indexOf(column);
+            
+            // Sort rows
+            filteredRows.sort((a, b) => {
+                const aValue = a[column] || '';
+                const bValue = b[column] || '';
+                
+                // Check if numeric
+                if (!isNaN(parseFloat(aValue)) && !isNaN(parseFloat(bValue))) {
+                    return parseFloat(aValue) - parseFloat(bValue);
+                }
+                
+                return String(aValue).localeCompare(String(bValue));
+            });
+            
+            // Reset to first page and display
+            currentPage = 1;
+            displayPage();
+        }
+        
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+        }
+        
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+        
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+        
+        function hideError() {
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

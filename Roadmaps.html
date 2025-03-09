@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Developer Roadmaps</title>
+  <style>
+    /* Global Styles */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #25252b;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      position: relative;
+      margin-bottom: 60px;
+    }
+    
+    /* Header styling with separator line */
+    header {
+      position: relative;
+      padding: 40px 20px;
+      background-color: #1e1e1e;
+      border-bottom: 1px solid #45f3ff;
+      margin-bottom: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* Title styling with pinkish cyberpunk colors */
+    .site-title {
+      font-size: 32px;
+      margin: 0;
+      font-weight: bold;
+      color: #84e5ff;
+      text-shadow: 0 0 5px #45f3ff, 0 0 10px #ff2770;
+    }
+    
+    /* Home button styling */
+    .home-btn {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      display: inline-block;
+      padding: 8px 15px;
+      background-color: #333;
+      border: 2px solid #45f3ff;
+      border-radius: 5px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: bold;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+    
+    .home-btn:hover {
+      background-color: #45f3ff;
+      color: #25252b;
+      box-shadow: 0 0 10px #45f3ff;
+      border-color: #ff2770;
+    }
+    
+    main {
+      padding: 20px;
+    }
+    
+    /* Section heading styling with dimmed outline */
+    .section-heading {
+      display: inline-block;
+      padding: 10px 20px;
+      margin-bottom: 20px;
+      background-color: transparent;
+      border: 2px solid rgba(69, 243, 255, 0.7);
+      border-radius: 5px;
+      font-weight: bold;
+      color: #45f3ff;
+    }
+    
+    /* Roadmap grid styling with solid gray separator lines */
+    .roadmap-section {
+      margin-bottom: 40px;
+      padding-bottom: 30px;
+      border-bottom: 1px solid #555;
+    }
+    
+    .roadmap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    /* Enhanced button styling with more pronounced glow and pop-up effect */
+    .roadmap-btn {
+      display: block;
+      text-decoration: none;
+      text-align: center;
+      padding: 15px 10px;
+      font-size: 16px;
+      background-color: #333;
+      color: #fff;
+      border: 2px solid #45f3ff;
+      border-radius: 5px;
+      transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s, color 0.3s;
+      cursor: pointer;
+      position: relative;
+      top: 0;
+      box-shadow: 0 0 5px rgba(69, 243, 255, 0.3);
+    }
+    
+    .roadmap-btn:hover {
+      background-color: #45f3ff;
+      color: #25252b;
+      transform: translateY(-5px);
+      box-shadow: 0 0 20px #45f3ff, 0 0 40px rgba(69, 243, 255, 0.5);
+      border-color: #ff2770;
+    }
+    
+    /* Footer styling */
+    .footer {
+      position: relative;
+      padding: 20px 0;
+      margin-top: 30px;
+      text-align: center;
+      border-top: 1px solid #555;
+      background-color: #1e1e1e;
+    }
+    
+    .elevate-text {
+      display: inline-block;
+      margin: 0 auto;
+      font-weight: bold;
+      font-size: 16px;
+      color: #ff2770;
+      text-shadow: 0 0 5px #ff2770;
+    }
+    
+    /* Footer navigation links */
+    .footer-links {
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    
+    .footer-link {
+      text-decoration: none;
+      color: #45f3ff;
+      font-weight: 500;
+      padding: 5px 10px;
+      transition: all 0.3s ease;
+    }
+    
+    .footer-link:hover {
+      text-decoration: none;
+      color: #ff2770;
+      text-shadow: 0 0 5px #ff2770;
+    }
+    
+    /* Modal styling */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .modal-content {
+      background-color: #25252b;
+      border: 2px solid #45f3ff;
+      box-shadow: 0 0 20px #45f3ff;
+      border-radius: 8px;
+      width: 80%;
+      max-width: 600px;
+      padding: 20px;
+      position: relative;
+    }
+    
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      color: #45f3ff;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    
+    .close:hover {
+      color: #ff2770;
+      text-shadow: 0 0 5px #ff2770;
+    }
+    
+    .modal-title {
+      color: #45f3ff;
+      border-bottom: 1px solid #555;
+      padding-bottom: 10px;
+      margin-top: 0;
+    }
+    
+    .modal-text {
+      color: #fff;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 class="site-title">Developer Roadmaps</h1>
+    <a href="index.html" class="home-btn">🏠 Home</a>
+  </header>
+  
+  <main>
+    <section class="roadmap-section">
+      <h2 class="section-heading">Web Development RoadMaps</h2>
+      <div class="roadmap-grid">
+        <a href="frontend.html" class="roadmap-btn">Frontend</a>
+        <a href="backend.html" class="roadmap-btn">Backend</a>
+        <a href="devops.html" class="roadmap-btn">DevOps</a>
+        <a href="fullstack.html" class="roadmap-btn">Full Stack</a>
+        <a href="dataanalyst.html" class="roadmap-btn">Data Analyst</a>
+        <a href="aiengineer.html" class="roadmap-btn">AI Engineer</a>
+        <a href="qa.html" class="roadmap-btn">QA</a>
+        <a href="cybersecurity.html" class="roadmap-btn">Cyber Security</a>
+        <a href="gamedevelopment.html" class="roadmap-btn">Game Developer</a>
+        <a href="productmanager.html" class="roadmap-btn">Product Manager</a>
+      </div>
+    </section>
+    
+    <section class="roadmap-section">
+      <h2 class="section-heading">Skill-Development Roadmaps</h2>
+      <div class="roadmap-grid">
+        <a href="android.html" class="roadmap-btn">Android</a>
+        <a href="ios.html" class="roadmap-btn">iOS</a>
+        <a href="apidesign.html" class="roadmap-btn">API Design</a>
+        <a href="blockchain.html" class="roadmap-btn">Blockchain</a>
+        <a href="mlops.html" class="roadmap-btn">MLOps</a>
+        <a href="technical-writer.html" class="roadmap-btn">Technical Writer</a>
+        <a href="postgresql.html" class="roadmap-btn">PostgreSQL</a>
+        <a href="software-architect.html" class="roadmap-btn">Software Architect</a>
+      </div>
+    </section>
+    
+    <section class="roadmap-section">
+      <h2 class="section-heading">Management Roadmaps</h2>
+      <div class="roadmap-grid">
+        <a href="business-fundamentals.html" class="roadmap-btn">Business Fundamentals</a>
+        <a href="human-resources.html" class="roadmap-btn">Human Resources</a>
+        <a href="operations-management.html" class="roadmap-btn">Operations</a>
+        <a href="marketing.html" class="roadmap-btn">Marketing</a>
+        <a href="financial-management.html" class="roadmap-btn">Finance</a>
+        <a href="strategic-management.html" class="roadmap-btn">Strategy</a>
+        <a href="entrepreneurship.html" class="roadmap-btn">Entrepreneurship</a>
+      </div>
+    </section>
+    
+    <section class="roadmap-section">
+      <h2 class="section-heading">Law Roadmaps</h2>
+      <div class="roadmap-grid">
+        <a href="pre-law.html" class="roadmap-btn">Pre-Law Studies</a>
+        <a href="core-legal.html" class="roadmap-btn">Core Legal Courses</a>
+        <a href="criminal-lawyer.html" class="roadmap-btn">Criminal Law</a>
+        <a href="corporate-law.html" class="roadmap-btn">Corporate Law</a>
+        <a href="family-law.html" class="roadmap-btn">Family Law</a>
+        <a href="intellectual-property.html" class="roadmap-btn">Intellectual Property Law</a>
+        <a href="bar-exam.html" class="roadmap-btn">Bar Exam & Licensing</a>
+      </div>
+    </section>
+    
+    <section class="roadmap-section">
+      <h2 class="section-heading">Health Care Roadmaps</h2>
+      <div class="roadmap-grid">
+        <a href="pre-med.html" class="roadmap-btn">Pre-Medical Sciences</a>
+        <a href="med-basic.html" class="roadmap-btn">Medical School (Basic Sciences)</a>
+        <a href="clinical-rotations.html" class="roadmap-btn">Clinical Rotations</a>
+        <a href="residency.html" class="roadmap-btn">Residency</a>
+        <a href="fellowship.html" class="roadmap-btn">Fellowship</a>
+        <a href="surgery.html" class="roadmap-btn">Surgery</a>
+        <a href="internal-medicine.html" class="roadmap-btn">Internal Medicine</a>
+        <a href="pediatrics.html" class="roadmap-btn">Pediatrics</a>
+        <a href="psychiatry.html" class="roadmap-btn">Psychiatry</a>
+      </div>
+    </section>
+    
+    <section class="roadmap-section">
+      <h2 class="section-heading">Psychology Roadmaps</h2>
+      <div class="roadmap-grid">
+        <a href="general-psychology.html" class="roadmap-btn">General Psychology</a>
+        <a href="clinical-psychology.html" class="roadmap-btn">Clinical Psychology</a>
+        <a href="counseling-psychology.html" class="roadmap-btn">Counseling Psychology</a>
+        <a href="forensic-psychology.html" class="roadmap-btn">Forensic Psychology</a>
+        <a href="io-psychology.html" class="roadmap-btn">Industrial-Organizational Psychology</a>
+        <a href="developmentalpyschology.html" class="roadmap-btn">Developmental Psychology</a>
+        <a href="neuropsychology.html" class="roadmap-btn">Neuropsychology</a>
+      </div>
+    </section>
+  </main>
+  
+  <footer class="footer">
+    <div class="elevate-text">Elevate X</div>
+    <div class="footer-links">
+      <a href="about.html" class="footer-link">About Us</a>
+      <a href="careers.html" class="footer-link">Careers</a>
+    </div>
+  </footer>
+  
+  <!-- Modal dialog for showing node details -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2 id="modal-title" class="modal-title"></h2>
+      <p id="modal-text" class="modal-text"></p>
+    </div>
+  </div>
+  
+  <script>
+    // Node data for the roadmap details
+    const nodeData = {
+      internet: {
+        title: "Internet",
+        text: `How does the internet work? 
+    HTTP, Domain Name, Hosting & DNS, Browsers & how they work, etc.`
+      },
+      html: {
+        title: "HTML",
+        text: `Learn the basics: 
+    Semantic HTML, Forms & Validations, Accessibility, SEO Basics...`
+      },
+      css: {
+        title: "CSS",
+        text: `Making layouts, Responsive design, 
+    Preprocessors (Sass, PostCSS), and more...`
+      },
+      js: {
+        title: "JavaScript",
+        text: `Fetch API / Ajax (XHR), DOM manipulation, 
+    JS fundamentals, modern ES features...`
+      },
+      vcs: {
+        title: "Version Control",
+        text: `Git, GitHub, GitLab, Bitbucket, branching strategies, 
+    commit best practices, etc.`
+      },
+      frameworks: {
+        title: "Frameworks",
+        text: `React, Vue, Angular, Svelte, SolidJS, Qwik, 
+    and other modern libraries.`
+      },
+      testing: {
+        title: "Testing",
+        text: `Unit testing, Integration testing, 
+    Tools like Jest, Cypress, Playwright, etc.`
+      }
+    };
+    
+    function openModal(nodeKey) {
+      const modal = document.getElementById("modal");
+      const modalTitle = document.getElementById("modal-title");
+      const modalText = document.getElementById("modal-text");
+    
+      const data = nodeData[nodeKey];
+      modalTitle.innerText = data.title;
+      modalText.innerText = data.text;
+    
+      modal.style.display = "flex";
+    }
+    
+    function closeModal() {
+      document.getElementById("modal").style.display = "none";
+    }
+    
+    // Close modal when clicking outside content
+    window.onclick = function(event) {
+      const modal = document.getElementById("modal");
+      if (event.target === modal) {
+        closeModal();
+      }
+    };
+  </script>
+</body>
+</html>

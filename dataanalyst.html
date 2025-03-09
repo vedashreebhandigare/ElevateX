@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Data Analyst Roadmap</title>
+  <style>
+    body {
+      background-color: #25252b;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid #45f3ff;
+    }
+
+    h1 {
+      color: #ff2770;
+      margin: 0;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: #45f3ff;
+      text-decoration: none;
+      font-weight: bold;
+      border: 1px solid #45f3ff;
+      padding: 5px 10px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background-color: #45f3ff;
+      color: #25252b;
+    }
+
+    /* Container for the roadmap diagram */
+    .roadmap-container {
+      position: relative;
+      width: 90%;
+      max-width: 1200px;
+      height: 2100px; /* Adjusted height to accommodate all nodes */
+      margin: 40px auto;
+      background-color: #25252b;
+      border: 2px solid #45f3ff;
+      border-radius: 8px;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    /* The SVG lines are placed behind the nodes */
+    .roadmap-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1; /* behind the nodes */
+    }
+
+    /* Each clickable node (box) */
+    .node {
+      position: absolute;
+      z-index: 2; /* above lines */
+      width: 180px; /* slightly wider for better content fit */
+      height: 40px; /* fixed height for better alignment */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: #333;
+      border: 2px solid #ff2770;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      color: #fff;
+      font-weight: bold;
+      /* Center the node around its position */
+      transform: translate(-50%, -50%);
+    }
+
+    /* Hover effect: glow + slight lift */
+    .node:hover {
+      background: #ff2770;
+      color: #25252b;
+      transform: translate(-50%, -50%) translateY(-3px);
+      box-shadow: 0 0 15px #ff2770;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: #25252b;
+      border: 2px solid #45f3ff;
+      border-radius: 8px;
+      padding: 20px;
+      width: 80%;
+      max-width: 600px;
+      position: relative;
+      text-align: left;
+      max-height: 70vh;
+      overflow-y: auto;
+      color: #fff;
+    }
+
+    .close {
+      color: #45f3ff;
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #ff2770;
+    }
+
+    #modal-title {
+      color: #ff2770;
+      margin-top: 0;
+      border-bottom: 1px solid #45f3ff;
+      padding-bottom: 10px;
+    }
+
+    /* Category label styles */
+    .category-label {
+      position: absolute;
+      font-size: 20px;
+      font-weight: bold;
+      color: #45f3ff;
+      z-index: 2;
+    }
+
+    /* Alternate node styles */
+    .node.primary {
+      border-color: #ff2770;
+    }
+
+    .node.alternative {
+      border-color: #45f3ff;
+      background: #2a2a33;
+    }
+    
+    .node.alternative:hover {
+      background: #45f3ff;
+      color: #25252b;
+      box-shadow: 0 0 15px #45f3ff;
+    }
+    
+    .node.optional {
+      border-style: dashed;
+      opacity: 0.9;
+    }
+    
+    /* Personal recommendation tag */
+    .recommendation {
+      position: absolute;
+      background-color: #ff2770;
+      color: #25252b;
+      font-size: 10px;
+      padding: 2px 5px;
+      border-radius: 4px;
+      top: -10px;
+      right: -10px;
+      transform: rotate(10deg);
+      z-index: 3;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Data Analyst Roadmap</h1>
+    <a href="index.html" class="back-btn">← Back</a>
+  </header>
+
+  <main>
+    <div class="roadmap-container">
+      <!-- Category Labels -->
+      <div class="category-label" style="left: 50px; top: 80px;">Fundamentals</div>
+      <div class="category-label" style="left: 50px; top: 440px;">Data Handling</div>
+      <div class="category-label" style="left: 50px; top: 800px;">Analysis & Visualization</div>
+      <div class="category-label" style="left: 50px; top: 1160px;">Statistical Analysis</div>
+      <div class="category-label" style="left: 50px; top: 1520px;">Advanced Skills</div>
+      
+      <!-- SVG for connecting lines - Using absolute coordinates that match node positions -->
+      <svg class="roadmap-svg" viewBox="0 0 1200 2100">
+        <defs>
+          <!-- Arrowhead marker -->
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+                  refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#45f3ff" />
+          </marker>
+          <!-- Dashed line marker for optional paths -->
+          <pattern id="dashed" patternUnits="userSpaceOnUse" width="6" height="1">
+            <line x1="0" y1="0" x2="3" y2="0" stroke="#45f3ff" stroke-width="1" />
+          </pattern>
+        </defs>
+
+        <!-- Fundamentals Section -->
+        <!-- Data Analytics Concepts to Excel and SQL -->
+        <line x1="600" y1="100" x2="300" y2="220" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="100" x2="900" y2="220" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+              
+        <!-- Excel, SQL to Programming Skills -->
+        <line x1="300" y1="220" x2="600" y2="340" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="220" x2="600" y2="340" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- Data Handling Section -->
+        <!-- Programming Skills to Data Collection, Cleaning -->
+        <line x1="600" y1="340" x2="300" y2="460" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="340" x2="900" y2="460" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+              
+        <!-- Data Collection, Cleaning to Data Transformation -->
+        <line x1="300" y1="460" x2="300" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="460" x2="600" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="300" y1="460" x2="600" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- Analysis & Visualization Section -->
+        <!-- Data Transformation to Descriptive Analysis -->
+        <line x1="300" y1="580" x2="300" y2="700"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="580" x2="300" y2="700"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Descriptive Analysis to Data Visualization -->
+        <line x1="300" y1="700" x2="900" y2="820"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Data Visualization to Charting Data -->
+        <line x1="900" y1="820" x2="600" y2="940"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Statistical Analysis Section -->
+        <!-- Charting Data to Hypothesis Testing -->
+        <line x1="600" y1="940" x2="300" y2="1060"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="940" x2="900" y2="1060"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Hypothesis Testing to Correlation & Regression -->
+        <line x1="300" y1="1060" x2="300" y2="1180"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1060" x2="900" y2="1180"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Advanced Skills Section -->
+        <!-- Correlation, Regression to Machine Learning -->
+        <line x1="300" y1="1180" x2="300" y2="1300"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1180" x2="900" y2="1300"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Machine Learning to Big Data -->
+        <line x1="300" y1="1300" x2="300" y2="1420"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1300" x2="600" y2="1420"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Big Data to Deep Learning -->
+        <line x1="300" y1="1420" x2="600" y2="1540"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="1420" x2="600" y2="1540"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Deep Learning to Project Building -->
+        <line x1="600" y1="1540" x2="600" y2="1660"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+      </svg>
+
+      <!-- Nodes (boxes) - Using absolute positioning -->
+      <!-- Fundamentals -->
+      <div class="node primary" style="left: 600px; top: 100px;"
+           onclick="openModal('concepts')">Data Analytics Concepts</div>
+      <div class="node primary" style="left: 300px; top: 220px;"
+           onclick="openModal('excel')">Excel Fundamentals</div>
+      <div class="node primary" style="left: 900px; top: 220px;"
+           onclick="openModal('sql')">SQL Fundamentals</div>
+      <div class="node primary" style="left: 600px; top: 340px;"
+           onclick="openModal('programming')">Programming Skills</div>
+           
+      <!-- Data Handling -->
+      <div class="node primary" style="left: 300px; top: 460px;"
+           onclick="openModal('datacollection')">Data Collection</div>
+      <div class="node primary" style="left: 900px; top: 460px;"
+           onclick="openModal('datacleaning')">Data Cleaning</div>
+      <div class="node primary" style="left: 300px; top: 580px;"
+           onclick="openModal('datatransformation')">Data Transformation</div>
+      <div class="node primary" style="left: 600px; top: 580px;"
+           onclick="openModal('dataquality')">Data Quality</div>
+           
+      <!-- Analysis & Visualization -->
+      <div class="node primary" style="left: 300px; top: 700px;"
+           onclick="openModal('descriptive')">Descriptive Analysis
+           <span class="recommendation">♦</span>
+      </div>
+      <div class="node primary" style="left: 900px; top: 820px;"
+           onclick="openModal('datavisualization')">Data Visualization Tools</div>
+      <div class="node primary" style="left: 600px; top: 940px;"
+           onclick="openModal('charting')">Charting Techniques</div>
+           
+      <!-- Statistical Analysis -->
+      <div class="node primary" style="left: 300px; top: 1060px;"
+           onclick="openModal('hypothesis')">Hypothesis Testing</div>
+      <div class="node primary" style="left: 900px; top: 1060px;"
+           onclick="openModal('distributions')">Statistical Distributions</div>
+      <div class="node primary" style="left: 300px; top: 1180px;"
+           onclick="openModal('correlation')">Correlation Analysis</div>
+      <div class="node primary" style="left: 900px; top: 1180px;"
+           onclick="openModal('regression')">Regression Analysis</div>
+           
+      <!-- Advanced Skills -->
+      <div class="node primary" style="left: 300px; top: 1300px;"
+           onclick="openModal('machinelearning')">Machine Learning Basics</div>
+      <div class="node alternative" style="left: 900px; top: 1300px;"
+           onclick="openModal('algorithms')">ML Algorithms</div>
+      <div class="node primary" style="left: 300px; top: 1420px;"
+           onclick="openModal('bigdata')">Big Data Technologies</div>
+      <div class="node primary" style="left: 600px; top: 1420px;"
+           onclick="openModal('dataprocessing')">Data Processing</div>
+      <div class="node optional" style="left: 600px; top: 1540px;"
+           onclick="openModal('deeplearning')">Deep Learning</div>
+      <div class="node primary" style="left: 600px; top: 1660px;"
+           onclick="openModal('projects')">Projects & Portfolio</div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2 id="modal-title"></h2>
+        <div id="modal-text"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Data for nodes
+    const nodeData = {
+      concepts: {
+        title: "Data Analytics Concepts",
+        text: `
+          <ul>
+            <li>What is Data Analytics?</li>
+            <li>Types of Data Analytics
+              <ul>
+                <li>Descriptive Analytics</li>
+                <li>Diagnostic Analytics</li>
+                <li>Predictive Analytics</li>
+                <li>Prescriptive Analytics</li>
+              </ul>
+            </li>
+            <li>Key Concepts
+              <ul>
+                <li>Data Collection</li>
+                <li>Data Cleanup</li>
+                <li>Data Exploration</li>
+                <li>Data Visualization</li>
+                <li>Statistical Analysis</li>
+              </ul>
+            </li>
+            <li>Central Tendency Measures
+              <ul>
+                <li>Mean</li>
+                <li>Mode</li>
+                <li>Median</li>
+                <li>Average</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      excel: {
+        title: "Excel Fundamentals",
+        text: `
+          <ul>
+            <li>Basic Functions
+              <ul>
+                <li>SUM, MIN / MAX</li>
+                <li>AVERAGE, COUNT</li>
+                <li>CONCAT, TRIM</li>
+                <li>UPPER / LOWER / PROPER</li>
+                <li>REPLACE / SUBSTITUTE</li>
+                <li>VLOOKUP / HLOOKUP</li>
+                <li>IF, DATEDIF</li>
+              </ul>
+            </li>
+            <li>Pivot Tables <span style="color: #ff2770;">(Recommended)</span></li>
+            <li>Charting and Visualization</li>
+            <li>Data Import and Export</li>
+            <li>Macros and Automation Basics</li>
+            <li>Data Analysis Tools
+              <ul>
+                <li>Solver</li>
+                <li>Data Tables</li>
+                <li>What-if Analysis</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      sql: {
+        title: "SQL Fundamentals",
+        text: `
+          <ul>
+            <li>Database Concepts</li>
+            <li>Basic SQL Queries
+              <ul>
+                <li>SELECT, FROM, WHERE</li>
+                <li>JOIN operations</li>
+                <li>GROUP BY, HAVING</li>
+                <li>ORDER BY, LIMIT</li>
+              </ul>
+            </li>
+            <li>Aggregate Functions
+              <ul>
+                <li>COUNT, SUM, AVG</li>
+                <li>MIN, MAX</li>
+              </ul>
+            </li>
+            <li>Subqueries</li>
+            <li>SQL Database Tools
+              <ul>
+                <li>MySQL <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>PostgreSQL</li>
+                <li>Microsoft SQL Server</li>
+                <li>SQLite</li>
+              </ul>
+            </li>
+            <li>Query Optimization</li>
+          </ul>
+        `
+      },
+      programming: {
+        title: "Programming Skills",
+        text: `
+          <ul>
+            <li>1. Programming Languages
+              <ul>
+                <li>Python <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>R</li>
+              </ul>
+            </li>
+            <li>2. Data Manipulation Libraries
+              <ul>
+                <li>Pandas (Python) <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>Dplyr (R)</li>
+                <li>NumPy (Python)</li>
+              </ul>
+            </li>
+            <li>3. Data Visualization Libraries
+              <ul>
+                <li>Matplotlib (Python)</li>
+                <li>Seaborn (Python)</li>
+                <li>ggplot2 (R)</li>
+                <li>Plotly</li>
+              </ul>
+            </li>
+            <li>4. Basic Coding Concepts
+              <ul>
+                <li>Variables and Data Types</li>
+                <li>Control Structures</li>
+                <li>Functions</li>
+                <li>Error Handling</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      datacollection: {
+        title: "Data Collection",
+        text: `
+          <ul>
+            <li>Data Sources
+              <ul>
+                <li>Databases</li>
+                <li>CSV/Excel Files</li>
+                <li>APIs</li>
+                <li>Web Scraping <span style="color: #ff2770;">(Recommended)</span></li>
+              </ul>
+            </li>
+            <li>Data Collection Tools
+              <ul>
+                <li>Database Connectors (ODBC, JDBC)</li>
+                <li>API Clients (Requests in Python)</li>
+                <li>Web Scraping Tools
+                  <ul>
+                    <li>Beautiful Soup</li>
+                    <li>Scrapy</li>
+                    <li>Selenium</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li>Data Formats
+              <ul>
+                <li>CSV, TSV</li>
+                <li>JSON, XML</li>
+                <li>Parquet, Avro</li>
+                <li>SQL Database Files</li>
+              </ul>
+            </li>
+            <li>Data Sampling Methods</li>
+          </ul>
+        `
+      },
+      datacleaning: {
+        title: "Data Cleaning",
+        text: `
+          <ul>
+            <li>Handling Missing Data
+              <ul>
+                <li>Removal</li>
+                <li>Imputation (Mean, Median, Mode)</li>
+                <li>Advanced Imputation Methods</li>
+              </ul>
+            </li>
+            <li>Removing Duplicates</li>
+            <li>Finding & Handling Outliers
+              <ul>
+                <li>Z-Score Method</li>
+                <li>IQR Method</li>
+                <li>DBSCAN</li>
+              </ul>
+            </li>
+            <li>Data Type Conversion</li>
+            <li>String Cleaning
+              <ul>
+                <li>Removing Whitespace</li>
+                <li>Case Normalization</li>
+                <li>Regular Expressions</li>
+              </ul>
+            </li>
+            <li>Data Validation Techniques</li>
+          </ul>
+        `
+      },
+      datatransformation: {
+        title: "Data Transformation",
+        text: `
+          <ul>
+            <li>Aggregation Techniques</li>
+            <li>Normalization Methods
+              <ul>
+                <li>Min-Max Scaling</li>
+                <li>Z-Score Normalization</li>
+                <li>Log Transformation</li>
+              </ul>
+            </li>
+            <li>Feature Engineering
+              <ul>
+                <li>Creating New Features</li>
+                <li>One-Hot Encoding</li>
+                <li>Binning / Discretization</li>
+              </ul>
+            </li>
+            <li>Data Reshaping
+              <ul>
+                <li>Pivoting</li>
+                <li>Melting</li>
+                <li>Stacking/Unstacking</li>
+              </ul>
+            </li>
+            <li>Time Series Transformations</li>
+            <li>Tools
+              <ul>
+                <li>Pandas (Python) <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>Dplyr (R)</li>
+                <li>SQL Window Functions</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      dataquality: {
+        title: "Data Quality",
+        text: `
+          <ul>
+            <li>Data Quality Dimensions
+              <ul>
+                <li>Accuracy</li>
+                <li>Completeness</li>
+                <li>Consistency</li>
+                <li>Timeliness</li>
+                <li>Uniqueness</li>
+                <li>Validity</li>
+              </ul>
+            </li>
+            <li>Data Profiling Techniques</li>
+            <li>Data Quality Assessment
+              <ul>
+                <li>Rule-based Validation</li>
+                <li>Statistical Methods</li>
+                <li>Anomaly Detection</li>
+              </ul>
+            </li>
+            <li>Data Quality Tools
+              <ul>
+                <li>Great Expectations</li>
+                <li>Deequ</li>
+                <li>Data Quality Services (DQS)</li>
+              </ul>
+            </li>
+            <li>Data Governance Principles</li>
+          </ul>
+        `
+      },
+      descriptive: {
+        title: "Descriptive Analysis",
+        text: `
+          <ul>
+            <li>Central Tendency
+              <ul>
+                <li>Mean, Median, Mode</li>
+              </ul>
+            </li>
+            <li>Dispersion
+              <ul>
+                <li>Range</li>
+                <li>Variance</li>
+                <li>Standard Deviation</li>
+                <li>Interquartile Range (IQR)</li>
+              </ul>
+            </li>
+            <li>Distribution Shape
+              <ul>
+                <li>Skewness</li>
+                <li>Kurtosis</li>
+              </ul>
+            </li>
+            <li>Generating Statistics
+              <ul>
+                <li>Summary Statistics</li>
+                <li>Frequency Distributions</li>
+                <li>Crosstabulations</li>
+              </ul>
+            </li>
+            <li>Percentiles and Quartiles</li>
+            <li>Exploratory Data Analysis (EDA) <span style="color: #ff2770;">(Recommended)</span></li>
+          </ul>
+        `
+      },
+      datavisualization: {
+        title: "Data Visualization Tools",
+        text: `
+          <ul>
+            <li>Business Intelligence Tools
+              <ul>
+                <li>Tableau <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>Power BI</li>
+                <li>Looker</li>
+                <li>QlikView</li>
+              </ul>
+            </li>
+            <li>Programming Libraries
+              <ul>
+                <li>Matplotlib (Python)</li>
+                <li>Seaborn (Python)</li>
+                <li>Plotly</li>
+                <li>ggplot2 (R)</li>
+              </ul>
+            </li>
+            <li>Web-based Visualization
+              <ul>
+                <li>D3.js</li>
+                <li>Google Data Studio</li>
+                <li>Highcharts</li>
+              </ul>
+            </li>
+            <li>Dashboard Design Principles</li>
+            <li>Interactive Visualization Techniques</li>
+          </ul>
+        `
+      },
+      charting: {
+        title: "Charting Techniques",
+        text: `
+          <ul>
+            <li>Basic Chart Types
+              <ul>
+                <li>Bar Charts</li>
+                <li>Histograms</li>
+                <li>Line Charts</li>
+                <li>Pie Charts</li>
+                <li>Scatter Plots <span style="color: #ff2770;">(Recommended)</span></li>
+              </ul>
+            </li>
+            <li>Advanced Visualizations
+              <ul>
+                <li>Heatmaps</li>
+                <li>Tree Maps</li>
+                <li>Box Plots</li>
+                <li>Violin Plots</li>
+                <li>Funnel Charts</li>
+                <li>Waterfall Charts</li>
+              </ul>
+            </li>
+            <li>Geographic Visualizations
+              <ul>
+                <li>Choropleth Maps</li>
+                <li>Point Maps</li>
+                <li>Heat Maps</li>
+              </ul>
+            </li>
+            <li>Time Series Visualization</li>
+            <li>Multivariate Visualization Techniques</li>
+            <li>Data Visualization Best Practices</li>
+          </ul>
+        `
+      },
+      hypothesis: {
+        title: "Hypothesis Testing",
+        text: `
+          <ul>
+            <li>Hypothesis Formulation
+              <ul>
+                <li>Null Hypothesis</li>
+                <li>Alternative Hypothesis</li>
+              </ul>
+            </li>
+            <li>Types of Statistical Tests
+              <ul>
+                <li>T-Tests</li>
+                <li>ANOVA</li>
+                <li>Chi-Square Tests</li>
+                <li>Mann-Whitney U Test</li>
+                <li>Wilcoxon Signed-Rank Test</li>
+              </ul>
+            </li>
+            <li>P-Values and Statistical Significance</li>
+            <li>Type I and Type II Errors</li>
+            <li>Effect Size</li>
+            <li>Statistical Power</li>
+            <li>A/B Testing <span style="color: #ff2770;">(Recommended)</span></li>
+          </ul>
+        `
+      },
+      distributions: {
+        title: "Statistical Distributions",
+        text: `
+          <ul>
+            <li>Common Distributions
+              <ul>
+                <li>Normal Distribution</li>
+                <li>Binomial Distribution</li>
+                <li>Poisson Distribution</li>
+                <li>Exponential Distribution</li>
+                <li>Log-normal Distribution</li>
+              </ul>
+            </li>
+            <li>Distribution Fitting</li>
+            <li>Probability Density Functions</li>
+            <li>Cumulative Distribution Functions</li>
+            <li>Q-Q Plots</li>
+            <li>Visualizing Distributions</li>
+            <li>Sampling Distributions</li>
+            <li>Central Limit Theorem</li

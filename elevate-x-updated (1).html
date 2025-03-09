@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElevateX - AI-Powered Learning</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #25252b;
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .container {
+            margin: auto;
+            
+        }
+        .container2 {
+            background: url('img 43.jpeg') no-repeat center center;
+            margin: auto;
+        }
+        /* Header with logo and navigation */
+        header {
+            background-color: #2a2a30;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            background-size: cover;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-button {
+            padding: 10px 15px;
+            background-color: #32323a;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+        
+        .upload-resume {
+            background-color: rgba(69, 243, 255, 0.2);
+        }
+        
+        .upload-resume:hover {
+            background-color: rgba(69, 243, 255, 0.3);
+            box-shadow: 0 0 15px rgba(69, 243, 255, 0.5);
+        }
+        
+        .mentorship-meet {
+            background-color: rgba(255, 215, 0, 0.2);
+        }
+        
+        .mentorship-meet:hover {
+            background-color: rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+        }
+        
+        /* Navigation bar */
+        nav {
+            display: flex;
+            border-top: 1px solid #3a3a40;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        
+        .nav-item {
+            flex: 1;
+            padding: 15px 20px;
+            text-align: center;
+            border-right: 1px solid #3a3a40;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            font-weight: 500;
+        }
+        
+        .nav-item:hover {
+            background-color: #32323a;
+        }
+        
+        .highlighted {
+            background-color: rgba(244, 80, 135, 0.878);
+        }
+        
+        .highlighted:hover {
+            background-color: rgba(255, 39, 112, 0.3);
+            box-shadow: 0 0 15px rgba(255, 39, 112, 0.5);
+        }
+        
+        .highlighted-blue {
+            background-color: rgba(69, 243, 255, 0.2);
+        }
+        
+        .highlighted-blue:hover {
+            background-color: rgba(69, 243, 255, 0.3);
+            box-shadow: 0 0 15px rgba(69, 243, 255, 0.5);
+        }
+        
+        .icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+        }
+        
+        /* Main content */
+        .main-content {
+            position: relative;
+            text-align: center;
+            padding: 50px 20px;
+            min-height: calc(100vh - 150px);
+            background-image: url('img 43.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        .logo-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            background-position: center;
+            background-repeat: no-repeat;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .logo-background img {
+            width: 400px;
+            height: 400px;
+            opacity: 0.2;
+            object-fit: contain;
+        }
+        
+        .content-wrapper {
+            background-color: rgba(0, 0, 0, 0.14);
+            padding: 40px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 50px;
+            max-width: 800px;
+        }
+        
+        .elevate-x {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            color: white;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* Chat bubble */
+        .chat-bubble {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #45f3ff, #ff2770);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(69, 243, 255, 0.4);
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .chat-bubble:hover {
+            transform: scale(1.1);
+        }
+        
+        .chat-bubble svg {
+            width: 25px;
+            height: 25px;
+            fill: white;
+        }
+        
+        /* Chat widget */
+        .chat-widget {
+            position: fixed;
+            bottom: 90px;
+            left: 30px;
+            width: 300px;
+            height: 400px;
+            background-color: #2a2a30;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(69, 243, 255, 0.2);
+            z-index: 99;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid rgba(69, 243, 255, 0.3);
+        }
+        
+        .chat-header {
+            background: linear-gradient(45deg, #45f3ff, #ff2770);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .chat-body {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            color: #e0e0e0;
+        }
+        
+        .chat-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #3a3a40;
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #3a3a40;
+            border-radius: 20px;
+            margin-right: 10px;
+            background-color: #32323a;
+            color: white;
+        }
+        
+        .chat-input button {
+            background: linear-gradient(45deg, #45f3ff, #ff2770);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: #2a2a30;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid rgba(69, 243, 255, 0.3);
+            box-shadow: 0 0 20px rgba(69, 243, 255, 0.2);
+        }
+        
+        .spinner {
+            border: 4px solid rgba(69, 243, 255, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid #45f3ff;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .close-modal {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #45f3ff, #ff2770);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            transform: scale(1.05);
+        }
+
+        /* Profile Section */
+        .profile-section {
+            display: block;
+            padding: 20px;
+            background-color: #2a2a30;
+            border-radius: 10px;
+            margin: 20px auto;
+            max-width: 800px;
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #3a3a40;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .profile-header h2 {
+            margin: 0;
+            background: linear-gradient(45deg, #45f3ff, #ff2770);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .profile-tabs {
+            display: flex;
+            border-bottom: 1px solid #3a3a40;
+            margin-bottom: 20px;
+        }
+
+        .profile-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            color: #e0e0e0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .profile-tab.active {
+            color: white;
+            border-bottom: 2px solid #ff2770;
+        }
+
+        .profile-content {
+            padding: 10px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background-color: #32323a;
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #45f3ff, #ff2770);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .course-card {
+            background-color: #32323a;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s ease;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .course-icon {
+            width: 50px;
+            height: 50px;
+            background-color: #45f3ff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 24px;
+        }
+
+        .course-info {
+            flex: 1;
+        }
+
+        .course-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .course-description {
+            color: #b0b0b0;
+            font-size: 0.9rem;
+        }
+        
+        /* Get Started Button */
+        .get-started-btn {
+            background: linear-gradient(45deg, #45f3ff, #ff2770);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(69, 243, 255, 0.3);
+        }
+        
+        .get-started-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(69, 243, 255, 0.5);
+        }
+
+        /* Media queries for responsive design */
+        @media screen and (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .action-buttons {
+                margin-top: 10px;
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .nav-item {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .elevate-x {
+                
+                font-size: 3rem;
+            }
+            
+            .tagline {
+                font-size: 1rem;
+            }
+            
+            .logo-background img {
+                width: 200px;
+                height: 200px;
+            }
+        }
+        
+        @media screen and (max-width: 576px) {
+            nav {
+                overflow-x: auto;
+            }
+            
+            .nav-item {
+                min-width: 100px;
+            }
+            
+            .elevate-x {
+                font-size: 2.5rem;
+            }
+            
+            .logo-background img {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo-container">
+                <div class="logo">
+                    <img src="logo.jpg" alt="ElevateX Logo">
+                </div>
+            </div>
+            <div class="action-buttons">
+                <div class="action-button upload-resume" id="uploadResume">
+                    <span class="icon">📄</span>Upload Resume
+                </div>
+                <div class="action-button mentorship-meet" id="mentorshipMeet">
+                    <span class="icon">🎥</span>Mentorship Meet
+                </div>
+            </div>
+        </div>
+        <nav>
+            <div class="nav-item highlighted" id="profileNavItem">Profile</div>
+            <div class="nav-item highlighted">Course</div>
+            <div class="nav-item highlighted">Upscaling</div>
+            <div class="nav-item highlighted">Simulation to Future</div>
+            <div class="nav-item highlighted">Live Job Market</div>
+        </nav>
+    </header>
+    
+    <div class="main-content">
+        <div class="container">
+            <div class="container2">
+                <div class="content-wrapper" id="welcomeSection">
+                    <div class="elevate-x">
+                        <span>ElevateX</span>
+                    </div>
+                    <p class="tagline">AI-Powered Learning for a Smarter You, Evolving Skills for an Evolving World!</p>
+                    <button class="get-started-btn" id="getStartedBtn">Get Started Now</button>
+            
+                </div>
+            </div>
+            
+            <!-- Profile Section -->
+            <div class="profile-section" id="profileSection">
+                <div class="profile-header">
+                    <h2>User Profile</h2>
+                    <div class="user-info">
+                        <span>Demo User</span>
+                    </div>
+                </div>
+                
+                <div class="profile-tabs">
+                    <div class="profile-tab active" data-tab="progress">My Progress</div>
+                    <div class="profile-tab" data-tab="courses">My Courses</div>
+                    <div class="profile-tab" data-tab="account">Account Settings</div>
+                    <div class="profile-tab" data-tab="linkedin">LinkedIn Data</div>
+                </div>
+                
+                <div class="profile-content">
+                    <!-- Progress Tab -->
+                    <div class="tab-content active" id="progressTab">
+                        <h3>Learning Progress</h3>
+                        <div class="progress-item">
+                            <div class="progress-label">Overall Completion</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 45%;"></div>
+                            </div>
+                            <div class="progress-percentage">45% Complete</div>
+                        </div>
+                        
+                        <div class="progress-item">
+                            <div class="progress-label">Courses Completed</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 30%;"></div>
+                            </div>
+                            <div class="progress-percentage">3/10 Courses</div>
+                        </div>
+                        
+                        <div class="progress-item">
+                            <div class="progress-label">Skills Mastered</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 60%;"></div>
+                            </div>
+                            <div class="progress-percentage">12/20 Skills</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Courses Tab -->
+                    <div class="tab-content" id="coursesTab">
+                        <h3>My Course Selections</h3>
+                        <div class="course-list">
+                            <div class="course-card">
+                                <div class="course-icon">📊</div>
+                                <div class="course-info">
+                                    <div class="course-title">Data Science Fundamentals</div>
+                                    <div class="course-description">Learn the basics of data analysis, visualization and machine learning</div>
+                                </div>
+                            </div>
+                            <div class="course-card">
+                                <div class="course-icon">💻</div>
+                                <div class="course-info">
+                                    <div class="course-title">Web Development Bootcamp</div>
+                                    <div class="course-description">Master HTML, CSS, JavaScript and modern frameworks</div>
+                                </div>
+                            </div>
+                            <div class="course-card">
+                                <div class="course-icon">🤖</div>
+                                <div class="course-info">
+                                    <div class="course-title">AI & Machine Learning</div>
+                                    <div class="course-description">Explore neural networks, deep learning and AI applications</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Account Settings Tab -->
+                    <div class="tab-content" id="accountTab">
+                        <h3>Account Settings</h3>
+                        <div class="form-group">
+                            <label for="updateEmail">Email Address</label>
+                            <input type="email" id="updateEmail" placeholder="Enter your email" value="demo@elevatex.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="updateName">Full Name</label>
+                            <input type="text" id="updateName" placeholder="Your name" value="Demo User">
+                        </div>
+                        <button class="submit-btn" id="updateAccountBtn">Update Account</button>
+                    </div>
+                    
+                    <!-- LinkedIn Data Tab -->
+                    <div class="tab-content" id="linkedinTab">
+                        <h3>LinkedIn Profile Data</h3>
+                        <div id="linkedinData">
+                            <p>Connect your LinkedIn profile to see your professional data and personalized recommendations.</p>
+                            <button class="submit-btn" style="margin-top:20px">Connect LinkedIn</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="chat-bubble" id="chatBubble">
+        <svg viewBox="0 0 24 24">
+            <path d="M12 3c-4.97 0-9 3.13-9 7 0 1.86 1.01 3.52 2.57 4.76-.1.5-.36 1.4-.9 2.14 0 0 2.23-.75 3.56-1.19.56.18 1.15.29 1.77.29h2c4.97 0 9-3.13 9-7s-4.03-7-9-7z"/>
+        </svg>
+    </div>
+    
+    <div class="chat-widget" id="chatWidget">
+        <div class="chat-header">Chat with us</div>
+        <div class="chat-body">
+            <p>Hello! How can we assist you today?</p>
+        </div>
+        <div class="chat-input">
+            <input type="text" placeholder="Type your message...">
+            <button>Send</button>
+        </div>
+    </div>
+    
+    <div class="modal" id="mentorshipModal">
+        <div class="modal-content">
+            <h2>Mentorship Meet</h2>
+            <p>Connecting to mentorship session...</p>
+            <div class="spinner"></div>
+            <p>Please wait while we connect you with a mentor.</p>
+            <button class="close-modal" id="closeMentorshipModal">Close</button>
+        </div>
+    </div>
+    
+    <script>
+        // DOM Elements
+        const chatBubble = document.getElementById('chatBubble');
+        const chatWidget = document.getElementById('chatWidget');
+        const mentorshipMeet = document.getElementById('mentorshipMeet');
+        const mentorshipModal = document.getElementById('mentorshipModal');
+        const closeMentorshipModal = document.getElementById('closeMentorshipModal');
+        const uploadResume = document.getElementById('uploadResume');
+        const profileNavItem = document.getElementById('profileNavItem');
+        const getStartedBtn = document.getElementById('getStartedBtn');
+        const profileSection = document.getElementById('profileSection');
+        const welcomeSection = document.getElementById('welcomeSection');
+        const profileTabs = document.querySelectorAll('.profile-tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        // Chat widget toggle
+        chatBubble.addEventListener('click', function() {
+            if (chatWidget.style.display === 'flex') {
+                chatWidget.style.display = 'none';
+            } else {
+                chatWidget.style.display = 'flex';
+            }
+        });
+        
+        // Mentorship modal
+        mentorshipMeet.addEventListener('click', function() {
+            mentorshipModal.style.display = 'flex';
+        });
+        
+        closeMentorshipModal.addEventListener('click', function() {
+            mentorshipModal.style.display = 'none';
+        });
+        
+        // Get Started button - Show profile section
+        getStartedBtn.addEventListener('click', function() {
+            welcomeSection.style.display = 'none';
+            profileSection.style.display = 'block';
+        });
+        
+        // Tab navigation
+        profileTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                profileTabs.forEach(t => t.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Hide all tab contents
+                tabContents.forEach(content => content.classList.remove('active'));
+                
+                // Show the corresponding tab content
+                const tabId = this.getAttribute('data-tab') + 'Tab';
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Upload Resume
+        uploadResume.addEventListener('click', function() {
+            alert('Resume upload feature will be available soon!');
+        });
+        
+        // Profile navigation
+        profileNavItem.addEventListener('click', function() {
+            welcomeSection.style.display = 'none';
+            profileSection.style.display = 'block';
+        });
+    </script>
+</body>
+</html>

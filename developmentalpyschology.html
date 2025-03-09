@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Developmental Psychology Roadmap</title>
+  <style>
+    body {
+      background-color: #25252b;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid #45f3ff;
+      background-color: #1e1e24;
+    }
+
+    h1 {
+      color: #ff2770;
+      margin: 0;
+      letter-spacing: 1px;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: #45f3ff;
+      text-decoration: none;
+      font-weight: bold;
+      border: 1px solid #45f3ff;
+      padding: 5px 10px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background-color: #45f3ff;
+      color: #25252b;
+    }
+
+    /* Container for the roadmap diagram */
+    .roadmap-container {
+      position: relative;
+      width: 90%;
+      max-width: 1000px;
+      height: 1800px;
+      margin: 40px auto;
+      background-color: #25252b;
+      border: 2px solid #45f3ff;
+      border-radius: 8px;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    /* The SVG lines are placed behind the nodes */
+    .roadmap-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1; /* behind the nodes */
+    }
+
+    /* Each clickable node (box) */
+    .node {
+      position: absolute;
+      z-index: 2; /* above lines */
+      width: 200px; /* consistent width */
+      min-height: 40px; /* minimum height */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: #333;
+      border: 2px solid #ff2770;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      color: #fff;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      /* Center the node around its position */
+      transform: translate(-50%, -50%);
+    }
+
+    /* Hover effect: glow + slight lift */
+    .node:hover {
+      background: #ff2770;
+      color: #25252b;
+      transform: translate(-50%, -50%) translateY(-3px);
+      box-shadow: 0 0 15px #ff2770;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: #25252b;
+      border: 2px solid #45f3ff;
+      border-radius: 8px;
+      padding: 20px;
+      width: 80%;
+      max-width: 600px;
+      position: relative;
+      text-align: left;
+      max-height: 70vh;
+      overflow-y: auto;
+      color: #fff;
+    }
+
+    .close {
+      color: #45f3ff;
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #ff2770;
+    }
+
+    #modal-title {
+      color: #ff2770;
+      margin-top: 0;
+      border-bottom: 1px solid #45f3ff;
+      padding-bottom: 10px;
+    }
+
+    /* Category label styles */
+    .category-label {
+      position: absolute;
+      font-size: 18px;
+      font-weight: bold;
+      color: #45f3ff;
+      z-index: 2;
+      background-color: #1e1e24;
+      padding: 5px 15px;
+      border-radius: 20px;
+      border: 1px solid #45f3ff;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(69, 243, 255, 0.3);
+      width: 180px; /* Set a fixed width */
+    }
+
+    /* Alternative node styles */
+    .node.primary {
+      border-color: #ff2770;
+    }
+
+    .node.alternative {
+      border-color: #45f3ff;
+      background: #2a2a33;
+    }
+    
+    .node.alternative:hover {
+      background: #45f3ff;
+      color: #25252b;
+      box-shadow: 0 0 15px #45f3ff;
+    }
+    
+    .node.optional {
+      border-style: dashed;
+      opacity: 0.9;
+    }
+    
+    /* Personal recommendation tag */
+    .recommendation {
+      position: absolute;
+      background-color: #ff2770;
+      color: #25252b;
+      font-size: 10px;
+      padding: 2px 5px;
+      border-radius: 4px;
+      top: -10px;
+      right: -10px;
+      transform: rotate(10deg);
+      z-index: 3;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Developmental Psychology Roadmap 🧠</h1>
+    <a href="index.html" class="back-btn">← Back</a>
+  </header>
+
+  <main>
+    <div class="roadmap-container">
+      <!-- Category Labels -->
+      <div class="category-label" style="left: 30px; top: 80px;">Foundation & Basics</div>
+      <div class="category-label" style="left: 30px; top: 360px;">Core Areas</div>
+      <div class="category-label" style="left: 30px; top: 640px;">Applied Psychology</div>
+      <div class="category-label" style="left: 30px; top: 920px;">Clinical Applications</div>
+      <div class="category-label" style="left: 30px; top: 1200px;">Advanced Studies</div>
+      <div class="category-label" style="left: 30px; top: 1480px;">Career Building</div>
+      
+      <!-- SVG for connecting lines -->
+      <svg class="roadmap-svg" viewBox="0 0 1000 1800">
+        <defs>
+          <!-- Arrowhead marker -->
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+                  refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#45f3ff" />
+          </marker>
+        </defs>
+
+        <!-- Main vertical path -->
+        <path d="M550 80 L550 1700" 
+              stroke="#45f3ff" stroke-width="4" stroke-opacity="0.5"
+              stroke-dasharray="10 5" fill="none" />
+              
+        <!-- Foundation Section Connections -->
+        <line x1="550" y1="80" x2="350" y2="80" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="550" y1="160" x2="350" y2="160" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="550" y1="240" x2="750" y2="240" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="550" y1="320" x2="750" y2="320" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- Core Areas Connections -->
+        <line x1="550" y1="400" x2="350" y2="400" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="550" y1="480" x2="350" y2="480" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="550" y1="560" x2="750" y2="560" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="550" y1="640" x2="750" y2="640" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- Applied Psychology Connections -->
+        <line x1="550" y1="720" x2="350" y2="720" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="550" y1="800" x2="350" y2="800" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="550" y1="880" x2="750" y2="880" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="550" y1="960" x2="750" y2="960" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- Clinical Applications Connections -->
+        <line x1="550" y1="1040" x2="350" y2="1040" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="550" y1="1120" x2="350" y2="1120" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="550" y1="1200" x2="750" y2="1200" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="550" y1="1280" x2="750" y2="1280" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- Advanced Studies Connections -->
+        <line x1="550" y1="1360" x2="350" y2="1360" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="550" y1="1440" x2="350" y2="1440" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="550" y1="1520" x2="750" y2="1520" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="550" y1="1600" x2="750" y2="1600" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- Career Building Connections -->
+        <line x1="550" y1="1680" x2="350" y2="1680" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="550" y1="1760" x2="750" y2="1760" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+      </svg>
+
+      <!-- Nodes -->
+      
+      <!-- Foundation & Basics -->
+      <div class="node primary" style="left: 350px; top: 80px;"
+           onclick="openModal('psychology-basics')">Psychology & Human Behavior</div>
+      <div class="node primary" style="left: 350px; top: 160px;"
+           onclick="openModal('cognitive-emotional')">Cognitive & Emotional Development</div>
+      <div class="node primary" style="left: 750px; top: 240px;"
+           onclick="openModal('psychological-theories')">Psychological Theories
+           <span class="recommendation">♦</span>
+      </div>
+      <div class="node primary" style="left: 750px; top: 320px;"
+           onclick="openModal('research-methods')">Research Methods</div>
+           
+      <!-- Core Areas -->
+      <div class="node primary" style="left: 350px; top: 400px;"
+           onclick="openModal('infant-child')">Infant & Child Development 👶</div>
+      <div class="node primary" style="left: 350px; top: 480px;"
+           onclick="openModal('adolescent')">Adolescent Development 🧑‍🎓</div>
+      <div class="node primary" style="left: 750px; top: 560px;"
+           onclick="openModal('adult-aging')">Adult & Aging Psychology 🏡</div>
+      <div class="node primary" style="left: 750px; top: 640px;"
+           onclick="openModal('social-emotional')">Social & Emotional Development</div>
+           
+      <!-- Applied Developmental Psychology -->
+      <div class="node primary" style="left: 350px; top: 720px;"
+           onclick="openModal('educational')">Child & Educational Psychology</div>
+      <div class="node primary" style="left: 350px; top: 800px;"
+           onclick="openModal('cognitive-language')">Cognitive & Language Development
+           <span class="recommendation">♦</span>
+      </div>
+      <div class="node primary" style="left: 750px; top: 880px;"
+           onclick="openModal('assessments')">Psychological Assessments</div>
+      <div class="node primary" style="left: 750px; top: 960px;"
+           onclick="openModal('environment-culture')">Environment & Culture</div>
+           
+      <!-- Clinical & Counseling Applications -->
+      <div class="node primary" style="left: 350px; top: 1040px;"
+           onclick="openModal('developmental-disorders')">Developmental Disorders</div>
+      <div class="node primary" style="left: 350px; top: 1120px;"
+           onclick="openModal('therapy-interventions')">Therapy & Interventions</div>
+      <div class="node primary" style="left: 750px; top: 1200px;"
+           onclick="openModal('family-counseling')">Family & Parenting Counseling</div>
+      <div class="node primary" style="left: 750px; top: 1280px;"
+           onclick="openModal('behavioral-therapies')">Mental Health & Behavioral Therapies</div>
+           
+      <!-- Advanced Studies & Research -->
+      <div class="node primary" style="left: 350px; top: 1360px;"
+           onclick="openModal('neuroscience')">Neuroscience & Brain Development 🧬
+           <span class="recommendation">♦</span>
+      </div>
+      <div class="node primary" style="left: 350px; top: 1440px;"
+           onclick="openModal('experimental-studies')">Psychological Research</div>
+      <div class="node primary" style="left: 750px; top: 1520px;"
+           onclick="openModal('ethics')">Ethics in Developmental Psychology</div>
+      <div class="node primary" style="left: 750px; top: 1600px;"
+           onclick="openModal('policy-public-health')">Policy Making & Public Health</div>
+           
+      <!-- Building a Career -->
+      <div class="node primary" style="left: 350px; top: 1680px;"
+           onclick="openModal('degrees')">Psychology Degrees</div>
+      <div class="node primary" style="left: 750px; top: 1760px;"
+           onclick="openModal('career-paths')">Career Paths</div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2 id="modal-title"></h2>
+        <div id="modal-text"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Data for the psychology roadmap nodes
+    const nodeData = {
+      "psychology-basics": {
+        title: "Psychology & Human Behavior",
+        text: `
+          <p>Introduction to the fundamental concepts of psychology and human behavior:</p>
+          <ul>
+            <li>History and evolution of psychology as a science</li>
+            <li>Major psychological perspectives (biological, cognitive, behavioral, psychodynamic, humanistic)</li>
+            <li>Basic brain structures and their functions</li>
+            <li>Sensation and perception processes</li>
+            <li>Learning and memory foundations</li>
+            <li>Motivation and emotion</li>
+            <li>Consciousness and attention</li>
+          </ul>
+        `
+      },
+      "cognitive-emotional": {
+        title: "Cognitive & Emotional Development",
+        text: `
+          <p>Understanding how thinking and emotional processes develop across the lifespan:</p>
+          <ul>
+            <li>Stages of cognitive development</li>
+            <li>Information processing in different age groups</li>
+            <li>Development of emotional regulation</li>
+            <li>Attachment theory and bonding</li>
+            <li>Theory of mind development</li>
+            <li>Executive functioning across development</li>
+            <li>Intelligence and its developmental trajectory</li>
+          </ul>
+        `
+      },
+      "psychological-theories": {
+        title: "Psychological Theories",
+        text: `
+          <p>Core developmental theories that form the foundation of the field:</p>
+          <ul>
+            <li><strong>Freud's Psychosexual Theory:</strong> Stages of development and the role of the unconscious</li>
+            <li><strong>Erikson's Psychosocial Theory:</strong> Eight stages of psychosocial development across the lifespan</li>
+            <li><strong>Piaget's Cognitive Development Theory:</strong> How children construct understanding of their world</li>
+            <li><strong>Vygotsky's Sociocultural Theory:</strong> The role of social interaction in cognitive development</li>
+            <li><strong>Bronfenbrenner's Ecological Systems Theory:</strong> How different environmental systems influence development</li>
+            <li><strong>Bandura's Social Learning Theory:</strong> Learning through observation and modeling</li>
+            <li><strong>Bowlby's and Ainsworth's Attachment Theory:</strong> Patterns of attachment and their lifelong impact</li>
+          </ul>
+        `
+      },
+      "research-methods": {
+        title: "Research Methods in Psychology",
+        text: `
+          <p>Scientific approaches to studying human development:</p>
+          <ul>
+            <li>Experimental, correlational, and observational methods</li>
+            <li>Cross-sectional vs. longitudinal research designs</li>
+            <li>Qualitative and quantitative research approaches</li>
+            <li>Ethical considerations in developmental research</li>
+            <li>Reliability and validity in psychological assessment</li>
+            <li>Statistical analyses in developmental research</li>
+            <li>Critical evaluation of research findings</li>
+          </ul>
+        `
+      },
+      "infant-child": {
+        title: "Infant & Child Development",
+        text: `
+          <p>Key developmental milestones and processes from birth through childhood:</p>
+          <ul>
+            <li>Prenatal development and birth</li>
+            <li>Physical and motor development in infancy and early childhood</li>
+            <li>Language acquisition and development</li>
+            <li>Play and its role in development</li>
+            <li>Moral development in children</li>
+            <li>Self-concept and identity formation</li>
+            <li>Peer relationships and social skills development</li>
+            <li>School readiness and early academic development</li>
+          </ul>
+        `
+      },
+      "adolescent": {
+        title: "Adolescent Development",
+        text: `
+          <p>Psychological growth and challenges during the teenage years:</p>
+          <ul>
+            <li>Puberty and physical changes</li>
+            <li>Brain development during adolescence</li>
+            <li>Identity formation and exploration</li>
+            <li>Cognitive development and abstract thinking</li>
+            <li>Emotional changes and regulation</li>
+            <li>Peer influence and social relationships</li>
+            <li>Risk-taking behavior and decision making</li>
+            <li>Family relationships and independence</li>
+            <li>Academic and career planning</li>
+          </ul>
+        `
+      },
+      "adult-aging": {
+        title: "Adult & Aging Psychology",
+        text: `
+          <p>Psychological development through adulthood and into later years:</p>
+          <ul>
+            <li>Theories of adult development</li>
+            <li>Life transitions and major life events</li>
+            <li>Career development and work identity</li>
+            <li>Relationships, marriage, and family development</li>
+            <li>Midlife transitions and evaluation</li>
+            <li>Cognitive changes in aging</li>
+            <li>Retirement and role adjustments</li>
+            <li>Successful aging and well-being</li>
+            <li>End-of-life issues and death anxiety</li>
+          </ul>
+        `
+      },
+      "social-emotional": {
+        title: "Social & Emotional Development",
+        text: `
+          <p>The development of social skills and emotional competence throughout life:</p>
+          <ul>
+            <li>Emotional intelligence and recognition</li>
+            <li>Temperament and personality development</li>
+            <li>Self-regulation and impulse control</li>
+            <li>Development of empathy and prosocial behavior</li>
+            <li>Formation and maintenance of relationships</li>
+            <li>Social cognition and perspective-taking</li>
+            <li>Cultural influences on social-emotional development</li>
+            <li>Gender development and socialization</li>
+          </ul>
+        `
+      },
+      "educational": {
+        title: "Child & Educational Psychology",
+        text: `
+          <p>Applying developmental principles to educational settings:</p>
+          <ul>
+            <li>Learning theories and their application</li>
+            <li>Cognitive development in educational contexts</li>
+            <li>Motivation and engagement in learning</li>
+            <li>Individual differences in learning styles</li>
+            <li>Special education needs and approaches</li>
+            <li>Classroom management and positive discipline</li>
+            <li>Assessment of learning and development</li>
+            <li>School transitions and adjustment</li>
+            <li>Teacher-student relationships</li>
+          </ul>
+        `
+      },
+      "cognitive-language": {
+        title: "Cognitive & Language Development",
+        text: `
+          <p>How thinking processes and language skills develop:</p>
+          <ul>
+            <li>Information processing development</li>
+            <li>Memory development and strategies</li>
+            <li>Attention span and development of focus</li>
+            <li>Problem-solving and critical thinking development</li>
+            <li>Prelinguistic communication</li>
+            <li>Phonological, semantic, and syntactic development</li>
+            <li>Pragmatic language and social communication</li>
+            <li>Bilingualism and second language acquisition</li>
+            <li>Reading and literacy development</li>
+            <li>Language disorders and interventions</li>
+          </ul>
+        `
+      },
+      "assessments": {
+        title: "Psychological Assessments & Testing",
+        text: `
+          <p>Methods for evaluating developmental progress and psychological functioning:</p>
+          <ul>
+            <li>Developmental screening and assessment</li>
+            <li>Intelligence and cognitive testing</li>
+            <li>Achievement and aptitude assessment</li>
+            <li>Personality assessment</li>
+            <li>Behavioral and emotional assessment</li>
+            <li>Neuropsychological testing</li>
+            <li>Observational techniques</li>
+            <li>Interviewing children and adolescents</li>
+            <li>Cultural considerations in assessment</li>
+            <li>Interpretation and reporting of results</li>
+          </ul>
+        `
+      },
+      "environment-culture": {
+        title: "Environment & Culture in Development",
+        text: `
+          <p>How context shapes psychological development:</p>
+          <ul>
+            <li>Family systems and parenting styles</li>
+            <li>Socioeconomic factors and their impact</li>
+            <li>School and neighborhood influences</li>
+            <li>Cross-cultural perspectives on development</li>
+            <li>Acculturation and immigration effects</li>
+            <li>Media and technology influences</li>
+            <li>Resilience and protective factors</li>
+            <li>Risk factors and adverse childhood experiences</li>
+            <li>Gene-environment interactions</li>
+          </ul>
+        `
+      },
+      "developmental-disorders": {
+        title: "Developmental Disorders",
+        text: `
+          <p>Understanding, identifying, and treating developmental challenges:</p>
+          <ul>
+            <li>Autism Spectrum Disorder: characteristics, assessment, and interventions</li>
+            <li>Attention-Deficit/Hyperactivity Disorder (ADHD): subtypes and management</li>
+            <li>Learning disabilities and academic interventions</li>
+            <li>Intellectual disabilities</li>
+            <li>Language and communication disorders</li>
+            <li>Motor development disorders</li>
+            <li>Early identification and screening</li>
+            <li>Differential diagnosis considerations</li>
+            <li>Impact on family systems</li>
+            <li>Educational accommodations and supports</li>
+          </ul>
+        `
+      },
+      "therapy-interventions": {
+        title: "Therapy & Interventions for Children & Adolescents",
+        text: `
+          <p>Therapeutic approaches for supporting young people:</p>
+          <ul>
+            <li>Play therapy techniques and applications</li>
+            <li>Cognitive-behavioral therapy for children and teens</li>
+            <li>Art and expressive therapies</li>
+            <li>Group therapy approaches</li>
+            <li>Trauma-focused interventions</li>
+            <li>Social skills training</li>
+            <li>Behavioral management and parent training</li>
+            <li>School-based interventions</li>
+            <li>Evidence-based practices for specific disorders</li>
+            <li>Crisis intervention with young people</li>
+          </ul>
+        `
+      },
+      "family-counseling": {
+        title: "Family & Parenting Counseling",
+        text: `
+          <p>Working with families to support healthy development:</p>
+          <ul>
+            <li>Family systems theory and assessment</li>
+            <li>Parenting styles and their developmental impact</li>
+            <li>Parent-child relationship enhancement</li>
+            <li>Co-parenting and blended family dynamics</li>
+            <li>Attachment-based family interventions</li>
+            <li>Behavioral parent training programs</li>
+            <li>Family therapy approaches and techniques</li>
+            <li>Cultural considerations in family work</li>
+            <li>Supporting families through transitions and crises</li>
+            <li>Family resilience and strength-building</li>
+          </ul>
+        `
+      },
+      "behavioral-therapies": {
+        title: "Mental Health & Behavioral Therapies",
+        text: `
+          <p>Approaches to addressing psychological and behavioral challenges:</p>
+          <ul>
+            <li>Childhood and adolescent mood disorders</li>
+            <li>Anxiety disorders across development</li>
+            <li>Behavioral interventions and modification</li>
+            <li>Cognitive restructuring techniques</li>
+            <li>Mindfulness and acceptance-based approaches</li>
+            <li>Dialectical Behavior Therapy adaptations</li>
+            <li>Interpersonal therapy for developmental issues</li>
+            <li>Psychopharmacology considerations</li>
+            <li>Integrative approaches to treatment</li>
+            <li>Prevention programs and early intervention</li>
+          </ul>
+        `
+      },
+      "neuroscience": {
+        title: "Neuroscience & Brain Development",
+        text: `
+          <p>The biological foundations of psychological development:</p>
+          <ul>
+            <li>Prenatal brain development</li>
+            <li>Neuroplasticity across the lifespan</li>
+            <li>Sensitive periods in brain development</li>
+            <li>Neurological bases of cognition, emotion, and behavior</li>
+            <li>Neurodevelopmental disorders and their biological bases</li>
+            <li>Brain imaging techniques in developmental research</li>
+            <li>Impact of stress and trauma on the developing brain</li>
+            <li>Neurochemistry and hormonal influences</li>
+            <li>Sleep and brain development</li>
+            <li>Nutritional influences on neurological development</li>
+          </ul>
+        `
+      },
+      "experimental-studies": {
+        title: "Psychological Research & Experimental Studies",
+        text: `
+          <p>Designing and conducting research in developmental psychology:</p>
+          <ul>
+            <li>Advanced research design in developmental studies</li>
+            <li>Measurement and assessment tools</li>
+            <li>Data collection with special populations</li>
+            <li>Statistical analysis in developmental research</li>
+            <li>Interpreting research findings</li>
+            <li>Publishing and presenting research</li>
+            <li>Grant writing and funding opportunities</li>
+            <li>Collaborative research approaches</li>
+            <li>Meta-analysis and systematic reviews</li>
+            <li>Translating research into practice</li>
+          </ul>
+        `
+      },
+      "ethics": {
+        title: "Ethics in Developmental Psychology",
+        text: `
+          <p>Ethical considerations when working with developing individuals:</p>
+          <ul>
+            <li>Informed consent and assent with minors</li>
+            <li>Confidentiality and its limits with children and families</li>
+            <li>Ethical issues in developmental research</li>
+            <li>Cultural competence and sensitivity</li>
+            <li>Ethical decision-making frameworks</li>
+            <li>Mandatory reporting and duty to protect</li>
+            <li>Professional boundaries with vulnerable populations</li>
+            <li>Ethics in assessment and testing</li>
+            <li>Digital ethics and technology considerations</li>
+            <li>Professional standards and ethical codes</li>
+          </ul>
+        `
+      },
+      "policy-public-health": {
+        title: "Policy Making & Public Health Impact",
+        text: `
+          <p>Applying developmental knowledge to broader societal contexts:

@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cybersecurity Roadmap</title>
+  <style>
+    body {
+      background-color: #25252b;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid #45f3ff;
+    }
+
+    h1 {
+      color: #ff2770;
+      margin: 0;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: #45f3ff;
+      text-decoration: none;
+      font-weight: bold;
+      border: 1px solid #45f3ff;
+      padding: 5px 10px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background-color: #45f3ff;
+      color: #25252b;
+    }
+
+    /* Container for the roadmap diagram */
+    .roadmap-container {
+      position: relative;
+      width: 90%;
+      max-width: 1200px;
+      height: 2300px; /* Increased height to accommodate all nodes */
+      margin: 40px auto;
+      background-color: #25252b;
+      border: 2px solid #45f3ff;
+      border-radius: 8px;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    /* The SVG lines are placed behind the nodes */
+    .roadmap-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1; /* behind the nodes */
+    }
+
+    /* Each clickable node (box) */
+    .node {
+      position: absolute;
+      z-index: 2; /* above lines */
+      width: 180px; /* slightly wider for better content fit */
+      height: 40px; /* fixed height for better alignment */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: #333;
+      border: 2px solid #ff2770;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      color: #fff;
+      font-weight: bold;
+      /* Center the node around its position */
+      transform: translate(-50%, -50%);
+    }
+
+    /* Hover effect: glow + slight lift */
+    .node:hover {
+      background: #ff2770;
+      color: #25252b;
+      transform: translate(-50%, -50%) translateY(-3px);
+      box-shadow: 0 0 15px #ff2770;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: #25252b;
+      border: 2px solid #45f3ff;
+      border-radius: 8px;
+      padding: 20px;
+      width: 80%;
+      max-width: 600px;
+      position: relative;
+      text-align: left;
+      max-height: 70vh;
+      overflow-y: auto;
+      color: #fff;
+    }
+
+    .close {
+      color: #45f3ff;
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #ff2770;
+    }
+
+    #modal-title {
+      color: #ff2770;
+      margin-top: 0;
+      border-bottom: 1px solid #45f3ff;
+      padding-bottom: 10px;
+    }
+
+    /* Category label styles */
+    .category-label {
+      position: absolute;
+      font-size: 20px;
+      font-weight: bold;
+      color: #45f3ff;
+      z-index: 2;
+    }
+
+    /* Alternate node styles */
+    .node.primary {
+      border-color: #ff2770;
+    }
+
+    .node.alternative {
+      border-color: #45f3ff;
+      background: #2a2a33;
+    }
+    
+    .node.alternative:hover {
+      background: #45f3ff;
+      color: #25252b;
+      box-shadow: 0 0 15px #45f3ff;
+    }
+    
+    .node.optional {
+      border-style: dashed;
+      opacity: 0.9;
+    }
+    
+    /* Personal recommendation tag */
+    .recommendation {
+      position: absolute;
+      background-color: #ff2770;
+      color: #25252b;
+      font-size: 10px;
+      padding: 2px 5px;
+      border-radius: 4px;
+      top: -10px;
+      right: -10px;
+      transform: rotate(10deg);
+      z-index: 3;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Cybersecurity Roadmap</h1>
+    <a href="index.html" class="back-btn">← Back</a>
+  </header>
+
+  <main>
+    <div class="roadmap-container">
+      <!-- Category Labels -->
+      <div class="category-label" style="left: 50px; top: 80px;">Fundamental IT Skills</div>
+      <div class="category-label" style="left: 50px; top: 440px;">Networking Knowledge</div>
+      <div class="category-label" style="left: 50px; top: 800px;">Security Fundamentals</div>
+      <div class="category-label" style="left: 50px; top: 1160px;">Security Techniques</div>
+      <div class="category-label" style="left: 50px; top: 1520px;">Advanced Skills</div>
+      <div class="category-label" style="left: 50px; top: 1880px;">Certifications & Practice</div>
+      
+      <!-- SVG for connecting lines - Using absolute coordinates that match node positions -->
+      <svg class="roadmap-svg" viewBox="0 0 1200 2300">
+        <defs>
+          <!-- Arrowhead marker -->
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+                  refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#45f3ff" />
+          </marker>
+          <!-- Dashed line marker for optional paths -->
+          <pattern id="dashed" patternUnits="userSpaceOnUse" width="6" height="1">
+            <line x1="0" y1="0" x2="3" y2="0" stroke="#45f3ff" stroke-width="1" />
+          </pattern>
+        </defs>
+
+        <!-- Fundamentals Section -->
+        <line x1="600" y1="100" x2="300" y2="220" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="100" x2="900" y2="220" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+              
+        <line x1="300" y1="220" x2="600" y2="340" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="220" x2="600" y2="340" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- Networking Section -->
+        <line x1="600" y1="340" x2="300" y2="460" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="340" x2="900" y2="460" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+              
+        <line x1="300" y1="460" x2="300" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="460" x2="600" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="300" y1="460" x2="600" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- Security Fundamentals Section -->
+        <line x1="300" y1="580" x2="300" y2="700"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="580" x2="300" y2="700"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <line x1="300" y1="700" x2="900" y2="820"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <line x1="900" y1="820" x2="600" y2="940"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Security Techniques Section -->
+        <line x1="600" y1="940" x2="300" y2="1060"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="940" x2="900" y2="1060"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <line x1="300" y1="1060" x2="300" y2="1180"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1060" x2="900" y2="1180"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Advanced Skills Section -->
+        <line x1="300" y1="1180" x2="300" y2="1300"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1180" x2="900" y2="1300"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <line x1="300" y1="1300" x2="300" y2="1420"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1300" x2="600" y2="1420"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <line x1="300" y1="1420" x2="600" y2="1540"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="1420" x2="600" y2="1540"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Certifications Section -->
+        <line x1="600" y1="1540" x2="300" y2="1660"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="1540" x2="900" y2="1660"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+              
+        <line x1="300" y1="1660" x2="300" y2="1780"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1660" x2="900" y2="1780"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+              
+        <line x1="300" y1="1780" x2="600" y2="1900"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1780" x2="600" y2="1900"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+              
+        <line x1="600" y1="1900" x2="600" y2="2020"
+              stroke="#45f3ff" stroke-width="2" 
+              marker-end="url(#arrowhead)"/>
+      </svg>
+
+      <!-- Nodes (boxes) - Using absolute positioning -->
+      <!-- Fundamental IT Skills -->
+      <div class="node primary" style="left: 600px; top: 100px;"
+           onclick="openModal('os')">Operating Systems</div>
+      <div class="node primary" style="left: 300px; top: 220px;"
+           onclick="openModal('linux')">Linux Basics</div>
+      <div class="node primary" style="left: 900px; top: 220px;"
+           onclick="openModal('windows')">Windows Basics</div>
+      <div class="node primary" style="left: 600px; top: 340px;"
+           onclick="openModal('virtualization')">Virtualization</div>
+           
+      <!-- Networking Knowledge -->
+      <div class="node primary" style="left: 300px; top: 460px;"
+           onclick="openModal('networking')">Network Fundamentals</div>
+      <div class="node primary" style="left: 900px; top: 460px;"
+           onclick="openModal('protocols')">Protocols & Services</div>
+      <div class="node primary" style="left: 300px; top: 580px;"
+           onclick="openModal('tools')">Network Tools</div>
+      <div class="node primary" style="left: 600px; top: 580px;"
+           onclick="openModal('secure')">Secure Communications</div>
+           
+      <!-- Security Fundamentals -->
+      <div class="node primary" style="left: 300px; top: 700px;"
+           onclick="openModal('core')">Core Security Concepts
+           <span class="recommendation">♦</span>
+      </div>
+      <div class="node primary" style="left: 900px; top: 820px;"
+           onclick="openModal('attacks')">Attack Types</div>
+      <div class="node primary" style="left: 600px; top: 940px;"
+           onclick="openModal('defense')">Defense Mechanisms</div>
+           
+      <!-- Security Techniques -->
+      <div class="node primary" style="left: 300px; top: 1060px;"
+           onclick="openModal('crypto')">Cryptography</div>
+      <div class="node primary" style="left: 900px; top: 1060px;"
+           onclick="openModal('pentesting')">Penetration Testing</div>
+      <div class="node primary" style="left: 300px; top: 1180px;"
+           onclick="openModal('incident')">Incident Response</div>
+      <div class="node primary" style="left: 900px; top: 1180px;"
+           onclick="openModal('malware')">Malware Analysis</div>
+           
+      <!-- Advanced Skills -->
+      <div class="node primary" style="left: 300px; top: 1300px;"
+           onclick="openModal('forensics')">Digital Forensics</div>
+      <div class="node alternative" style="left: 900px; top: 1300px;"
+           onclick="openModal('cloud')">Cloud Security</div>
+      <div class="node primary" style="left: 300px; top: 1420px;"
+           onclick="openModal('osint')">OSINT & Threat Intel</div>
+      <div class="node primary" style="left: 600px; top: 1420px;"
+           onclick="openModal('frameworks')">Security Frameworks</div>
+      <div class="node primary" style="left: 600px; top: 1540px;"
+           onclick="openModal('programming')">Programming Skills</div>
+           
+      <!-- Certifications & Practice -->
+      <div class="node primary" style="left: 300px; top: 1660px;"
+           onclick="openModal('beginner')">Beginner Certifications</div>
+      <div class="node primary" style="left: 900px; top: 1660px;"
+           onclick="openModal('advanced')">Advanced Certifications</div>
+      <div class="node primary" style="left: 300px; top: 1780px;"
+           onclick="openModal('platforms')">Practice Platforms</div>
+      <div class="node primary" style="left: 900px; top: 1780px;"
+           onclick="openModal('ctf')">CTF Competitions</div>
+      <div class="node primary" style="left: 600px; top: 1900px;"
+           onclick="openModal('specialization')">Specialization Paths</div>
+      <div class="node optional" style="left: 600px; top: 2020px;"
+           onclick="openModal('continuous')">Continuous Learning</div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2 id="modal-title"></h2>
+        <div id="modal-text"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Data for nodes
+    const nodeData = {
+      os: {
+        title: "Operating Systems",
+        text: `
+          <ul>
+            <li>Understanding core OS concepts</li>
+            <li>Command Line Interface (CLI) basics</li>
+            <li>User management and permissions</li>
+            <li>Filesystem navigation and operations</li>
+            <li>Process management</li>
+            <li>Resource monitoring</li>
+            <li>System logging and auditing</li>
+          </ul>
+        `
+      },
+      linux: {
+        title: "Linux Basics",
+        text: `
+          <ul>
+            <li>Popular distributions</li>
+            <li>Essential commands
+              <ul>
+                <li>ls, cd, mkdir, rm, cp, mv</li>
+                <li>grep, find, ps, top, netstat</li>
+                <li>chmod, chown, sudo</li>
+              </ul>
+            </li>
+            <li>File system structure</li>
+            <li>Package management</li>
+            <li>Bash scripting</li>
+            <li>User permissions</li>
+            <li>Security hardening basics</li>
+          </ul>
+        `
+      },
+      windows: {
+        title: "Windows Basics",
+        text: `
+          <ul>
+            <li>Windows versions and differences</li>
+            <li>Command Prompt vs PowerShell</li>
+            <li>Windows system architecture</li>
+            <li>Active Directory basics</li>
+            <li>Windows permissions model</li>
+            <li>Group Policy</li>
+            <li>Windows Registry</li>
+            <li>Windows logs and Event Viewer</li>
+          </ul>
+        `
+      },
+      virtualization: {
+        title: "Virtualization",
+        text: `
+          <ul>
+            <li>Virtualization concepts</li>
+            <li>Hypervisors
+              <ul>
+                <li>VMware <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>VirtualBox</li>
+                <li>Hyper-V</li>
+                <li>KVM</li>
+              </ul>
+            </li>
+            <li>Virtual machine setup and management</li>
+            <li>Virtual networking</li>
+            <li>Virtualization security concerns</li>
+            <li>Containerization basics</li>
+          </ul>
+        `
+      },
+      networking: {
+        title: "Network Fundamentals",
+        text: `
+          <ul>
+            <li>OSI and TCP/IP models</li>
+            <li>IP addressing and subnetting</li>
+            <li>Network devices and functions
+              <ul>
+                <li>Routers</li>
+                <li>Switches</li>
+                <li>Firewalls</li>
+              </ul>
+            </li>
+            <li>IPv4 vs IPv6</li>
+            <li>Network topologies</li>
+            <li>VLANs and segmentation</li>
+            <li>NAT and routing basics</li>
+          </ul>
+        `
+      },
+      protocols: {
+        title: "Protocols & Services",
+        text: `
+          <ul>
+            <li>Common protocols and ports
+              <ul>
+                <li>HTTP/HTTPS (80/443)</li>
+                <li>FTP/SFTP (21/22)</li>
+                <li>SSH (22)</li>
+                <li>SMTP/POP3/IMAP (25/110/143)</li>
+                <li>DNS (53)</li>
+                <li>SMB (445)</li>
+                <li>RDP (3389)</li>
+              </ul>
+            </li>
+            <li>Secure vs. insecure protocols</li>
+            <li>Authentication protocols</li>
+            <li>TLS/SSL</li>
+            <li>VPN protocols</li>
+          </ul>
+        `
+      },
+      tools: {
+        title: "Network Tools",
+        text: `
+          <ul>
+            <li>Packet analysis
+              <ul>
+                <li>Wireshark <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>tcpdump</li>
+              </ul>
+            </li>
+            <li>Network mapping
+              <ul>
+                <li>nmap</li>
+                <li>Zenmap</li>
+              </ul>
+            </li>
+            <li>Network troubleshooting
+              <ul>
+                <li>ping</li>
+                <li>traceroute/tracert</li>
+                <li>netstat</li>
+                <li>ifconfig/ipconfig</li>
+                <li>dig/nslookup</li>
+                <li>arp</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      secure: {
+        title: "Secure Communications",
+        text: `
+          <ul>
+            <li>Encryption fundamentals</li>
+            <li>Public Key Infrastructure (PKI)</li>
+            <li>Certificates and certificate authorities</li>
+            <li>Secure protocols
+              <ul>
+                <li>HTTPS</li>
+                <li>SSH</li>
+                <li>SFTP</li>
+                <li>TLS/SSL</li>
+                <li>DNSSEC</li>
+                <li>IPSEC</li>
+              </ul>
+            </li>
+            <li>Authentication methods</li>
+          </ul>
+        `
+      },
+      core: {
+        title: "Core Security Concepts",
+        text: `
+          <ul>
+            <li>CIA Triad (Confidentiality, Integrity, Availability)</li>
+            <li>AAA (Authentication, Authorization, Accounting)</li>
+            <li>Defense in Depth</li>
+            <li>Least Privilege</li>
+            <li>Risk management concepts</li>
+            <li>Threat, vulnerability, and risk relationships</li>
+            <li>Basic threat modeling</li>
+            <li>Security controls
+              <ul>
+                <li>Administrative</li>
+                <li>Technical</li>
+                <li>Physical</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      attacks: {
+        title: "Attack Types",
+        text: `
+          <ul>
+            <li>Social engineering
+              <ul>
+                <li>Phishing</li>
+                <li>Vishing</li>
+                <li>Smishing</li>
+                <li>Pretexting</li>
+                <li>Baiting</li>
+              </ul>
+            </li>
+            <li>Network-based attacks
+              <ul>
+                <li>DoS/DDoS</li>
+                <li>Man-in-the-Middle</li>
+                <li>ARP poisoning</li>
+                <li>DNS poisoning</li>
+                <li>Evil Twin</li>
+              </ul>
+            </li>
+            <li>Web application attacks
+              <ul>
+                <li>SQL injection</li>
+                <li>XSS (Cross-site scripting)</li>
+                <li>CSRF (Cross-site request forgery)</li>
+                <li>Directory traversal</li>
+              </ul>
+            </li>
+            <li>Password attacks
+              <ul>
+                <li>Brute force</li>
+                <li>Dictionary attacks</li>
+                <li>Password spraying</li>
+                <li>Credential stuffing</li>
+              </ul>
+            </li>
+            <li>Malware types</li>
+          </ul>
+        `
+      },
+      defense: {
+        title: "Defense Mechanisms",
+        text: `
+          <ul>
+            <li>Network security
+              <ul>
+                <li>Firewalls</li>
+                <li>IDS/IPS</li>
+                <li>Network segmentation</li>
+                <li>DMZ</li>
+              </ul>
+            </li>
+            <li>Endpoint security
+              <ul>
+                <li>Antivirus/Antimalware</li>
+                <li>EDR (Endpoint Detection and Response)</li>
+                <li>Host-based firewalls</li>
+              </ul>
+            </li>
+            <li>Access controls</li>
+            <li>Multi-factor authentication</li>
+            <li>Patch management</li>
+            <li>Security awareness training</li>
+            <li>Honeypots/honeynets</li>
+          </ul>
+        `
+      },
+      crypto: {
+        title: "Cryptography",
+        text: `
+          <ul>
+            <li>Encryption types
+              <ul>
+                <li>Symmetric encryption</li>
+                <li>Asymmetric encryption</li>
+              </ul>
+            </li>
+            <li>Common algorithms
+              <ul>
+                <li>AES, DES, 3DES</li>
+                <li>RSA, ECC</li>
+                <li>SHA, MD5</li>
+              </ul>
+            </li>
+            <li>Hashing</li>
+            <li>Digital signatures</li>
+            <li>Key management</li>
+            <li>Certificates</li>
+            <li>Public Key Infrastructure (PKI)</li>
+          </ul>
+        `
+      },
+      pentesting: {
+        title: "Penetration Testing",
+        text: `
+          <ul>
+            <li>Penetration testing methodology
+              <ul>
+                <li>Reconnaissance</li>
+                <li>Scanning</li>
+                <li>Gaining access</li>
+                <li>Maintaining access</li>
+                <li>Covering tracks</li>
+                <li>Reporting</li>
+              </ul>
+            </li>
+            <li>Penetration testing tools
+              <ul>
+                <li>Kali Linux <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>Metasploit</li>
+                <li>BurpSuite</li>
+                <li>OWASP ZAP</li>
+                <li>Nessus</li>
+              </ul>
+            </li>
+            <li>Exploitation frameworks</li>
+            <li>Web application testing</li>
+            <li>Password cracking</li>
+            <li>Wireless security testing</li>
+          </ul>
+        `
+      },
+      incident: {
+        title: "Incident Response",
+        text: `
+          <ul>
+            <li>Incident response lifecycle
+              <ul>
+                <li>Preparation</li>
+                <li>Identification</li>
+                <li>Containment</li>
+                <li>Eradication</li>
+                <li>Recovery</li>
+                <li>Lessons learned</li>
+              </ul>
+            </li>
+            <li>Incident response tools</li>
+            <li>Evidence collection</li>
+            <li>Log analysis</li>
+            <li>SIEM systems</li>
+            <li>Playbooks and runbooks</li>
+            <li>Communication plans</li>
+          </ul>
+        `
+      },
+      malware: {
+        title: "Malware Analysis",
+        text: `
+          <ul>
+            <li>Types of malware
+              <ul>
+                <li>Viruses</li>
+                <li>Worms</li>
+                <li>Trojans</li>
+                <li>Ransomware</li>
+                <li>Rootkits</li>
+                <li>Botnets</li>
+              </ul>
+            </li>
+            <li>Analysis techniques
+              <ul>
+                <li>Static analysis</li>
+                <li>Dynamic analysis</li>
+              </ul>
+            </li>
+            <li>Malware analysis tools
+              <ul>
+                <li>Sandboxes</li>
+                <li>Disassemblers</li>
+                <li>Debuggers</li>
+                <li>Network analyzers</li>
+              </ul>
+            </li>
+            <li>Reverse engineering basics</li>
+          </ul>
+        `
+      },
+      forensics: {
+        title: "Digital Forensics",
+        text: `
+          <ul>
+            <li>Forensic process and methodology</li>
+            <li>Chain of custody</li>
+            <li>Data acquisition</li>
+            <li>Disk forensics</li>
+            <li>Memory forensics</li>
+            <li>Network forensics</li>
+            <li>Mobile device forensics</li>
+            <li>Forensic tools
+              <ul>
+                <li>FTK

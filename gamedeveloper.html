@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Game Developer Roadmap</title>
+  <style>
+    body {
+      background-color: #25252b;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid #45f3ff;
+    }
+
+    h1 {
+      color: #ff2770;
+      margin: 0;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: #45f3ff;
+      text-decoration: none;
+      font-weight: bold;
+      border: 1px solid #45f3ff;
+      padding: 5px 10px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background-color: #45f3ff;
+      color: #25252b;
+    }
+
+    /* Container for the roadmap diagram */
+    .roadmap-container {
+      position: relative;
+      width: 90%;
+      max-width: 1200px;
+      height: 2500px; /* Increased height to accommodate all nodes */
+      margin: 40px auto;
+      background-color: #25252b;
+      border: 2px solid #45f3ff;
+      border-radius: 8px;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    /* The SVG lines are placed behind the nodes */
+    .roadmap-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1; /* behind the nodes */
+    }
+
+    /* Each clickable node (box) */
+    .node {
+      position: absolute;
+      z-index: 2; /* above lines */
+      width: 180px; /* slightly wider for better content fit */
+      height: 40px; /* fixed height for better alignment */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: #333;
+      border: 2px solid #ff2770;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      color: #fff;
+      font-weight: bold;
+      /* Center the node around its position */
+      transform: translate(-50%, -50%);
+    }
+
+    /* Hover effect: glow + slight lift */
+    .node:hover {
+      background: #ff2770;
+      color: #25252b;
+      transform: translate(-50%, -50%) translateY(-3px);
+      box-shadow: 0 0 15px #ff2770;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: #25252b;
+      border: 2px solid #45f3ff;
+      border-radius: 8px;
+      padding: 20px;
+      width: 80%;
+      max-width: 600px;
+      position: relative;
+      text-align: left;
+      max-height: 70vh;
+      overflow-y: auto;
+      color: #fff;
+    }
+
+    .close {
+      color: #45f3ff;
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #ff2770;
+    }
+
+    #modal-title {
+      color: #ff2770;
+      margin-top: 0;
+      border-bottom: 1px solid #45f3ff;
+      padding-bottom: 10px;
+    }
+
+    /* Category label styles */
+    .category-label {
+      position: absolute;
+      font-size: 20px;
+      font-weight: bold;
+      color: #45f3ff;
+      z-index: 2;
+    }
+
+    /* Alternate node styles */
+    .node.primary {
+      border-color: #ff2770;
+    }
+
+    .node.alternative {
+      border-color: #45f3ff;
+      background: #2a2a33;
+    }
+    
+    .node.alternative:hover {
+      background: #45f3ff;
+      color: #25252b;
+      box-shadow: 0 0 15px #45f3ff;
+    }
+    
+    .node.optional {
+      border-style: dashed;
+      opacity: 0.9;
+    }
+    
+    /* Personal recommendation tag */
+    .recommendation {
+      position: absolute;
+      background-color: #ff2770;
+      color: #25252b;
+      font-size: 10px;
+      padding: 2px 5px;
+      border-radius: 4px;
+      top: -10px;
+      right: -10px;
+      transform: rotate(10deg);
+      z-index: 3;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Game Developer Roadmap</h1>
+    <a href="#" class="back-btn">← Back</a>
+  </header>
+
+  <main>
+    <div class="roadmap-container">
+      <!-- Category Labels -->
+      <div class="category-label" style="left: 50px; top: 80px;">Fundamentals</div>
+      <div class="category-label" style="left: 50px; top: 440px;">Game Mathematics</div>
+      <div class="category-label" style="left: 50px; top: 800px;">Game Engine</div>
+      <div class="category-label" style="left: 50px; top: 1160px;">Computer Graphics</div>
+      <div class="category-label" style="left: 50px; top: 1520px;">Game Physics</div>
+      <div class="category-label" style="left: 50px; top: 1880px;">Game AI</div>
+      <div class="category-label" style="left: 50px; top: 2240px;">Advanced Topics</div>
+      
+      <!-- SVG for connecting lines - Using absolute coordinates that match node positions -->
+      <svg class="roadmap-svg" viewBox="0 0 1200 2500">
+        <defs>
+          <!-- Arrowhead marker -->
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+                  refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#45f3ff" />
+          </marker>
+          <!-- Dashed line marker for optional paths -->
+          <pattern id="dashed" patternUnits="userSpaceOnUse" width="6" height="1">
+            <line x1="0" y1="0" x2="3" y2="0" stroke="#45f3ff" stroke-width="1" />
+          </pattern>
+        </defs>
+
+        <!-- Fundamentals Section -->
+        <!-- Programming Languages to Game Design & Tools -->
+        <line x1="600" y1="100" x2="300" y2="220" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="100" x2="900" y2="220" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+              
+        <!-- Game Design & Tools to Project Management -->
+        <line x1="300" y1="220" x2="600" y2="340" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="220" x2="600" y2="340" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- Game Mathematics Section -->
+        <!-- Project Management to Linear Algebra & Vectors -->
+        <line x1="600" y1="340" x2="300" y2="460" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="340" x2="900" y2="460" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+              
+        <!-- Linear Algebra to Transformations & Quaternions -->
+        <line x1="300" y1="460" x2="300" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="460" x2="900" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="300" y1="460" x2="900" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- Game Engine Section -->
+        <!-- Transformations & Quaternions to Game Engines -->
+        <line x1="300" y1="580" x2="300" y2="700"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="580" x2="300" y2="700"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Game Engines to Custom Engine Development -->
+        <line x1="300" y1="700" x2="900" y2="820"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Custom Engine Development to Game Architecture -->
+        <line x1="900" y1="820" x2="600" y2="940"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Computer Graphics Section -->
+        <!-- Game Architecture to Rendering Basics -->
+        <line x1="600" y1="940" x2="300" y2="1060"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="940" x2="900" y2="1060"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Rendering Basics, Graphics APIs to Shaders & Materials -->
+        <line x1="300" y1="1060" x2="300" y2="1180"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1060" x2="900" y2="1180"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="300" y1="1060" x2="900" y2="1180"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Game Physics Section -->
+        <!-- Shaders & Materials to Physics Fundamentals -->
+        <line x1="300" y1="1180" x2="300" y2="1300"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1180" x2="900" y2="1300"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Physics Fundamentals, Collision Detection to Physics Integration -->
+        <line x1="300" y1="1300" x2="300" y2="1420"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1300" x2="600" y2="1420"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Physics Integration to Rigid Body Dynamics -->
+        <line x1="300" y1="1420" x2="600" y2="1540"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="1420" x2="600" y2="1540"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Game AI Section -->
+        <!-- Rigid Body Dynamics to Decision Making -->
+        <line x1="600" y1="1540" x2="300" y2="1660"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="1540" x2="900" y2="1660"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Decision Making, Pathfinding to Behavior Implementation -->
+        <line x1="300" y1="1660" x2="300" y2="1780"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1660" x2="600" y2="1780"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Behavior Implementation to Advanced AI -->
+        <line x1="300" y1="1780" x2="600" y2="1900"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="1780" x2="600" y2="1900"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Advanced Topics Section -->
+        <!-- Advanced AI to Optimization -->
+        <line x1="600" y1="1900" x2="300" y2="2020"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="1900" x2="900" y2="2020"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Optimization, Multiplayer to Modern Rendering -->
+        <line x1="300" y1="2020" x2="300" y2="2140"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="2020" x2="600" y2="2140"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Modern Rendering to Procedural Generation -->
+        <line x1="300" y1="2140" x2="600" y2="2260"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="2140" x2="600" y2="2260"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+      </svg>
+
+      <!-- Nodes (boxes) - Using absolute positioning -->
+      <!-- Fundamentals -->
+      <div class="node primary" style="left: 600px; top: 100px;"
+           onclick="openModal('programmingLanguages')">Programming Languages</div>
+      <div class="node primary" style="left: 300px; top: 220px;"
+           onclick="openModal('gameDesign')">Game Design & Tools</div>
+      <div class="node primary" style="left: 900px; top: 220px;"
+           onclick="openModal('versionControl')">Version Control</div>
+      <div class="node primary" style="left: 600px; top: 340px;"
+           onclick="openModal('projectManagement')">Project Management</div>
+           
+      <!-- Game Mathematics -->
+      <div class="node primary" style="left: 300px; top: 460px;"
+           onclick="openModal('linearAlgebra')">Linear Algebra & Vectors</div>
+      <div class="node primary" style="left: 900px; top: 460px;"
+           onclick="openModal('geometry')">Geometry & Curves</div>
+      <div class="node primary" style="left: 300px; top: 580px;"
+           onclick="openModal('transformations')">Transformations</div>
+      <div class="node primary" style="left: 900px; top: 580px;"
+           onclick="openModal('quaternions')">Quaternions & Rotations</div>
+           
+      <!-- Game Engine -->
+      <div class="node primary" style="left: 300px; top: 700px;"
+           onclick="openModal('gameEngines')">Game Engines
+           <span class="recommendation">♦</span>
+      </div>
+      <div class="node primary" style="left: 900px; top: 820px;"
+           onclick="openModal('customEngine')">Custom Engine Development</div>
+      <div class="node primary" style="left: 600px; top: 940px;"
+           onclick="openModal('gameArchitecture')">Game Architecture</div>
+           
+      <!-- Computer Graphics -->
+      <div class="node primary" style="left: 300px; top: 1060px;"
+           onclick="openModal('renderingBasics')">Rendering Basics</div>
+      <div class="node primary" style="left: 900px; top: 1060px;"
+           onclick="openModal('graphicsAPIs')">Graphics APIs</div>
+      <div class="node primary" style="left: 300px; top: 1180px;"
+           onclick="openModal('lighting')">Lighting & Shadows</div>
+      <div class="node primary" style="left: 900px; top: 1180px;"
+           onclick="openModal('shaders')">Shaders & Materials</div>
+           
+      <!-- Game Physics -->
+      <div class="node primary" style="left: 300px; top: 1300px;"
+           onclick="openModal('physicsBasics')">Physics Fundamentals</div>
+      <div class="node alternative" style="left: 900px; top: 1300px;"
+           onclick="openModal('collision')">Collision Detection</div>
+      <div class="node primary" style="left: 300px; top: 1420px;"
+           onclick="openModal('physicsEngines')">Physics Engines</div>
+      <div class="node primary" style="left: 600px; top: 1420px;"
+           onclick="openModal('physicsIntegration')">Physics Integration</div>
+      <div class="node primary" style="left: 600px; top: 1540px;"
+           onclick="openModal('rigidBody')">Rigid Body Dynamics</div>
+           
+      <!-- Game AI -->
+      <div class="node primary" style="left: 300px; top: 1660px;"
+           onclick="openModal('decisionMaking')">Decision Making</div>
+      <div class="node primary" style="left: 900px; top: 1660px;"
+           onclick="openModal('pathfinding')">Pathfinding</div>
+      <div class="node primary" style="left: 300px; top: 1780px;"
+           onclick="openModal('behaviorImplementation')">Behavior Implementation</div>
+      <div class="node primary" style="left: 600px; top: 1780px;"
+           onclick="openModal('boardGames')">Board Game AI</div>
+      <div class="node primary" style="left: 600px; top: 1900px;"
+           onclick="openModal('advancedAI')">Advanced AI Techniques</div>
+           
+      <!-- Advanced Topics -->
+      <div class="node primary" style="left: 300px; top: 2020px;"
+           onclick="openModal('optimization')">Optimization</div>
+      <div class="node primary" style="left: 900px; top: 2020px;"
+           onclick="openModal('multiplayer')">Multiplayer & Networking</div>
+      <div class="node primary" style="left: 300px; top: 2140px;"
+           onclick="openModal('modernRendering')">Modern Rendering</div>
+      <div class="node primary" style="left: 600px; top: 2140px;"
+           onclick="openModal('audio')">Game Audio</div>
+      <div class="node optional" style="left: 600px; top: 2260px;"
+           onclick="openModal('procedural')">Procedural Generation</div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2 id="modal-title"></h2>
+        <div id="modal-text"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Data for nodes
+    const nodeData = {
+      programmingLanguages: {
+        title: "Programming Languages",
+        text: `
+          <ul>
+            <li>C++ <span style="color: #ff2770;">(Recommended for performance-critical applications)</span>
+              <ul>
+                <li>Modern C++ (C++11, C++14, C++17, C++20)</li>
+                <li>Memory management</li>
+                <li>Templates and generic programming</li>
+                <li>Performance optimization</li>
+              </ul>
+            </li>
+            <li>C#
+              <ul>
+                <li>Used extensively with Unity</li>
+                <li>Language features (LINQ, async/await)</li>
+                <li>.NET ecosystem</li>
+              </ul>
+            </li>
+            <li>Python
+              <ul>
+                <li>Rapid prototyping</li>
+                <li>Scripting and tools</li>
+                <li>AI and machine learning integration</li>
+              </ul>
+            </li>
+            <li>Rust
+              <ul>
+                <li>Memory safety without garbage collection</li>
+                <li>Concurrency without data races</li>
+                <li>Emerging in game development</li>
+              </ul>
+            </li>
+            <li>JavaScript/TypeScript
+              <ul>
+                <li>Web-based games</li>
+                <li>HTML5 Canvas and WebGL</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      gameDesign: {
+        title: "Game Design & Tools",
+        text: `
+          <ul>
+            <li>Game Design Fundamentals
+              <ul>
+                <li>Mechanics, Dynamics, Aesthetics (MDA Framework)</li>
+                <li>Game loops and core mechanics</li>
+                <li>Balancing and tuning</li>
+                <li>Level design principles</li>
+                <li>Player psychology</li>
+              </ul>
+            </li>
+            <li>Design Tools
+              <ul>
+                <li>Rapid prototyping tools</li>
+                <li>Level editors</li>
+                <li>Visual scripting systems</li>
+                <li>Game design document templates</li>
+              </ul>
+            </li>
+            <li>Asset Creation Tools
+              <ul>
+                <li>Blender <span style="color: #ff2770;">(Recommended for 3D modeling)</span></li>
+                <li>Maya or 3ds Max</li>
+                <li>Substance Painter/Designer</li>
+                <li>Photoshop or GIMP</li>
+                <li>Aseprite <span style="color: #ff2770;">(Recommended for pixel art)</span></li>
+              </ul>
+            </li>
+            <li>Design Patterns
+              <ul>
+                <li>Component-based architecture</li>
+                <li>Observer pattern</li>
+                <li>Factory pattern</li>
+                <li>Singleton (use carefully)</li>
+                <li>Command pattern</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      versionControl: {
+        title: "Version Control",
+        text: `
+          <ul>
+            <li>Git <span style="color: #ff2770;">(Recommended)</span>
+              <ul>
+                <li>Basic commands (clone, commit, push, pull)</li>
+                <li>Branching strategies</li>
+                <li>Merge conflict resolution</li>
+                <li>Git workflows (Gitflow, trunk-based development)</li>
+              </ul>
+            </li>
+            <li>Git Hosting Platforms
+              <ul>
+                <li>GitHub</li>
+                <li>GitLab</li>
+                <li>Bitbucket</li>
+              </ul>
+            </li>
+            <li>Large File Management
+              <ul>
+                <li>Git LFS (Large File Storage)</li>
+                <li>Asset versioning strategies</li>
+              </ul>
+            </li>
+            <li>Source Control Best Practices
+              <ul>
+                <li>Commit message conventions</li>
+                <li>Code reviews</li>
+                <li>Pull/merge request workflow</li>
+                <li>Continuous integration</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      projectManagement: {
+        title: "Project Management",
+        text: `
+          <ul>
+            <li>Project Management Methodologies
+              <ul>
+                <li>Agile/Scrum <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>Kanban</li>
+                <li>Waterfall (for specific phases)</li>
+              </ul>
+            </li>
+            <li>Project Management Tools
+              <ul>
+                <li>Jira</li>
+                <li>Trello</li>
+                <li>Asana</li>
+                <li>Notion</li>
+                <li>HacknPlan <span style="color: #ff2770;">(Game development specific)</span></li>
+              </ul>
+            </li>
+            <li>Game Development Lifecycle
+              <ul>
+                <li>Pre-production and planning</li>
+                <li>Prototyping</li>
+                <li>Production</li>
+                <li>Testing</li>
+                <li>Polishing</li>
+                <li>Launch and post-launch support</li>
+              </ul>
+            </li>
+            <li>Team Collaboration
+              <ul>
+                <li>Communication tools</li>
+                <li>Documentation practices</li>
+                <li>Asset pipeline management</li>
+              </ul>
+            </li>
+            <li>Scope Management
+              <ul>
+                <li>Feature prioritization</li>
+                <li>Minimum Viable Product (MVP) approach</li>
+                <li>Time/feature trade-offs</li>
+                <li>Technical debt management</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      linearAlgebra: {
+        title: "Linear Algebra & Vectors",
+        text: `
+          <ul>
+            <li>Vectors
+              <ul>
+                <li>Vector operations (addition, subtraction, scaling)</li>
+                <li>Dot product and cross product</li>
+                <li>Normalization</li>
+                <li>Vector projections</li>
+                <li>Vector interpolation</li>
+              </ul>
+            </li>
+            <li>Matrices
+              <ul>
+                <li>Matrix operations (addition, multiplication)</li>
+                <li>Determinants and inverses</li>
+                <li>Identity and zero matrices</li>
+                <li>Matrix decompositions</li>
+              </ul>
+            </li>
+            <li>Linear Systems
+              <ul>
+                <li>Solving linear equations</li>
+                <li>Linear independence</li>
+                <li>Basis and dimension</li>
+                <li>Eigenvalues and eigenvectors</li>
+              </ul>
+            </li>
+            <li>Applications in Games
+              <ul>
+                <li>Character movement</li>
+                <li>Camera control</li>
+                <li>Collision detection</li>
+                <li>Physics simulations</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      geometry: {
+        title: "Geometry & Curves",
+        text: `
+          <ul>
+            <li>Geometric Primitives
+              <ul>
+                <li>Points, lines, rays, and segments</li>
+                <li>Triangles and polygons</li>
+                <li>Circles and spheres</li>
+                <li>Planes and polyhedra</li>
+              </ul>
+            </li>
+            <li>Coordinate Systems
+              <ul>
+                <li>Cartesian coordinates</li>
+                <li>Polar/spherical coordinates</li>
+                <li>Barycentric coordinates</li>
+                <li>Homogeneous coordinates</li>
+              </ul>
+            </li>
+            <li>Curves and Splines
+              <ul>
+                <li>Bézier curves</li>
+                <li>Hermite curves</li>
+                <li>Catmull-Rom splines</li>
+                <li>B-splines and NURBS</li>
+                <li>Path following</li>
+              </ul>
+            </li>
+            <li>Geometric Algorithms
+              <ul>
+                <li>Intersection tests</li>
+                <li>Distance calculations</li>
+                <li>Convex hull</li>
+                <li>Triangulation</li>
+                <li>Voronoi diagrams</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      transformations: {
+        title: "Transformations",
+        text: `
+          <ul>
+            <li>Linear Transformations
+              <ul>
+                <li>Scaling</li>
+                <li>Rotation</li>
+                <li>Shearing</li>
+                <li>Reflection</li>
+              </ul>
+            </li>
+            <li>Affine Transformations
+              <ul>
+                <li>Translation</li>
+                <li>Combination of linear transformations</li>
+                <li>Homogeneous coordinates</li>
+              </ul>
+            </li>
+            <li>3D Transformations
+              <ul>
+                <li>Rotation around arbitrary axes</li>
+                <li>Change of basis</li>
+                <li>

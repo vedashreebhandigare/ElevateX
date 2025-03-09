@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Leaderboard</title>
+    <style>
+        /* General Styles */
+        body {
+            background-color: #25252b;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Background with animated dots */
+        .bg-dots {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 40px;
+            border-bottom: 1px solid #45f3ff;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            color: #45f3ff;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-icon {
+            height: 40px;
+            stroke: #45f3ff;
+        }
+
+        /* Login Section */
+        .login-container {
+            margin: 30px auto;
+            padding: 20px;
+            background: rgba(69, 243, 255, 0.1);
+            border-radius: 10px;
+            width: 70%;
+            max-width: 800px;
+            box-shadow: 0 0 10px rgba(69, 243, 255, 0.3);
+            text-align: center;
+        }
+
+        .login-container h2 {
+            color: #45f3ff;
+        }
+
+        .login-button {
+            background-color: #ff2770;
+            color: white;
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .login-button:hover {
+            background-color: #d9205a;
+        }
+
+        /* Top Performers */
+        .top-performers {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 30px auto;
+            max-width: 1200px;
+            padding: 0 20px;
+        }
+
+        .performer-card {
+            background: linear-gradient(to bottom, rgba(45, 45, 50, 0.9), rgba(35, 35, 45, 0.7));
+            border-radius: 12px;
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .performer-card:nth-child(1) {
+            border: 2px solid #ff2770;
+            background-color: rgba(37, 37, 43, 0.9);
+        }
+
+        .performer-card:nth-child(2) {
+            border: 2px solid #ff2770;
+            background-color: rgba(37, 37, 43, 0.9);
+        }
+
+        .performer-card:nth-child(3) {
+            border: 2px solid #ff2770;
+            background-color: rgba(37, 37, 43, 0.9);
+        }
+
+        /* Fireworks effect on hover */
+        .performer-card:hover .firework {
+            opacity: 1;
+        }
+
+        .firework {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 0;
+        }
+
+        .firework::before, .firework::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            box-shadow: 
+                0 0 0 4px #ff2770,
+                0 0 0 8px #45f3ff,
+                0 0 0 12px #ffcc00,
+                0 0 0 16px #ff2770,
+                0 0 0 20px #45f3ff,
+                0 0 20px #ff2770,
+                0 0 40px #45f3ff;
+            animation: fireworks 1s infinite;
+        }
+
+        .firework::after {
+            animation-delay: 0.25s;
+        }
+
+        @keyframes fireworks {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0;
+            }
+        }
+
+        .performer-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .performer-card:nth-child(1)::before {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M50 0 L100 100 L0 100 Z" fill="%23FFD700"/></svg>');
+        }
+
+        .performer-card:nth-child(2)::before {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M50 0 L100 100 L0 100 Z" fill="%239370DB"/></svg>');
+        }
+
+        .performer-card:nth-child(3)::before {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M50 0 L100 100 L0 100 Z" fill="%23FFA500"/></svg>');
+        }
+
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            position: relative;
+            border: 3px solid #45f3ff;
+            box-shadow: 0 0 10px rgba(69, 243, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(69, 243, 255, 0.1);
+        }
+
+        .person-icon {
+            width: 60px;
+            height: 60px;
+            fill: #45f3ff;
+        }
+
+        .trophy-icon {
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            width: 35px;
+            height: 35px;
+        }
+
+        .profile-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 5px 0;
+            color: #fff;
+        }
+
+        .profile-school {
+            font-size: 14px;
+            color: #a0a0a0;
+            margin-bottom: 15px;
+            height: 40px;
+        }
+
+        .profile-score {
+            color: white;
+            padding: 8px;
+            border-radius: 8px;
+            font-weight: bold;
+            display: inline-block;
+            min-width: 100px;
+        }
+
+        .performer-card:nth-child(1) .profile-score {
+            background-color: #ff2770;
+            color: #333;
+        }
+
+        .performer-card:nth-child(2) .profile-score {
+            background-color: #ff2770;
+        }
+
+        .performer-card:nth-child(3) .profile-score {
+            background-color: #ff2770;
+            color: #333;
+        }
+
+        /* My Rank Section */
+        .my-rank-section {
+            background-color: #2d2d35;
+            margin: 40px auto;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 1200px;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border: 1px solid #45f3ff;
+        }
+
+        .my-rank-banner {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            background-color: #ff2770;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 0 0 10px 0;
+            transform: rotate(-5deg);
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .my-rank-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+        }
+
+        .my-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .my-profile-pic {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid #ff2770;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 39, 112, 0.1);
+        }
+
+        .my-person-icon {
+            width: 36px;
+            height: 36px;
+            fill: #ff2770;
+        }
+
+        .my-details {
+            text-align: left;
+        }
+
+        .my-name {
+            font-weight: bold;
+            font-size: 18px;
+            margin: 0;
+            color: #fff;
+        }
+
+        .my-school {
+            color: #a0a0a0;
+            font-size: 14px;
+            margin: 3px 0;
+        }
+
+        .my-stats {
+            display: flex;
+            gap: 15px;
+        }
+
+        .stat-pill {
+            background-color: #333340;
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .global-rank {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .rank-number {
+            font-size: 30px;
+            font-weight: bold;
+            color: #ff2770;
+        }
+
+        .rank-label {
+            font-size: 14px;
+            color: #a0a0a0;
+        }
+
+        /* Leaderboard Table */
+        .leaderboard {
+            width: 90%;
+            max-width: 1200px;
+            margin: 30px auto;
+            background: #2d2d35;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(69, 243, 255, 0.2);
+        }
+
+        .leaderboard h2 {
+            color: #45f3ff;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px;
+            border-bottom: 1px solid #3d3d45;
+            text-align: left;
+        }
+
+        th {
+            background: #ff2770;
+            color: white;
+            position: sticky;
+            top: 0;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(255, 39, 112, 0.05);
+        }
+
+        tr:nth-child(odd) {
+            background: rgba(69, 243, 255, 0.05);
+        }
+
+        tr:hover {
+            background-color: rgba(69, 243, 255, 0.1);
+        }
+
+        /* Rank Up Animation */
+        .rank-up {
+            font-size: 20px;
+            color: #ff2770;
+            margin-top: 20px;
+            animation: pop 1s infinite alternate;
+            text-align: center;
+        }
+
+        @keyframes pop {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .top-performers {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .performer-card {
+                width: 90%;
+                max-width: 300px;
+            }
+            
+            .my-rank-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .my-stats {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>
+            Live Leaderboard (Global)
+            <svg class="chart-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="2" width="20" height="20" rx="2"></rect>
+                <line x1="6" y1="6" x2="6" y2="18"></line>
+                <line x1="10" y1="10" x2="10" y2="18"></line>
+                <line x1="14" y1="14" x2="14" y2="18"></line>
+                <line x1="18" y1="8" x2="18" y2="18"></line>
+            </svg>
+        </h1>
+    </div>
+
+
+    <!-- Top Performers -->
+    <div class="top-performers">
+        <div class="performer-card">
+            <div class="firework"></div>
+            <div class="profile-pic">
+                <svg class="person-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                <img class="trophy-icon" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 24 24' fill='%23FFD700'><path d='M12 2l3 6 7 1-5 4 2 7-7-4-7 4 2-7-5-4 7-1z'/></svg>" alt="Trophy">
+            </div>
+            <div class="profile-name">Chaitanya Iyer</div>
+            <div class="profile-school">Indian Institute of Technology, Bombay</div>
+            <div class="profile-score">985,421</div>
+        </div>
+        
+        <div class="performer-card">
+            <div class="firework"></div>
+            <div class="profile-pic">
+                <svg class="person-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                <img class="trophy-icon" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 24 24' fill='%239370DB'><path d='M12 2l3 6 7 1-5 4 2 7-7-4-7 4 2-7-5-4 7-1z'/></svg>" alt="Trophy">
+            </div>
+            <div class="profile-name">Deepak Verma</div>
+            <div class="profile-school">Delhi Technological University</div>
+            <div class="profile-score">876,553</div>
+        </div>
+        
+        <div class="performer-card">
+            <div class="firework"></div>
+            <div class="profile-pic">
+                <svg class="person-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                <img class="trophy-icon" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 24 24' fill='%23FFA500'><path d='M12 2l3 6 7 1-5 4 2 7-7-4-7 4 2-7-5-4 7-1z'/></svg>" alt="Trophy">
+            </div>
+            <div class="profile-name">Riya Sengupta</div>
+            <div class="profile-school">Indian Statistical Institute, Kolkata</div>
+            <div class="profile-score">754,879</div>
+        </div>
+    </div>
+
+    <!-- My Rank Section -->
+    <div class="my-rank-section">
+        <div class="my-rank-banner">My Rank</div>
+        <div class="my-rank-content">
+            <div class="my-profile">
+                <div class="my-profile-pic">
+                    <svg class="my-person-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                </div>
+                <div class="my-details">
+                    <p class="my-name">Vedashree Bhandigare</p>
+                    <p class="my-school">NMIMS, Mumbai</p>
+                    <div class="my-stats">
+                        <div class="stat-pill">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#45f3ff" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M12 6v6l4 2"></path>
+                            </svg>
+                            378,620 Points
+                        </div>
+                        <div class="stat-pill">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#45f3ff" stroke-width="2">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                            </svg>
+                            4 Certificates
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="global-rank">
+                <div class="rank-number">5</div>
+                <div class="rank-label">Global Rank</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaderboard Section -->
+    <div class="leaderboard">
+        <h2>Rankings</h2>
+        <table>
+            <tr>
+                <th>Participant Name</th>
+                <th>Field</th>
+                <th>Skills</th>
+                <th>Global Rank</th>
+                <th>Rank Change</th>
+                <th>Certificates</th>
+                <th>Points</th>
+            </tr>
+            <tr>
+                <td>Chaitanya Iyer</td>
+                <td>Web Development</td>
+                <td>JavaScript, React, Node.js, DevOps</td>
+                <td>1</td>
+                <td>↑ 1</td>
+                <td>12</td>
+                <td>985,421</td>
+            </tr>
+            <tr>
+                <td>Deepak Verma</td>
+                <td>Web Development</td>
+                <td>HTML, CSS, Testing, Git, Cybersecurity</td>
+                <td>2</td>
+                <td>↑ 2</td>
+                <td>10</td>
+                <td>876,553</td>
+            </tr>
+            <tr>
+                <td>Riya Sengupta</td>
+                <td>Skill Development</td>
+                <td>Blockchain, MLOps, PostgreSQL</td>
+                <td>3</td>
+                <td>↑ 3</td>
+                <td>9</td>
+                <td>754,879</td>
+            </tr>
+            <tr>
+                <td>Qasim Khan</td>
+                <td>Skill Development</td>
+                <td>Android, iOS, API Design</td>
+                <td>4</td>
+                <td>↓ 1</td>
+                <td>7</td>
+                <td>695,210</td>
+            </tr>
+            <tr>
+                <td>Vedashree Bhandigare</td>
+                <td>Web Development</td>
+                <td>C++, Python, HTML, CSS</td>
+                <td>5</td>
+                <td>↑ 3</td>
+                <td>4</td>
+                <td>378,620</td>
+            </tr>
+            <tr>
+                <td>Aarav Sharma</td>
+                <td>Web Development</td>
+                <td>HTML, CSS, JavaScript</td>
+                <td>6</td>
+                <td>↓ 2</td>
+                <td>5</td>
+                <td>356,748</td>
+            </tr>
+            <tr>
+                <td>Ojaswini Rao</td>
+                <td>Healthcare</td>
+                <td>Surgery, Internal Medicine, Psychiatry</td>
+                <td>7</td>
+                <td>↑ 4</td>
+                <td>6</td>
+                <td>298,456</td>
+            </tr>
+        </table>
+
+        <div class="rank-up">🎉 You moved up in rank! Keep progressing! 🎉</div>
+    </div>
+
+    <!-- Canvas for animated background dots -->
+    <canvas class="bg-dots"></canvas>
+
+    <script>
+        // Background dots animation
+        const canvas = document.querySelector('.bg-dots');
+        const ctx = canvas.getContext('2d');
+        
+        // Set canvas size
+        function setCanvasSize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        setCanvasSize();
+        window.addEventListener('resize', setCanvasSize);
+        
+        // Create particles
+        let particles = [];
+        const colors = ['#45f3ff', '#ff2770', '#FFD700', '#9370DB', '#FFA500', '#4CAF50', '#2196F3'];
+        
+        function createParticles() {
+            particles = [];
+            const particleCount = Math.floor(window.innerWidth * window.innerHeight / 10000);
+            
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 3 + 1,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    speed: Math.random() * 0.5 + 0.1,
+                    direction: Math.random() * Math.PI * 2
+                });
+            }
+        }
+        
+        // Draw and update particles
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(p => {
+                // Draw particle
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.fill();
+                
+                // Move particle
+                p.x += Math.cos(p.direction) * p.speed;
+                p.y += Math.sin(p.direction) * p.speed;
+                
+                // Change direction randomly
+                if (Math.random() < 0.01) {
+                    p.direction = Math.random() * Math.PI * 2;
+                }
+                
+                // Handle edge cases
+                if (p.x < 0) p.x = canvas.width;
+                if (p.x > canvas.width) p.x = 0;
+                if (p.y < 0) p.y = canvas.height;
+                if (p.y > canvas.height) p.y = 0;
+            });
+            
+            requestAnimationFrame(animateParticles);
+        }
+        
+        // Initialize and start animation
+        createParticles();
+        animateParticles();
+        
+        // Updated student database based on skills importance
+        const userDatabase = [
+            { id: 1, name: "Chaitanya Iyer", field: "Web Development", skills: "JavaScript, React, Node.js, DevOps", school: "Indian Institute of Technology, Bombay", points: 985421, certificates: 12, rank: 1, prevRank: 2 },
+            { id: 2, name: "Deepak Verma", field: "Web Development", skills: "HTML, CSS, Testing, Git, Cybersecurity", school: "Delhi Technological University", points: 876553, certificates: 10, rank: 2, prevRank: 4 },
+            { id: 3, name: "Riya Sengupta", field: "Skill Development", skills: "Blockchain, MLOps, PostgreSQL", school: "Indian Statistical Institute, Kolkata", points: 754879, certificates: 9, rank: 3, prevRank: 6 },
+            { id: 4, name: "Qasim Khan", field: "Skill Development", skills: "Android, iOS, API Design", school: "Birla Institute of Technology and Science, Pilani", points: 695210, certificates: 7, rank: 4, prevRank: 3 },
+            { id: 5, name: "Vedashree Bhandigare", field: "Web Development", skills: "C++, Python, HTML, CSS", school: "NMIMS, Mumbai", points: 378620, certificates: 4, rank: 5, prevRank: 8 },
+            { id: 6, name: "Aarav Sharma", field: "Web Development", skills: "HTML, CSS, JavaScript", school: "Indian Institute of Technology, Delhi", points: 356748, certificates: 5, rank: 6, prevRank: 4 },
+            { id: 7, name: "Ojaswini Rao", field: "Healthcare", skills: "Surgery, Internal Medicine, Psychiatry", school: "All India Institute of Medical Sciences, Delhi", points: 298456, certificates: 6, rank: 7, prevRank: 11 },
+            { id: 8, name: "Bhavya Reddy", field: "Web Development", skills: "HTML, CSS", school: "International Institute of Information Technology, Hyderabad", points: 276390, certificates: 3, rank: 8, prevRank: 7 },
+            { id: 9, name: "Pranav Kulkarni", field: "Healthcare", skills: "Pediatrics, Residency", school: "Christian Medical College, Vellore", points: 254189, certificates: 5, rank: 9, prevRank: 10 },
+            { id: 10, name: "Garima Tiwari", field: "Psychology", skills: "Forensic Psychology, Neuropsychology", school: "Tata Institute of Social Sciences, Mumbai", points: 231678, certificates: 4, rank: 10, prevRank: 9 }
+        ];
+        
+        // Function to update user rank (for demonstration)
+        function updateRank() {
+            // This would normally connect to a database
+            console.log("Connected to database, rank updated");
+        }
+        
+        // Initialize with database values
+        document.addEventListener('DOMContentLoaded', function() {
+            // This would normally fetch data from a server
+            updateRank();
+        });
+    </script>
+</body>
+</html>

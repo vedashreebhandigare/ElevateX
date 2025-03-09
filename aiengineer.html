@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Engineer Roadmap</title>
+  <style>
+    body {
+      background-color: #25252b;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid #45f3ff;
+    }
+
+    h1 {
+      color: #ff2770;
+      margin: 0;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: #45f3ff;
+      text-decoration: none;
+      font-weight: bold;
+      border: 1px solid #45f3ff;
+      padding: 5px 10px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background-color: #45f3ff;
+      color: #25252b;
+    }
+
+    /* Container for the roadmap diagram */
+    .roadmap-container {
+      position: relative;
+      width: 90%;
+      max-width: 1200px;
+      height: 2400px; /* Increased height to accommodate all nodes */
+      margin: 40px auto;
+      background-color: #25252b;
+      border: 2px solid #45f3ff;
+      border-radius: 8px;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    /* The SVG lines are placed behind the nodes */
+    .roadmap-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1; /* behind the nodes */
+    }
+
+    /* Each clickable node (box) */
+    .node {
+      position: absolute;
+      z-index: 2; /* above lines */
+      width: 180px; /* slightly wider for better content fit */
+      height: 40px; /* fixed height for better alignment */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: #333;
+      border: 2px solid #ff2770;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      color: #fff;
+      font-weight: bold;
+      /* Center the node around its position */
+      transform: translate(-50%, -50%);
+    }
+
+    /* Hover effect: glow + slight lift */
+    .node:hover {
+      background: #ff2770;
+      color: #25252b;
+      transform: translate(-50%, -50%) translateY(-3px);
+      box-shadow: 0 0 15px #ff2770;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: #25252b;
+      border: 2px solid #45f3ff;
+      border-radius: 8px;
+      padding: 20px;
+      width: 80%;
+      max-width: 600px;
+      position: relative;
+      text-align: left;
+      max-height: 70vh;
+      overflow-y: auto;
+      color: #fff;
+    }
+
+    .close {
+      color: #45f3ff;
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #ff2770;
+    }
+
+    #modal-title {
+      color: #ff2770;
+      margin-top: 0;
+      border-bottom: 1px solid #45f3ff;
+      padding-bottom: 10px;
+    }
+
+    /* Category label styles */
+    .category-label {
+      position: absolute;
+      font-size: 20px;
+      font-weight: bold;
+      color: #45f3ff;
+      z-index: 2;
+    }
+
+    /* Alternate node styles */
+    .node.primary {
+      border-color: #ff2770;
+    }
+
+    .node.alternative {
+      border-color: #45f3ff;
+      background: #2a2a33;
+    }
+    
+    .node.alternative:hover {
+      background: #45f3ff;
+      color: #25252b;
+      box-shadow: 0 0 15px #45f3ff;
+    }
+    
+    .node.optional {
+      border-style: dashed;
+      opacity: 0.9;
+    }
+    
+    /* Personal recommendation tag */
+    .recommendation {
+      position: absolute;
+      background-color: #ff2770;
+      color: #25252b;
+      font-size: 10px;
+      padding: 2px 5px;
+      border-radius: 4px;
+      top: -10px;
+      right: -10px;
+      transform: rotate(10deg);
+      z-index: 3;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>AI Engineer Roadmap</h1>
+    <a href="index.html" class="back-btn">← Back</a>
+  </header>
+
+  <main>
+    <div class="roadmap-container">
+      <!-- Category Labels -->
+      <div class="category-label" style="left: 50px; top: 80px;">Fundamentals</div>
+      <div class="category-label" style="left: 50px; top: 440px;">LLM Frameworks</div>
+      <div class="category-label" style="left: 50px; top: 800px;">Data & Embeddings</div>
+      <div class="category-label" style="left: 50px; top: 1160px;">AI Implementation</div>
+      <div class="category-label" style="left: 50px; top: 1520px;">Advanced Topics</div>
+      
+      <!-- SVG for connecting lines -->
+      <svg class="roadmap-svg" viewBox="0 0 1200 2400">
+        <defs>
+          <!-- Arrowhead marker -->
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+                  refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#45f3ff" />
+          </marker>
+          <!-- Dashed line marker for optional paths -->
+          <pattern id="dashed" patternUnits="userSpaceOnUse" width="6" height="1">
+            <line x1="0" y1="0" x2="3" y2="0" stroke="#45f3ff" stroke-width="1" />
+          </pattern>
+        </defs>
+
+        <!-- Fundamentals Section -->
+        <line x1="600" y1="100" x2="300" y2="220" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="100" x2="900" y2="220" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+              
+        <line x1="300" y1="220" x2="600" y2="340" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="220" x2="600" y2="340" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- LLM Frameworks Section -->
+        <line x1="600" y1="340" x2="300" y2="460" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="340" x2="900" y2="460" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+              
+        <line x1="300" y1="460" x2="300" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="460" x2="600" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="300" y1="460" x2="600" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- Data & Embeddings Section -->
+        <line x1="300" y1="580" x2="300" y2="700"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="580" x2="300" y2="700"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <line x1="300" y1="700" x2="900" y2="820"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <line x1="900" y1="820" x2="600" y2="940"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- AI Implementation Section -->
+        <line x1="600" y1="940" x2="300" y2="1060"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="940" x2="900" y2="1060"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <line x1="300" y1="1060" x2="300" y2="1180"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1060" x2="900" y2="1180"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Advanced Topics Section -->
+        <line x1="300" y1="1180" x2="300" y2="1300"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1180" x2="900" y2="1300"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <line x1="300" y1="1300" x2="300" y2="1420"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1300" x2="600" y2="1420"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <line x1="300" y1="1420" x2="600" y2="1540"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="1420" x2="600" y2="1540"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <line x1="600" y1="1540" x2="600" y2="1660"
+              stroke="#45f3ff" stroke-width="2" stroke-dasharray="5,5"
+              marker-end="url(#arrowhead)"/>
+      </svg>
+
+      <!-- Nodes (boxes) - Using absolute positioning -->
+      <!-- Fundamentals -->
+      <div class="node primary" style="left: 600px; top: 100px;"
+           onclick="openModal('intro')">AI Engineering Intro</div>
+      <div class="node primary" style="left: 300px; top: 220px;"
+           onclick="openModal('roles')">Roles & Responsibilities</div>
+      <div class="node primary" style="left: 900px; top: 220px;"
+           onclick="openModal('terminology')">AI Terminology</div>
+      <div class="node primary" style="left: 600px; top: 340px;"
+           onclick="openModal('aimodels')">LLM Models</div>
+           
+      <!-- LLM Frameworks -->
+      <div class="node primary" style="left: 300px; top: 460px;"
+           onclick="openModal('openai')">OpenAI Models
+           <span class="recommendation">♦</span>
+      </div>
+      <div class="node primary" style="left: 900px; top: 460px;"
+           onclick="openModal('openmodels')">Open-Source Models</div>
+      <div class="node primary" style="left: 300px; top: 580px;"
+           onclick="openModal('apis')">API Integration</div>
+      <div class="node primary" style="left: 600px; top: 580px;"
+           onclick="openModal('promptengineering')">Prompt Engineering</div>
+           
+      <!-- Data & Embeddings -->
+      <div class="node primary" style="left: 300px; top: 700px;"
+           onclick="openModal('embeddings')">Embeddings
+           <span class="recommendation">♦</span>
+      </div>
+      <div class="node primary" style="left: 900px; top: 820px;"
+           onclick="openModal('vectordbs')">Vector Databases</div>
+      <div class="node primary" style="left: 600px; top: 940px;"
+           onclick="openModal('rag')">RAG Implementation</div>
+           
+      <!-- AI Implementation -->
+      <div class="node primary" style="left: 300px; top: 1060px;"
+           onclick="openModal('aiagents')">AI Agents</div>
+      <div class="node primary" style="left: 900px; top: 1060px;"
+           onclick="openModal('multimodal')">Multimodal AI</div>
+      <div class="node primary" style="left: 300px; top: 1180px;"
+           onclick="openModal('frameworks')">AI Frameworks</div>
+      <div class="node primary" style="left: 900px; top: 1180px;"
+           onclick="openModal('aisafety')">AI Safety & Ethics</div>
+           
+      <!-- Advanced Topics -->
+      <div class="node primary" style="left: 300px; top: 1300px;"
+           onclick="openModal('finetuning')">Fine-tuning</div>
+      <div class="node alternative" style="left: 900px; top: 1300px;"
+           onclick="openModal('security')">AI Security</div>
+      <div class="node primary" style="left: 300px; top: 1420px;"
+           onclick="openModal('tokenization')">Tokenization</div>
+      <div class="node primary" style="left: 600px; top: 1420px;"
+           onclick="openModal('devtools')">Development Tools</div>
+      <div class="node primary" style="left: 600px; top: 1540px;"
+           onclick="openModal('deployment')">Model Deployment</div>
+      <div class="node optional" style="left: 600px; top: 1660px;"
+           onclick="openModal('customtraining')">Custom Model Training</div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2 id="modal-title"></h2>
+        <div id="modal-text"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Data for nodes
+    const nodeData = {
+      intro: {
+        title: "AI Engineering Introduction",
+        text: `
+          <ul>
+            <li>What is an AI Engineer?</li>
+            <li>AI Engineer vs ML Engineer</li>
+            <li>Impact on Product Development</li>
+            <li>AI vs AGI (Artificial General Intelligence)</li>
+            <li>Career Paths & Opportunities</li>
+            <li>Prerequisites & Required Skills</li>
+          </ul>
+        `
+      },
+      roles: {
+        title: "Roles & Responsibilities",
+        text: `
+          <ul>
+            <li>Building AI Solutions</li>
+            <li>Integrating LLMs into Applications</li>
+            <li>Optimizing AI System Performance</li>
+            <li>Model Selection & Evaluation</li>
+            <li>Cross-Functional Collaboration</li>
+            <li>AI Solution Architecture</li>
+            <li>User Experience Design for AI</li>
+          </ul>
+        `
+      },
+      terminology: {
+        title: "AI Terminology",
+        text: `
+          <ul>
+            <li>Common AI & LLM Concepts
+              <ul>
+                <li>Inference</li>
+                <li>Training</li>
+                <li>Embeddings</li>
+                <li>Tokens & Context Length</li>
+                <li>Generative AI</li>
+                <li>Hallucinations</li>
+                <li>Model Architecture</li>
+                <li>Parameters</li>
+                <li>Transformers</li>
+                <li>Cut-off Dates / Knowledge</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      aimodels: {
+        title: "LLM Models",
+        text: `
+          <ul>
+            <li>Popular AI Models
+              <ul>
+                <li>OpenAI Models <span style="color: #ff2770;">(Recommended)</span>
+                  <ul>
+                    <li>GPT-3.5/GPT-4/GPT-4 Turbo</li>
+                    <li>DALL-E</li>
+                    <li>Whisper</li>
+                  </ul>
+                </li>
+                <li>Anthropic's Claude</li>
+                <li>Google's Gemini</li>
+                <li>Mistral AI Models</li>
+                <li>Cohere Models</li>
+                <li>Hugging Face Models</li>
+              </ul>
+            </li>
+            <li>Benefits of Pre-trained Models</li>
+            <li>Limitations and Considerations</li>
+            <li>Model Capabilities Comparison</li>
+          </ul>
+        `
+      },
+      openai: {
+        title: "OpenAI Models",
+        text: `
+          <ul>
+            <li>OpenAI Platform</li>
+            <li>Model Capabilities
+              <ul>
+                <li>Context Lengths</li>
+                <li>Cut-off Dates</li>
+                <li>Specialized Abilities</li>
+                <li>Multimodal Support</li>
+              </ul>
+            </li>
+            <li>Available Models
+              <ul>
+                <li>GPT-3.5 <span style="color: #ff2770;">(Budget option)</span></li>
+                <li>GPT-4/GPT-4 Turbo <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>DALL-E (Image generation)</li>
+                <li>Whisper (Speech-to-text)</li>
+                <li>Embedding models</li>
+              </ul>
+            </li>
+            <li>OpenAI API Basics</li>
+            <li>OpenAI Assistant API</li>
+          </ul>
+        `
+      },
+      openmodels: {
+        title: "Open-Source Models",
+        text: `
+          <ul>
+            <li>Open vs Closed Source Models</li>
+            <li>Popular Open Source Models
+              <ul>
+                <li>Llama 2/3</li>
+                <li>Mistral</li>
+                <li>Falcon</li>
+                <li>MPT</li>
+                <li>BLOOM</li>
+              </ul>
+            </li>
+            <li>Hugging Face Hub</li>
+            <li>Ollama
+              <ul>
+                <li>Ollama Models</li>
+                <li>Ollama SDK</li>
+              </ul>
+            </li>
+            <li>Finding & Selecting Models</li>
+            <li>Local Deployment Options</li>
+          </ul>
+        `
+      },
+      apis: {
+        title: "API Integration",
+        text: `
+          <ul>
+            <li>API Types & Endpoints
+              <ul>
+                <li>Chat Completions API</li>
+                <li>Image Generation API</li>
+                <li>Embeddings API</li>
+                <li>Speech-to-Text API</li>
+                <li>Text-to-Speech API</li>
+              </ul>
+            </li>
+            <li>Authentication & Security</li>
+            <li>Rate Limiting & Quotas</li>
+            <li>SDK Options
+              <ul>
+                <li>OpenAI SDK</li>
+                <li>Hugging Face Inference SDK</li>
+                <li>Transformers.js</li>
+                <li>Ollama SDK</li>
+              </ul>
+            </li>
+            <li>API Best Practices</li>
+          </ul>
+        `
+      },
+      promptengineering: {
+        title: "Prompt Engineering",
+        text: `
+          <ul>
+            <li>Writing Effective Prompts
+              <ul>
+                <li>Zero-shot Prompting</li>
+                <li>Few-shot Prompting</li>
+                <li>Chain-of-Thought Prompting</li>
+                <li>ReAct Prompting</li>
+              </ul>
+            </li>
+            <li>Prompt Patterns & Templates</li>
+            <li>System Instructions</li>
+            <li>Controlling Output Format</li>
+            <li>Optimizing for Specific Tasks</li>
+            <li>Prompt Versioning & Testing</li>
+            <li>Prompt Libraries & Tools</li>
+          </ul>
+        `
+      },
+      embeddings: {
+        title: "Embeddings",
+        text: `
+          <ul>
+            <li>What are Embeddings?</li>
+            <li>Use Cases for Embeddings
+              <ul>
+                <li>Semantic Search <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>Recommendation Systems</li>
+                <li>Anomaly Detection</li>
+                <li>Data Classification</li>
+                <li>Information Retrieval</li>
+              </ul>
+            </li>
+            <li>Embedding Models
+              <ul>
+                <li>OpenAI Embedding Models</li>
+                <li>Sentence Transformers</li>
+                <li>HuggingFace Models</li>
+              </ul>
+            </li>
+            <li>Embedding Creation & Storage</li>
+            <li>Similarity Metrics</li>
+            <li>Dimension Reduction</li>
+          </ul>
+        `
+      },
+      vectordbs: {
+        title: "Vector Databases",
+        text: `
+          <ul>
+            <li>Purpose and Functionality</li>
+            <li>Popular Vector Databases
+              <ul>
+                <li>Pinecone <span style="color: #ff2770;">(Hosted option)</span></li>
+                <li>Chroma <span style="color: #ff2770;">(Local option)</span></li>
+                <li>Weaviate</li>
+                <li>FAISS</li>
+                <li>Qdrant</li>
+                <li>Milvus</li>
+                <li>Supabase Vector</li>
+                <li>MongoDB Atlas Vector Search</li>
+              </ul>
+            </li>
+            <li>Indexing Embeddings</li>
+            <li>Performing Similarity Search</li>
+            <li>Vector Database Operations</li>
+            <li>Metadata Filtering</li>
+            <li>Scaling Considerations</li>
+          </ul>
+        `
+      },
+      rag: {
+        title: "RAG Implementation",
+        text: `
+          <ul>
+            <li>Retrieval Augmented Generation</li>
+            <li>RAG vs Fine-tuning</li>
+            <li>RAG Architecture Components
+              <ul>
+                <li>Document Processing</li>
+                <li>Chunking Strategies</li>
+                <li>Embedding Generation</li>
+                <li>Vector Database Storage</li>
+                <li>Retrieval Process</li>
+                <li>Context Assembly</li>
+                <li>LLM Generation</li>
+              </ul>
+            </li>
+            <li>Implementation Methods
+              <ul>
+                <li>Using SDKs Directly</li>
+                <li>LangChain <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>LlamaIndex</li>
+                <li>OpenAI Assistants API</li>
+              </ul>
+            </li>
+            <li>Advanced RAG Techniques</li>
+          </ul>
+        `
+      },
+      aiagents: {
+        title: "AI Agents",
+        text: `
+          <ul>
+            <li>What are AI Agents?</li>
+            <li>Agent Use Cases</li>
+            <li>Agent Architecture
+              <ul>
+                <li>Planning</li>
+                <li>Memory</li>
+                <li>Tool Usage</li>
+                <li>Reflection</li>
+              </ul>
+            </li>
+            <li>Implementation Options
+              <ul>
+                <li>Manual Implementation</li>
+                <li>OpenAI Functions / Tools</li>
+                <li>OpenAI Assistants API <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>LangChain Agents</li>
+                <li>AutoGPT</li>
+              </ul>
+            </li>
+            <li>Agent Orchestration</li>
+            <li>Multi-Agent Systems</li>
+          </ul>
+        `
+      },
+      multimodal: {
+        title: "Multimodal AI",
+        text: `
+          <ul>
+            <li>What is Multimodal AI?</li>
+            <li>Multimodal Tasks
+              <ul>
+                <li>Image Understanding</li>
+                <li>Image Generation</li>
+                <li>Video Understanding</li>
+                <li>Audio Processing</li>
+                <li>Text-to-Speech</li>
+                <li>Speech-to-Text</li>
+              </ul>
+            </li>
+            <li>Multimodal Models & APIs
+              <ul>
+                <li>OpenAI Vision API</li>
+                <li>DALL-E API</li>
+                <li>Whisper API</li>
+                <li>Hugging Face Models</li>
+              </ul>
+            </li>
+            <li>Implementation Tools
+              <ul>
+                <li>LangChain for Multimodal</li>
+                <li>LlamaIndex for Multimodal</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      frameworks: {
+        title: "AI Frameworks",
+        text: `
+          <ul>
+            <li>LangChain <span style="color: #ff2770;">(Recommended)</span>
+              <ul>
+                <li>Document Loading</li>
+                <li>Text Splitting</li>
+                <li>Chains</li>
+                <li>Memory</li>
+                <li>Agents</li>
+                <li>Callbacks</li>
+              </ul>
+            </li>
+            <li>LlamaIndex
+              <ul>
+                <li>Data Connectors</li>
+                <li>Indices</li>
+                <li>Query Engines</li>
+                <li>Node Parsing</li>
+              </ul>
+            </li>
+            <li>Semantic Kernel</li>
+            <li>Haystack</li>
+            <li>Frontend Frameworks
+              <ul>
+                <li>Vercel AI SDK</li>
+                <li>Chainlit</li>
+                <li>Gradio</li>
+                <li>Streamlit</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      aisafety: {
+        title: "AI Safety & Ethics",
+        text: `
+          <ul>
+            <li>Understanding AI Safety Issues</li>
+            <li>Common Risks
+              <ul>
+                <li>Prompt Injection Attacks</li>
+                <li>Bias and Fairness</li>
+                <li>Security and Privacy Concerns</li>
+                <li>Hallucinations</li>
+                <li>Content Policy Violations</li>
+              </ul>
+            </li>
+            <li>Mitigation Strategies
+              <ul>
+                <li>Conducting Adversarial Testing</li>
+                <li>Content Moderation</li>
+                <li>Robust Prompt Engineering</li>
+                <li>Input & Output Constraints</li>
+                <li>User Authentication & Attribution</li>
+              </ul>
+            </li>
+            <li>Responsible AI Development</li>
+            <li>Compliance Considerations</li>
+          </ul>
+        `
+      },
+      finetuning: {
+        title: "Fine-tuning",
+        text: `
+          <ul>
+            <li>What is Fine-tuning?</li>
+            <li>When to Use Fine-tuning vs RAG</li>
+            <li>Data Preparation
+              <ul>
+                <li>Data Collection</li>
+                <li>Data Cleaning</li>
+                <li>Training Data Format</li>
+                <li>Validation Data</li>
+              </ul>
+            </li>
+            <li>Fine-tuning Options
+              <ul>
+                <li>OpenAI Fine-tuning API</li>
+                <li>Hugging Face Trainers</li>
+                <li>Parameter-Efficient Fine-tuning (PEFT)</li>
+                <li>LoRA / QLoRA</li>
+              </ul>
+            </li>
+            <li>Evaluation & Iteration</li>
+          </ul>
+        `
+      },
+      security: {
+        title: "AI Security",
+        text: `
+          <ul>
+            <li>Security Challenges in AI Systems</li>
+            <li>Attack Vectors
+              <ul>
+                <li>Prompt Injection</li>

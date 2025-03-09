@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DevOps Roadmap</title>
+  <style>
+    body {
+      background-color: #25252b;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid #45f3ff;
+    }
+
+    h1 {
+      color: #ff2770;
+      margin: 0;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: #45f3ff;
+      text-decoration: none;
+      font-weight: bold;
+      border: 1px solid #45f3ff;
+      padding: 5px 10px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background-color: #45f3ff;
+      color: #25252b;
+    }
+
+    /* Container for the roadmap diagram */
+    .roadmap-container {
+      position: relative;
+      width: 90%;
+      max-width: 1200px;
+      height: 2100px; /* Increased height to accommodate all nodes */
+      margin: 40px auto;
+      background-color: #25252b;
+      border: 2px solid #45f3ff;
+      border-radius: 8px;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    /* The SVG lines are placed behind the nodes */
+    .roadmap-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1; /* behind the nodes */
+    }
+
+    /* Each clickable node (box) */
+    .node {
+      position: absolute;
+      z-index: 2; /* above lines */
+      width: 150px;
+      text-align: center;
+      background: #333;
+      border: 2px solid #ff2770;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    /* Hover effect: glow + slight lift */
+    .node:hover {
+      background: #ff2770;
+      color: #25252b;
+      transform: translateY(-3px);
+      box-shadow: 0 0 15px #ff2770;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: #25252b;
+      border: 2px solid #45f3ff;
+      border-radius: 8px;
+      padding: 20px;
+      width: 80%;
+      max-width: 600px;
+      position: relative;
+      text-align: left;
+      max-height: 70vh;
+      overflow-y: auto;
+      color: #fff;
+    }
+
+    .close {
+      color: #45f3ff;
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #ff2770;
+    }
+
+    #modal-title {
+      color: #ff2770;
+      margin-top: 0;
+      border-bottom: 1px solid #45f3ff;
+      padding-bottom: 10px;
+    }
+
+    /* Category label styles */
+    .category-label {
+      position: absolute;
+      font-size: 20px;
+      font-weight: bold;
+      color: #45f3ff;
+      z-index: 2;
+    }
+
+    /* Alternate node styles */
+    .node.primary {
+      border-color: #ff2770;
+    }
+
+    .node.alternative {
+      border-color: #45f3ff;
+      background: #2a2a33;
+    }
+    
+    .node.alternative:hover {
+      background: #45f3ff;
+      color: #25252b;
+      box-shadow: 0 0 15px #45f3ff;
+    }
+    
+    .node.optional {
+      border-style: dashed;
+      opacity: 0.9;
+    }
+    
+    /* Personal recommendation tag */
+    .recommendation {
+      position: absolute;
+      background-color: #ff2770;
+      color: #25252b;
+      font-size: 10px;
+      padding: 2px 5px;
+      border-radius: 4px;
+      top: -8px;
+      right: -8px;
+      transform: rotate(10deg);
+      z-index: 3;
+    }
+
+    /* Column layout for better alignment */
+    .column-left {
+      left: 250px;
+    }
+    
+    .column-center {
+      left: 525px;
+    }
+    
+    .column-right {
+      left: 800px;
+    }
+    
+    /* Stage rows for vertical alignment - adjusted spacing */
+    .stage-row-1 { top: 80px; }
+    .stage-row-2 { top: 200px; }
+    .stage-row-3 { top: 320px; }
+    .stage-row-4 { top: 440px; }
+    .stage-row-5 { top: 560px; }
+    .stage-row-6 { top: 680px; }
+    .stage-row-7 { top: 800px; }
+    .stage-row-8 { top: 920px; }
+    .stage-row-9 { top: 1040px; }
+    .stage-row-10 { top: 1160px; }
+    .stage-row-11 { top: 1280px; }
+    .stage-row-12 { top: 1400px; }
+    .stage-row-13 { top: 1520px; }
+    .stage-row-14 { top: 1640px; }
+    .stage-row-15 { top: 1760px; }
+    .stage-row-16 { top: 1880px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>DevOps Development Roadmap</h1>
+    <a href="index.html" class="back-btn">← Back</a>
+  </header>
+
+  <main>
+    <div class="roadmap-container">
+      <!-- Category Labels -->
+      <div class="category-label" style="left: 50px; top: 80px;">Fundamentals</div>
+      <div class="category-label" style="left: 50px; top: 440px;">Core Skills</div>
+      <div class="category-label" style="left: 50px; top: 800px;">Infrastructure</div>
+      <div class="category-label" style="left: 50px; top: 1160px;">CI/CD & Monitoring</div>
+      <div class="category-label" style="left: 50px; top: 1520px;">Advanced Topics</div>
+      
+      <!-- SVG for connecting lines -->
+      <svg class="roadmap-svg" viewBox="0 0 1200 2100">
+        <defs>
+          <!-- Arrowhead marker -->
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+                  refX="0" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#45f3ff" />
+          </marker>
+          <!-- Dashed line marker for optional paths -->
+          <pattern id="dashed" patternUnits="userSpaceOnUse" width="6" height="1">
+            <line x1="0" y1="0" x2="3" y2="0" stroke="#45f3ff" stroke-width="1" />
+          </pattern>
+        </defs>
+
+        <!-- Fundamentals Section -->
+        <!-- OSs to Programming Languages -->
+        <line x1="600" y1="100" x2="325" y2="220" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="100" x2="875" y2="220" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+              
+        <!-- Languages, Terminals to Version Control -->
+        <line x1="325" y1="240" x2="600" y2="340" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="875" y1="240" x2="600" y2="340" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- Core Skills Section -->
+        <!-- Version Control to Scripting, Networking -->
+        <line x1="600" y1="360" x2="325" y2="460" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="360" x2="875" y2="460" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+              
+        <!-- Scripting, Networking to Web Servers, Process Monitoring -->
+        <line x1="325" y1="480" x2="325" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="875" y1="480" x2="600" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="875" y1="480" x2="875" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- Infrastructure Section -->
+        <!-- Web Servers, Process Monitoring to Containers -->
+        <line x1="325" y1="600" x2="325" y2="700"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="600" x2="325" y2="700"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="875" y1="600" x2="325" y2="700"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Containers to Infrastructure Provisioning -->
+        <line x1="325" y1="720" x2="875" y2="820"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Infrastructure Provisioning to Cloud Providers -->
+        <line x1="875" y1="840" x2="600" y2="940"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- CI/CD & Monitoring Section -->
+        <!-- Cloud Providers to CI/CD -->
+        <line x1="600" y1="960" x2="325" y2="1060"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="960" x2="875" y2="1060"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- CI/CD, Artifact Management to Infrastructure Monitoring -->
+        <line x1="325" y1="1080" x2="325" y2="1180"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="875" y1="1080" x2="875" y2="1180"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Advanced Topics Section -->
+        <!-- Infrastructure Monitoring, Logs Management to Container Orchestration -->
+        <line x1="325" y1="1200" x2="325" y2="1300"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="875" y1="1200" x2="875" y2="1300"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Container Orchestration, App Monitoring to GitOps -->
+        <line x1="325" y1="1320" x2="325" y2="1440"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="875" y1="1320" x2="875" y2="1440"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- GitOps, Config Management to Service Mesh -->
+        <line x1="325" y1="1460" x2="600" y2="1580"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="875" y1="1460" x2="600" y2="1580"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Service Mesh to Serverless -->
+        <line x1="600" y1="1600" x2="600" y2="1700"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Serverless to Optional Connection (dashed) -->
+        <line x1="600" y1="1720" x2="600" y2="1820"
+              stroke="#45f3ff" stroke-width="2" stroke-dasharray="5,5"
+              marker-end="url(#arrowhead)"/>
+      </svg>
+
+      <!-- Nodes (boxes) - With improved alignment using classes -->
+      <!-- Fundamentals -->
+      <div class="node primary column-center stage-row-1"
+           onclick="openModal('os')">Operating Systems</div>
+      <div class="node primary column-left stage-row-2"
+           onclick="openModal('language')">Programming Language</div>
+      <div class="node primary column-right stage-row-2"
+           onclick="openModal('terminal')">Terminal Skills</div>
+      <div class="node primary column-center stage-row-3"
+           onclick="openModal('vcs')">Version Control</div>
+           
+      <!-- Core Skills -->
+      <div class="node primary column-left stage-row-4"
+           onclick="openModal('scripting')">Scripting</div>
+      <div class="node primary column-right stage-row-4"
+           onclick="openModal('networking')">Networking</div>
+      <div class="node primary column-left stage-row-5"
+           onclick="openModal('webservers')">Web Servers</div>
+      <div class="node primary column-center stage-row-5"
+           onclick="openModal('process')">Process Monitoring</div>
+      <div class="node primary column-right stage-row-5"
+           onclick="openModal('firewalls')">Proxies & Firewalls</div>
+           
+      <!-- Infrastructure -->
+      <div class="node primary column-left stage-row-6"
+           onclick="openModal('containers')">Containers
+           <span class="recommendation">♦</span>
+      </div>
+      <div class="node primary column-right stage-row-7"
+           onclick="openModal('infrastructure')">Infrastructure Provisioning</div>
+      <div class="node primary column-center stage-row-8"
+           onclick="openModal('cloud')">Cloud Providers</div>
+           
+      <!-- CI/CD & Monitoring -->
+      <div class="node primary column-left stage-row-9"
+           onclick="openModal('cicd')">CI/CD Tools</div>
+      <div class="node primary column-right stage-row-9"
+           onclick="openModal('artifact')">Artifact Management</div>
+      <div class="node primary column-left stage-row-10"
+           onclick="openModal('inframonitoring')">Infrastructure Monitoring</div>
+      <div class="node primary column-right stage-row-10"
+           onclick="openModal('logging')">Logs Management</div>
+           
+      <!-- Advanced Topics -->
+      <div class="node primary column-left stage-row-11"
+           onclick="openModal('orchestration')">Container Orchestration</div>
+      <div class="node alternative column-right stage-row-11"
+           onclick="openModal('appmonitoring')">Application Monitoring</div>
+      <div class="node primary column-left stage-row-12"
+           onclick="openModal('gitops')">GitOps</div>
+      <div class="node primary column-right stage-row-12"
+           onclick="openModal('config')">Configuration Management</div>
+      <div class="node primary column-center stage-row-13"
+           onclick="openModal('servicemesh')">Service Mesh</div>
+      <div class="node primary column-center stage-row-14"
+           onclick="openModal('serverless')">Serverless</div>
+      <div class="node optional column-center stage-row-15"
+           onclick="openModal('security')">Secret Management</div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2 id="modal-title"></h2>
+        <div id="modal-text"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Data for the roadmap nodes
+    const nodeData = {
+      os: {
+        title: "Operating Systems",
+        text: `
+          <p>Understanding various operating systems is crucial for DevOps engineers:</p>
+          <ul>
+            <li>Linux Distributions
+              <ul>
+                <li>RHEL / Derivatives (CentOS, Fedora)</li>
+                <li>Ubuntu / Debian <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>SUSE Linux</li>
+              </ul>
+            </li>
+            <li>Unix-like Systems
+              <ul>
+                <li>FreeBSD</li>
+                <li>OpenBSD</li>
+                <li>NetBSD</li>
+              </ul>
+            </li>
+            <li>Windows Server</li>
+          </ul>
+          <p>Focus on learning one distribution thoroughly before exploring others.</p>
+        `
+      },
+      language: {
+        title: "Programming Language",
+        text: `
+          <p>Learn at least one of these programming/scripting languages:</p>
+          <ul>
+            <li>Python <span style="color: #ff2770;">(Recommended)</span></li>
+            <li>Go</li>
+            <li>Ruby</li>
+            <li>JavaScript / Node.js</li>
+            <li>Rust</li>
+          </ul>
+          <p>Python is especially popular for automation and scripting in DevOps.</p>
+        `
+      },
+      terminal: {
+        title: "Terminal Skills",
+        text: `
+          <p>Being comfortable in terminal environments is essential:</p>
+          <ul>
+            <li>Bash Scripting <span style="color: #ff2770;">(Recommended)</span></li>
+            <li>PowerShell (for Windows environments)</li>
+            <li>Essential Terminal Skills:
+              <ul>
+                <li>File operations (ls, cd, cp, mv, rm)</li>
+                <li>Text processing (grep, sed, awk)</li>
+                <li>Process management (ps, top, kill)</li>
+                <li>Networking tools (netstat, ping, curl)</li>
+                <li>System information (uname, df, du)</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      vcs: {
+        title: "Version Control Systems",
+        text: `
+          <p>Master Git and become familiar with at least one hosting platform:</p>
+          <ul>
+            <li>Git <span style="color: #ff2770;">(Recommended)</span>
+              <ul>
+                <li>Basic commands (clone, add, commit, push, pull)</li>
+                <li>Branching strategies</li>
+                <li>Merge vs Rebase</li>
+                <li>Resolving conflicts</li>
+              </ul>
+            </li>
+            <li>Git Hosting Services:
+              <ul>
+                <li>GitHub</li>
+                <li>GitLab</li>
+                <li>Bitbucket</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      scripting: {
+        title: "Scripting",
+        text: `
+          <p>Automate repetitive tasks with scripting:</p>
+          <ul>
+            <li>Shell Scripting (Bash) <span style="color: #ff2770;">(Recommended)</span></li>
+            <li>Python Scripting</li>
+            <li>PowerShell (for Windows environments)</li>
+            <li>Key Scripting Skills:
+              <ul>
+                <li>Process automation</li>
+                <li>File manipulation</li>
+                <li>System monitoring</li>
+                <li>Task scheduling (cron jobs)</li>
+                <li>Error handling and logging</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      networking: {
+        title: "Networking",
+        text: `
+          <p>Understanding networking fundamentals is critical for DevOps:</p>
+          <ul>
+            <li>OSI Model</li>
+            <li>TCP/IP Stack</li>
+            <li>Common Protocols:
+              <ul>
+                <li>HTTP/HTTPS</li>
+                <li>SSH</li>
+                <li>FTP/SFTP</li>
+                <li>DNS</li>
+                <li>SSL/TLS</li>
+              </ul>
+            </li>
+            <li>Network Tools:
+              <ul>
+                <li>ping, traceroute</li>
+                <li>netstat, ss</li>
+                <li>tcpdump, wireshark</li>
+                <li>nmap</li>
+                <li>curl, wget</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      webservers: {
+        title: "Web Servers",
+        text: `
+          <p>Learn to set up and configure web servers:</p>
+          <ul>
+            <li>Nginx <span style="color: #ff2770;">(Recommended)</span></li>
+            <li>Apache</li>
+            <li>Tomcat</li>
+            <li>IIS (for Windows environments)</li>
+            <li>Key Concepts:
+              <ul>
+                <li>Virtual hosts configuration</li>
+                <li>Load balancing</li>
+                <li>SSL/TLS configuration</li>
+                <li>HTTP/2 & HTTP/3</li>
+                <li>Performance tuning</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      process: {
+        title: "Process Monitoring",
+        text: `
+          <p>Monitoring system and application processes:</p>
+          <ul>
+            <li>Basic Tools:
+              <ul>
+                <li>top, htop</li>
+                <li>ps, pgrep, pkill</li>
+                <li>lsof (list open files)</li>
+                <li>strace (system call tracer)</li>
+              </ul>
+            </li>
+            <li>Performance Monitoring:
+              <ul>
+                <li>CPU, memory, disk usage</li>
+                <li>I/O operations</li>
+                <li>Network traffic</li>
+              </ul>
+            </li>
+            <li>System Services:
+              <ul>
+                <li>systemd/systemctl</li>
+                <li>service management</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      firewalls: {
+        title: "Proxies & Firewalls",
+        text: `
+          <p>Understand different types of proxies and firewall configurations:</p>
+          <ul>
+            <li>Proxy Types:
+              <ul>
+                <li>Forward Proxy</li>
+                <li>Reverse Proxy</li>
+                <li>Caching Server</li>
+                <li>Load Balancer</li>
+              </ul>
+            </li>
+            <li>Firewalls:
+              <ul>
+                <li>iptables</li>
+                <li>ufw (Uncomplicated Firewall)</li>
+                <li>firewalld</li>
+                <li>Windows Firewall</li>
+                <li>Cloud provider firewalls</li>
+              </ul>
+            </li>
+            <li>Network Security Groups</li>
+          </ul>
+        `
+      },
+      containers: {
+        title: "Containers",
+        text: `
+          <p>Learn containerization technologies:</p>
+          <ul>
+            <li>Docker <span style="color: #ff2770;">(Recommended)</span>
+              <ul>
+                <li>Dockerfile creation</li>
+                <li>Image building and management</li>
+                <li>Container lifecycle</li>
+                <li>Docker Compose</li>
+                <li>Docker networking</li>
+                <li>Docker volumes</li>
+              </ul>
+            </li>
+            <li>Other Container Technologies:
+              <ul>
+                <li>LXC (Linux Containers)</li>
+                <li>Podman</li>
+                <li>containerd</li>
+              </ul>
+            </li>
+            <li>Container Concepts:
+              <ul>
+                <li>Isolation</li>
+                <li>Resource control</li>
+                <li>Image layering</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      infrastructure: {
+        title: "Infrastructure Provisioning",
+        text: `
+          <p>Automate infrastructure deployment with these tools:</p>
+          <ul>
+            <li>Terraform <span style="color: #ff2770;">(Recommended)</span>
+              <ul>
+                <li>HCL (HashiCorp Configuration Language)</li>
+                <li>State management</li>
+                <li>Modules</li>
+                <li>Providers</li>
+              </ul>
+            </li>
+            <li>Cloud-specific tools:
+              <ul>
+                <li>AWS CloudFormation</li>
+                <li>Azure Resource Manager templates</li>
+                <li>Google Cloud Deployment Manager</li>
+              </ul>
+            </li>
+            <li>Alternative tools:
+              <ul>
+                <li>Pulumi</li>
+                <li>AWS CDK</li>
+              </ul>
+            </li>
+          </ul>
+          <p>Infrastructure as Code (IaC) is essential for consistent, repeatable deployments.</p>
+        `
+      },
+      cloud: {
+        title: "Cloud Providers",
+        text: `
+          <p>Get familiar with at least one major cloud provider:</p>
+          <ul>
+            <li>AWS (Amazon Web Services) <span style="color: #ff2770;">(Recommended)</span></li>
+            <li>Microsoft Azure</li>
+            <li>Google Cloud Platform (GCP)</li>
+            <li>Smaller Alternatives:
+              <ul>
+                <li>Digital Ocean</li>
+                <li>Linode / Akamai Cloud</li>
+                <li>Heroku</li>
+                <li>Vultr</li>
+                <li>Alibaba Cloud</li>
+              </ul>
+            </li>
+            <li>Key Services to Understand:
+              <ul>
+                <li>Compute (VMs, containers)</li>
+                <li>Storage</li>
+                <li>Networking</li>
+                <li>Security</li>
+                <li>Database services</li>
+                <li>Identity and access management</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      cicd: {
+        title: "CI/CD Tools",
+        text: `
+          <p>Continuous Integration and Continuous Delivery/Deployment tools:</p>
+          <ul>
+            <li>Jenkins <span style="color: #ff2770;">(Recommended)</span></li>
+            <li>GitHub Actions</li>
+            <li>GitLab CI</li>
+            <li>CircleCI</li>
+            <li>Travis CI</li>
+            <li>TeamCity</li>
+            <li>Azure DevOps Services</li>
+            <li>Drone</li>
+            <li>Key CI/CD Concepts:
+              <ul>
+                <li>Build automation</li>
+                <li>Automated testing</li>
+                <li>Deployment automation</li>
+                <li>Pipeline as code</li>
+                <li>Environment management</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      artifact: {
+        title: "Artifact Management",
+        text: `
+          <p>Store, version, and distribute build artifacts:</p>
+          <ul>
+            <li>JFrog Artifactory <span style="color: #ff2770;">(Recommended)</span></li>
+            <li>Nexus Repository</li>
+            <li>Cloud Smith</li>
+            <li>GitHub Packages</li>
+            <li>Common Repository Types:
+              <ul>
+                <li>Maven/Gradle repositories (Java)</li>
+                <li>npm registries (JavaScript)</li>
+                <li>PyPI mirrors (Python)</li>
+                <li>Docker registries</li>
+                <li>Generic binary repositories</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      inframonitoring: {
+        title: "Infrastructure Monitoring",
+        text: `
+          <p>Monitor your infrastructure health and performance:</p>
+          <ul>
+            <li>Prometheus + Grafana <span style="color: #ff2770;">(Recommended)</span>
+              <ul>
+                <li>Metrics collection</li>
+                <li>Alerting</li>
+                <li>Visualization</li>
+              </ul>
+            </li>
+            <li>Alternatives:
+              <ul>
+                <li>Zabbix</li>
+                <li>Datadog</li>
+                <li>Nagios</li>
+                <li>Amazon CloudWatch

@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QA Engineer Roadmap</title>
+  <style>
+    body {
+      background-color: #25252b;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid #45f3ff;
+    }
+
+    h1 {
+      color: #ff2770;
+      margin: 0;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: #45f3ff;
+      text-decoration: none;
+      font-weight: bold;
+      border: 1px solid #45f3ff;
+      padding: 5px 10px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background-color: #45f3ff;
+      color: #25252b;
+    }
+
+    /* Container for the roadmap diagram */
+    .roadmap-container {
+      position: relative;
+      width: 90%;
+      max-width: 1200px;
+      height: 2100px; /* Increased height to accommodate all nodes */
+      margin: 40px auto;
+      background-color: #25252b;
+      border: 2px solid #45f3ff;
+      border-radius: 8px;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    /* The SVG lines are placed behind the nodes */
+    .roadmap-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1; /* behind the nodes */
+    }
+
+    /* Each clickable node (box) */
+    .node {
+      position: absolute;
+      z-index: 2; /* above lines */
+      width: 180px; /* slightly wider for better content fit */
+      height: 40px; /* fixed height for better alignment */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: #333;
+      border: 2px solid #ff2770;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      color: #fff;
+      font-weight: bold;
+      /* Center the node around its position */
+      transform: translate(-50%, -50%);
+    }
+
+    /* Hover effect: glow + slight lift */
+    .node:hover {
+      background: #ff2770;
+      color: #25252b;
+      transform: translate(-50%, -50%) translateY(-3px);
+      box-shadow: 0 0 15px #ff2770;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: #25252b;
+      border: 2px solid #45f3ff;
+      border-radius: 8px;
+      padding: 20px;
+      width: 80%;
+      max-width: 600px;
+      position: relative;
+      text-align: left;
+      max-height: 70vh;
+      overflow-y: auto;
+      color: #fff;
+    }
+
+    .close {
+      color: #45f3ff;
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #ff2770;
+    }
+
+    #modal-title {
+      color: #ff2770;
+      margin-top: 0;
+      border-bottom: 1px solid #45f3ff;
+      padding-bottom: 10px;
+    }
+
+    /* Category label styles */
+    .category-label {
+      position: absolute;
+      font-size: 20px;
+      font-weight: bold;
+      color: #45f3ff;
+      z-index: 2;
+    }
+
+    /* Alternate node styles */
+    .node.primary {
+      border-color: #ff2770;
+    }
+
+    .node.alternative {
+      border-color: #45f3ff;
+      background: #2a2a33;
+    }
+    
+    .node.alternative:hover {
+      background: #45f3ff;
+      color: #25252b;
+      box-shadow: 0 0 15px #45f3ff;
+    }
+    
+    .node.optional {
+      border-style: dashed;
+      opacity: 0.9;
+    }
+    
+    /* Personal recommendation tag */
+    .recommendation {
+      position: absolute;
+      background-color: #ff2770;
+      color: #25252b;
+      font-size: 10px;
+      padding: 2px 5px;
+      border-radius: 4px;
+      top: -10px;
+      right: -10px;
+      transform: rotate(10deg);
+      z-index: 3;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>QA Engineer Roadmap</h1>
+    <a href="index.html" class="back-btn">← Back</a>
+  </header>
+
+  <main>
+    <div class="roadmap-container">
+      <!-- Category Labels -->
+      <div class="category-label" style="left: 50px; top: 80px;">Fundamentals</div>
+      <div class="category-label" style="left: 50px; top: 440px;">Testing Techniques</div>
+      <div class="category-label" style="left: 50px; top: 800px;">Automation</div>
+      <div class="category-label" style="left: 50px; top: 1160px;">Non-Functional Testing</div>
+      <div class="category-label" style="left: 50px; top: 1520px;">Advanced Skills</div>
+      
+      <!-- SVG for connecting lines - Using absolute coordinates that match node positions -->
+      <svg class="roadmap-svg" viewBox="0 0 1200 2100">
+        <defs>
+          <!-- Arrowhead marker -->
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+                  refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#45f3ff" />
+          </marker>
+          <!-- Dashed line marker for optional paths -->
+          <pattern id="dashed" patternUnits="userSpaceOnUse" width="6" height="1">
+            <line x1="0" y1="0" x2="3" y2="0" stroke="#45f3ff" stroke-width="1" />
+          </pattern>
+        </defs>
+
+        <!-- Fundamentals Section -->
+        <!-- QA Fundamentals to Testing Approaches -->
+        <line x1="600" y1="100" x2="300" y2="220" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="100" x2="900" y2="220" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+              
+        <!-- Testing Approaches, SDLC to Test Planning -->
+        <line x1="300" y1="220" x2="600" y2="340" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="220" x2="600" y2="340" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- Testing Techniques Section -->
+        <!-- Test Planning to Functional Testing, Test Management -->
+        <line x1="600" y1="340" x2="300" y2="460" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="340" x2="900" y2="460" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+              
+        <!-- Functional Testing, Test Management to Bug Management -->
+        <line x1="300" y1="460" x2="300" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="460" x2="600" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="300" y1="460" x2="600" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- Automation Section -->
+        <!-- Bug Management, Project Management to Frontend Automation -->
+        <line x1="300" y1="580" x2="300" y2="700"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="580" x2="300" y2="700"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Frontend Automation to Backend Automation -->
+        <line x1="300" y1="700" x2="900" y2="820"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Backend Automation to Mobile Automation -->
+        <line x1="900" y1="820" x2="600" y2="940"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Non-Functional Testing Section -->
+        <!-- Mobile Automation to Performance Testing -->
+        <line x1="600" y1="940" x2="300" y2="1060"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="940" x2="900" y2="1060"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Performance, Security to Accessibility, Reporting -->
+        <line x1="300" y1="1060" x2="300" y2="1180"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1060" x2="900" y2="1180"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Advanced Skills Section -->
+        <!-- Accessibility, Reporting to CI/CD -->
+        <line x1="300" y1="1180" x2="300" y2="1300"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1180" x2="900" y2="1300"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- CI/CD, Monitoring to Version Control -->
+        <line x1="300" y1="1300" x2="300" y2="1420"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1300" x2="600" y2="1420"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Version Control to Headless Testing -->
+        <line x1="300" y1="1420" x2="600" y2="1540"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="1420" x2="600" y2="1540"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Headless Testing to Optional Connection (dashed) -->
+        <line x1="600" y1="1540" x2="600" y2="1660"
+              stroke="#45f3ff" stroke-width="2" stroke-dasharray="5,5"
+              marker-end="url(#arrowhead)"/>
+      </svg>
+
+      <!-- Nodes (boxes) - Using absolute positioning -->
+      <!-- Fundamentals -->
+      <div class="node primary" style="left: 600px; top: 100px;"
+           onclick="openModal('fundamentals')">QA Fundamentals</div>
+      <div class="node primary" style="left: 300px; top: 220px;"
+           onclick="openModal('approaches')">Testing Approaches</div>
+      <div class="node primary" style="left: 900px; top: 220px;"
+           onclick="openModal('sdlc')">SDLC Models</div>
+      <div class="node primary" style="left: 600px; top: 340px;"
+           onclick="openModal('testplanning')">Test Planning</div>
+           
+      <!-- Testing Techniques -->
+      <div class="node primary" style="left: 300px; top: 460px;"
+           onclick="openModal('functional')">Functional Testing</div>
+      <div class="node primary" style="left: 900px; top: 460px;"
+           onclick="openModal('testmanagement')">Test Management</div>
+      <div class="node primary" style="left: 300px; top: 580px;"
+           onclick="openModal('bugmanagement')">Bug Management</div>
+      <div class="node primary" style="left: 600px; top: 580px;"
+           onclick="openModal('projectmanagement')">Project Management</div>
+           
+      <!-- Automation -->
+      <div class="node primary" style="left: 300px; top: 700px;"
+           onclick="openModal('frontendautomation')">Frontend Automation
+           <span class="recommendation">♦</span>
+      </div>
+      <div class="node primary" style="left: 900px; top: 820px;"
+           onclick="openModal('backendautomation')">Backend Automation</div>
+      <div class="node primary" style="left: 600px; top: 940px;"
+           onclick="openModal('mobileautomation')">Mobile Automation</div>
+           
+      <!-- Non-Functional Testing -->
+      <div class="node primary" style="left: 300px; top: 1060px;"
+           onclick="openModal('performance')">Performance Testing</div>
+      <div class="node primary" style="left: 900px; top: 1060px;"
+           onclick="openModal('security')">Security Testing</div>
+      <div class="node primary" style="left: 300px; top: 1180px;"
+           onclick="openModal('accessibility')">Accessibility Testing</div>
+      <div class="node primary" style="left: 900px; top: 1180px;"
+           onclick="openModal('reporting')">Reporting</div>
+           
+      <!-- Advanced Skills -->
+      <div class="node primary" style="left: 300px; top: 1300px;"
+           onclick="openModal('cicd')">CI / CD</div>
+      <div class="node alternative" style="left: 900px; top: 1300px;"
+           onclick="openModal('monitoring')">Monitoring & Logs</div>
+      <div class="node primary" style="left: 300px; top: 1420px;"
+           onclick="openModal('versioncontrol')">Version Control</div>
+      <div class="node primary" style="left: 600px; top: 1420px;"
+           onclick="openModal('email')">Email Testing</div>
+      <div class="node primary" style="left: 600px; top: 1540px;"
+           onclick="openModal('headless')">Headless Testing</div>
+      <div class="node optional" style="left: 600px; top: 1660px;"
+           onclick="openModal('devskills')">Development Skills</div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2 id="modal-title"></h2>
+        <div id="modal-text"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Data for nodes
+    const nodeData = {
+      fundamentals: {
+        title: "QA Fundamentals",
+        text: `
+          <ul>
+            <li>What is Quality Assurance?</li>
+            <li>Tester Mindset</li>
+            <li>Test Oracles</li>
+            <li>Test Prioritization</li>
+            <li>Difference between QA, QC, and Testing</li>
+            <li>Verification vs Validation</li>
+            <li>Quality Metrics and KPIs</li>
+          </ul>
+        `
+      },
+      approaches: {
+        title: "Testing Approaches",
+        text: `
+          <ul>
+            <li>White Box Testing</li>
+            <li>Black Box Testing</li>
+            <li>Gray Box Testing</li>
+            <li>Static vs Dynamic Testing</li>
+            <li>Manual vs Automated Testing</li>
+            <li>TDD (Test Driven Development)</li>
+            <li>BDD (Behavior Driven Development)</li>
+          </ul>
+        `
+      },
+      sdlc: {
+        title: "SDLC Models",
+        text: `
+          <ul>
+            <li>Waterfall Model</li>
+            <li>V Model</li>
+            <li>Agile Model <span style="color: #ff2770;">(Recommended)</span>
+              <ul>
+                <li>Scrum</li>
+                <li>Kanban</li>
+                <li>XP (Extreme Programming)</li>
+              </ul>
+            </li>
+            <li>DevOps & QA</li>
+            <li>SAFe (Scaled Agile Framework)</li>
+          </ul>
+        `
+      },
+      testplanning: {
+        title: "Test Planning",
+        text: `
+          <ul>
+            <li>Test Plan Creation</li>
+            <li>Test Strategy Development</li>
+            <li>Test Cases and Scenarios</li>
+            <li>Test Data Management</li>
+            <li>Test Environment Setup</li>
+            <li>Test Estimation Techniques</li>
+            <li>Risk-Based Testing</li>
+            <li>Testing in Agile</li>
+          </ul>
+        `
+      },
+      functional: {
+        title: "Functional Testing",
+        text: `
+          <ul>
+            <li>Unit Testing</li>
+            <li>Integration Testing</li>
+            <li>System Testing</li>
+            <li>Acceptance Testing
+              <ul>
+                <li>UAT (User Acceptance Testing)</li>
+                <li>Alpha & Beta Testing</li>
+              </ul>
+            </li>
+            <li>Regression Testing</li>
+            <li>Smoke Testing</li>
+            <li>Sanity Testing</li>
+            <li>Exploratory Testing <span style="color: #ff2770;">(Recommended)</span></li>
+          </ul>
+        `
+      },
+      testmanagement: {
+        title: "Test Management",
+        text: `
+          <ul>
+            <li>Test Management Tools
+              <ul>
+                <li>TestRail <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>qTest</li>
+                <li>TestLink</li>
+                <li>Zephyr</li>
+              </ul>
+            </li>
+            <li>Test Data Management</li>
+            <li>Test Execution Tracking</li>
+            <li>Test Metrics & Reporting</li>
+            <li>Defect Lifecycle Management</li>
+          </ul>
+        `
+      },
+      bugmanagement: {
+        title: "Bug Management",
+        text: `
+          <ul>
+            <li>Bug Reporting Best Practices</li>
+            <li>Bug Lifecycle</li>
+            <li>Bug Tracking Tools
+              <ul>
+                <li>Jira <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>Bugzilla</li>
+                <li>Mantis</li>
+                <li>Azure DevOps</li>
+              </ul>
+            </li>
+            <li>Bug Severity vs Priority</li>
+            <li>Bug Triage Process</li>
+          </ul>
+        `
+      },
+      projectmanagement: {
+        title: "Project Management",
+        text: `
+          <ul>
+            <li>Project Management Tools
+              <ul>
+                <li>Jira <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>Trello</li>
+                <li>Asana</li>
+                <li>YouTrack</li>
+                <li>Azure DevOps</li>
+              </ul>
+            </li>
+            <li>Agile Ceremonies</li>
+            <li>Kanban Boards</li>
+            <li>Sprint Planning</li>
+            <li>Release Management</li>
+          </ul>
+        `
+      },
+      frontendautomation: {
+        title: "Frontend Automation",
+        text: `
+          <ul>
+            <li>Web UI Testing Tools
+              <ul>
+                <li>Selenium <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>Cypress</li>
+                <li>Playwright</li>
+                <li>Puppeteer</li>
+                <li>WebdriverIO</li>
+              </ul>
+            </li>
+            <li>Test Frameworks
+              <ul>
+                <li>TestNG</li>
+                <li>JUnit</li>
+                <li>Mocha</li>
+                <li>Jest</li>
+              </ul>
+            </li>
+            <li>Basic Web Technologies
+              <ul>
+                <li>HTML, CSS, JavaScript</li>
+                <li>Browser Dev Tools</li>
+                <li>DOM Structure</li>
+              </ul>
+            </li>
+            <li>Page Object Model</li>
+            <li>Data-Driven Testing</li>
+          </ul>
+        `
+      },
+      backendautomation: {
+        title: "Backend Automation",
+        text: `
+          <ul>
+            <li>API Testing Tools
+              <ul>
+                <li>Postman <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>REST Assured</li>
+                <li>SoapUI</li>
+                <li>Karate Framework</li>
+              </ul>
+            </li>
+            <li>API Types
+              <ul>
+                <li>REST</li>
+                <li>SOAP</li>
+                <li>GraphQL</li>
+              </ul>
+            </li>
+            <li>Response Validation</li>
+            <li>JSON & XML Parsing</li>
+            <li>Authentication Methods
+              <ul>
+                <li>Basic Auth</li>
+                <li>OAuth</li>
+                <li>JWT</li>
+              </ul>
+            </li>
+            <li>Database Testing</li>
+          </ul>
+        `
+      },
+      mobileautomation: {
+        title: "Mobile Automation",
+        text: `
+          <ul>
+            <li>Mobile Testing Frameworks
+              <ul>
+                <li>Appium <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>XCUITest (iOS)</li>
+                <li>Espresso (Android)</li>
+                <li>Detox</li>
+              </ul>
+            </li>
+            <li>Mobile Testing Types
+              <ul>
+                <li>Functional Testing</li>
+                <li>Usability Testing</li>
+                <li>Performance Testing</li>
+                <li>Installation Testing</li>
+                <li>Compatibility Testing</li>
+              </ul>
+            </li>
+            <li>Mobile Test Labs
+              <ul>
+                <li>BrowserStack</li>
+                <li>Sauce Labs</li>
+                <li>AWS Device Farm</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      performance: {
+        title: "Performance Testing",
+        text: `
+          <ul>
+            <li>Performance Testing Types
+              <ul>
+                <li>Load Testing</li>
+                <li>Stress Testing</li>
+                <li>Endurance Testing</li>
+                <li>Spike Testing</li>
+                <li>Volume Testing</li>
+                <li>Scalability Testing</li>
+              </ul>
+            </li>
+            <li>Performance Testing Tools
+              <ul>
+                <li>JMeter <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>Gatling</li>
+                <li>K6</li>
+                <li>LoadRunner</li>
+                <li>Locust</li>
+              </ul>
+            </li>
+            <li>Performance Metrics</li>
+            <li>Bottleneck Identification</li>
+            <li>Performance Optimization</li>
+          </ul>
+        `
+      },
+      security: {
+        title: "Security Testing",
+        text: `
+          <ul>
+            <li>Security Testing Types
+              <ul>
+                <li>Vulnerability Assessment</li>
+                <li>Penetration Testing</li>
+                <li>Security Scanning</li>
+                <li>Risk Assessment</li>
+                <li>Compliance Testing</li>
+              </ul>
+            </li>
+            <li>Security Knowledge
+              <ul>
+                <li>OWASP Top 10</li>
+                <li>Authentication/Authorization</li>
+                <li>Encryption</li>
+                <li>Session Management</li>
+                <li>Input Validation</li>
+              </ul>
+            </li>
+            <li>Security Testing Tools
+              <ul>
+                <li>OWASP ZAP</li>
+                <li>Burp Suite</li>
+                <li>Nmap</li>
+                <li>Metasploit</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      accessibility: {
+        title: "Accessibility Testing",
+        text: `
+          <ul>
+            <li>Accessibility Standards
+              <ul>
+                <li>WCAG 2.1/2.2</li>
+                <li>Section 508</li>
+                <li>ADA Compliance</li>
+              </ul>
+            </li>
+            <li>Accessibility Testing Tools
+              <ul>
+                <li>WAVE</li>
+                <li>Axe</li>
+                <li>Lighthouse</li>
+                <li>NVDA</li>
+                <li>VoiceOver</li>
+                <li>Chrome DevTools</li>
+              </ul>
+            </li>
+            <li>Testing for Screen Readers</li>
+            <li>Keyboard Navigation Testing</li>
+            <li>Color Contrast Testing</li>
+          </ul>
+        `
+      },
+      reporting: {
+        title: "Reporting",
+        text: `
+          <ul>
+            <li>Reporting Frameworks
+              <ul>
+                <li>Allure <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>Extent Reports</li>
+                <li>TestNG Reports</li>
+                <li>JUnit Reports</li>
+              </ul>
+            </li>
+            <li>Test Metrics
+              <ul>
+                <li>Defect Density</li>
+                <li>Defect Leakage</li>
+                <li>Test Coverage</li>
+                <li>Test Execution Status</li>
+              </ul>
+            </li>
+            <li>Dashboards</li>
+            <li>Automated Reporting</li>
+            <li>Executive Summaries</li>
+          </ul>
+        `
+      },
+      cicd: {
+        title: "CI / CD",
+        text: `
+          <ul>
+            <li>CI/CD Tools
+              <ul>
+                <li>Jenkins <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>GitHub Actions</li>
+                <li>GitLab CI</li>
+                <li>CircleCI</li>
+                <li>Travis CI</li>
+                <li>Azure DevOps</li>
+              </ul>
+            </li>
+            <li>Test Automation Integration</li>
+            <li>Build Pipeline Configuration</li>
+            <li>Continuous Testing</li>
+            <li>Test Environment Management</li>
+            <li>Automated Deployment</li>
+          </ul>
+        `
+      },
+      monitoring: {
+        title: "Monitoring & Logs",
+        text: `
+          <ul>
+            <li>Monitoring Tools
+              <ul>
+                <li>Grafana</li>
+                <li>Kibana</li>
+                <li>New Relic</li>
+                <li>Datadog</li>
+                <li>Prometheus</li>
+              </ul>
+            </li>
+            <li>Log Analysis
+              <ul>
+                <li>ELK Stack</li>
+                <li>Splunk</li>
+                <li>Sumo Logic</li>
+              </ul>
+            </li>
+            <li>Alert Management
+              <ul>
+                <li>PagerDuty</li>
+                <li>OpsGenie</li>
+              </ul>
+            </li>
+            <li>Application Performance Monitoring</li>
+            <li>Real User Monitoring (RUM)</li>
+          </ul>
+        `
+      },
+      versioncontrol: {
+        title: "Version Control",
+        text: `
+          <ul>
+            <li>Version Control Systems
+              <ul>
+                <li>Git <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>SVN</li>
+              </ul>
+            </li>
+            <li>Repository Hosting
+              <ul>
+                <li>GitHub</li>
+                <li>GitLab</li>
+                <li>Bitbucket</li>
+                <li>Azure DevOps</li>
+              </ul>
+            </li>
+            <li>Branching Strategies</li>
+            <li>Pull/Merge Requests</li>

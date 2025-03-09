@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Frontend Roadmap</title>
+  <style>
+    body {
+      background-color: #25252b;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid #45f3ff;
+    }
+
+    h1 {
+      color: #ff2770;
+      margin: 0;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: #45f3ff;
+      text-decoration: none;
+      font-weight: bold;
+      border: 1px solid #45f3ff;
+      padding: 5px 10px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background-color: #45f3ff;
+      color: #25252b;
+    }
+
+    /* Container for the roadmap diagram */
+    .roadmap-container {
+      position: relative;
+      width: 90%;
+      max-width: 1200px;
+      height: 1900px; /* Increased height to accommodate all nodes */
+      margin: 40px auto;
+      background-color: #25252b;
+      border: 2px solid #45f3ff;
+      border-radius: 8px;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    /* The SVG lines are placed behind the nodes */
+    .roadmap-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1; /* behind the nodes */
+    }
+
+    /* Each clickable node (box) */
+    .node {
+      position: absolute;
+      z-index: 2; /* above lines */
+      width: 150px;
+      text-align: center;
+      background: #333;
+      border: 2px solid #ff2770;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    /* Hover effect: glow + slight lift */
+    .node:hover {
+      background: #ff2770;
+      color: #25252b;
+      transform: translateY(-3px);
+      box-shadow: 0 0 15px #ff2770;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: #25252b;
+      border: 2px solid #45f3ff;
+      border-radius: 8px;
+      padding: 20px;
+      width: 80%;
+      max-width: 600px;
+      position: relative;
+      text-align: left;
+      max-height: 70vh;
+      overflow-y: auto;
+      color: #fff;
+    }
+
+    .close {
+      color: #45f3ff;
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #ff2770;
+    }
+
+    #modal-title {
+      color: #ff2770;
+      margin-top: 0;
+      border-bottom: 1px solid #45f3ff;
+      padding-bottom: 10px;
+    }
+
+    /* Category label styles */
+    .category-label {
+      position: absolute;
+      font-size: 20px;
+      font-weight: bold;
+      color: #45f3ff;
+      z-index: 2;
+    }
+
+    /* Alternate node styles */
+    .node.primary {
+      border-color: #ff2770;
+    }
+
+    .node.alternative {
+      border-color: #45f3ff;
+      background: #2a2a33;
+    }
+    
+    .node.alternative:hover {
+      background: #45f3ff;
+      color: #25252b;
+      box-shadow: 0 0 15px #45f3ff;
+    }
+    
+    .node.optional {
+      border-style: dashed;
+      opacity: 0.9;
+    }
+    
+    /* Personal recommendation tag */
+    .recommendation {
+      position: absolute;
+      background-color: #ff2770;
+      color: #25252b;
+      font-size: 10px;
+      padding: 2px 5px;
+      border-radius: 4px;
+      top: -8px;
+      right: -8px;
+      transform: rotate(10deg);
+      z-index: 3;
+    }
+
+    /* Column layout for better alignment */
+    .column-left {
+      left: 250px;
+    }
+    
+    .column-center {
+      left: 525px;
+    }
+    
+    .column-right {
+      left: 800px;
+    }
+    
+    /* Stage rows for vertical alignment - adjusted spacing */
+    .stage-row-1 { top: 80px; }
+    .stage-row-2 { top: 200px; }
+    .stage-row-3 { top: 320px; }
+    .stage-row-4 { top: 440px; }
+    .stage-row-5 { top: 560px; }
+    .stage-row-6 { top: 680px; }
+    .stage-row-7 { top: 800px; }
+    .stage-row-8 { top: 920px; }
+    .stage-row-9 { top: 1040px; }
+    .stage-row-10 { top: 1160px; }
+    .stage-row-11 { top: 1280px; }
+    .stage-row-12 { top: 1420px; } /* Increased spacing */
+    .stage-row-13 { top: 1560px; } /* Increased spacing */
+    .stage-row-14 { top: 1700px; } /* Increased spacing */
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Frontend Development Roadmap</h1>
+    <a href="index.html" class="back-btn">← Back</a>
+  </header>
+
+  <main>
+    <div class="roadmap-container">
+      <!-- Category Labels -->
+      <div class="category-label" style="left: 50px; top: 80px;">Fundamentals</div>
+      <div class="category-label" style="left: 50px; top: 440px;">Essential Tools</div>
+      <div class="category-label" style="left: 50px; top: 800px;">Development</div>
+      <div class="category-label" style="left: 50px; top: 1160px;">Advanced Topics</div>
+      
+      <!-- SVG for connecting lines -->
+      <svg class="roadmap-svg" viewBox="0 0 1200 1900">
+        <defs>
+          <!-- Arrowhead marker -->
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+                  refX="0" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#45f3ff" />
+          </marker>
+          <!-- Dashed line marker for optional paths -->
+          <pattern id="dashed" patternUnits="userSpaceOnUse" width="6" height="1">
+            <line x1="0" y1="0" x2="3" y2="0" stroke="#45f3ff" stroke-width="1" />
+          </pattern>
+        </defs>
+
+        <!-- Fundamentals Section -->
+        <!-- Internet to HTML, CSS -->
+        <line x1="600" y1="100" x2="325" y2="220" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="100" x2="875" y2="220" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+              
+        <!-- HTML, CSS to JavaScript -->
+        <line x1="325" y1="240" x2="600" y2="340" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="875" y1="240" x2="600" y2="340" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- Essential Tools Section -->
+        <!-- JavaScript to VCS, Package Managers -->
+        <line x1="600" y1="360" x2="325" y2="460" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="360" x2="875" y2="460" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+              
+        <!-- VCS, Package Managers to CSS Advanced, Frameworks, Alt Frameworks -->
+        <line x1="325" y1="480" x2="325" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="875" y1="480" x2="875" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="325" y1="480" x2="600" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="875" y1="480" x2="600" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- Development Section -->
+        <!-- CSS Adv, Frameworks, Alt Frameworks to Build Tools -->
+        <line x1="325" y1="600" x2="600" y2="700"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="600" x2="600" y2="700"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="875" y1="600" x2="600" y2="700"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Build Tools to Testing, Security -->
+        <line x1="600" y1="720" x2="325" y2="820"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="720" x2="875" y2="820"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Testing, Security to Type Checkers -->
+        <line x1="325" y1="840" x2="600" y2="940"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="875" y1="840" x2="600" y2="940"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Advanced Topics Section -->
+        <!-- Type Checkers to SSR, GraphQL -->
+        <line x1="600" y1="960" x2="325" y2="1060"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="960" x2="875" y2="1060"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- SSR, GraphQL to Web Components, State Management -->
+        <line x1="325" y1="1080" x2="325" y2="1180"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="875" y1="1080" x2="875" y2="1180"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Web Components, State Management to Performance, PWAs -->
+        <line x1="325" y1="1200" x2="325" y2="1300"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="875" y1="1200" x2="875" y2="1300"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Optional connection between Performance and PWAs (dashed) -->
+        <line x1="325" y1="1320" x2="875" y2="1320"
+              stroke="#45f3ff" stroke-width="2" stroke-dasharray="5,5"/>
+        
+        <!-- Performance, PWAs to Mobile Apps, Desktop Apps (dashed lines) -->
+        <line x1="325" y1="1320" x2="325" y2="1440"
+              stroke="#45f3ff" stroke-width="2" stroke-dasharray="5,5"
+              marker-end="url(#arrowhead)"/>
+        <line x1="875" y1="1320" x2="875" y2="1440"
+              stroke="#45f3ff" stroke-width="2" stroke-dasharray="5,5"
+              marker-end="url(#arrowhead)"/>
+      </svg>
+
+      <!-- Nodes (boxes) - With improved alignment using classes -->
+      <!-- Fundamentals -->
+      <div class="node primary column-center stage-row-1"
+           onclick="openModal('internet')">Internet</div>
+      <div class="node primary column-left stage-row-2"
+           onclick="openModal('html')">HTML</div>
+      <div class="node primary column-right stage-row-2"
+           onclick="openModal('css')">CSS</div>
+      <div class="node primary column-center stage-row-3"
+           onclick="openModal('javascript')">JavaScript</div>
+           
+      <!-- Essential Tools -->
+      <div class="node primary column-left stage-row-4"
+           onclick="openModal('vcs')">Version Control</div>
+      <div class="node primary column-right stage-row-4"
+           onclick="openModal('packagemanagers')">Package Managers</div>
+      <div class="node alternative column-left stage-row-5"
+           onclick="openModal('cssadvanced')">CSS Advanced
+           <span class="recommendation">♦</span>
+      </div>
+      <div class="node primary column-center stage-row-5"
+           onclick="openModal('frameworks')">Frameworks</div>
+      <div class="node alternative column-right stage-row-5"
+           onclick="openModal('altframeworks')">Alternative Frameworks</div>
+           
+      <!-- Development -->
+      <div class="node primary column-center stage-row-6"
+           onclick="openModal('buildtools')">Build Tools</div>
+      <div class="node primary column-left stage-row-7"
+           onclick="openModal('testing')">Testing</div>
+      <div class="node primary column-right stage-row-7"
+           onclick="openModal('security')">Security</div>
+      <div class="node primary column-center stage-row-8"
+           onclick="openModal('typecheckers')">Type Checkers</div>
+           
+      <!-- Advanced Topics -->
+      <div class="node primary column-left stage-row-9"
+           onclick="openModal('ssr')">SSR</div>
+      <div class="node alternative column-right stage-row-9"
+           onclick="openModal('graphql')">GraphQL</div>
+      <div class="node primary column-left stage-row-10"
+           onclick="openModal('webcomponents')">Web Components</div>
+      <div class="node primary column-right stage-row-10"
+           onclick="openModal('statemanagement')">State Management</div>
+      <div class="node primary column-left stage-row-11"
+           onclick="openModal('performance')">Performance</div>
+      <div class="node primary column-right stage-row-11"
+           onclick="openModal('pwas')">PWAs</div>
+      <div class="node optional column-left stage-row-12"
+           onclick="openModal('mobileapps')">Mobile Apps</div>
+      <div class="node optional column-right stage-row-12"
+           onclick="openModal('desktopapps')">Desktop Apps</div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2 id="modal-title"></h2>
+        <div id="modal-text"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Data from the PDF
+    const nodeData = {
+      internet: {
+        title: "Internet",
+        text: `
+          <ul>
+            <li>How does the internet work?</li>
+            <li>What is HTTP?</li>
+            <li>What is Domain Name?</li>
+            <li>What is hosting?</li>
+            <li>DNS and how it works?</li>
+            <li>Browsers and how they work?</li>
+          </ul>
+        `
+      },
+      html: {
+        title: "HTML",
+        text: `
+          <ul>
+            <li>Learn the basics</li>
+            <li>Writing Semantic HTML</li>
+            <li>Forms and Validations</li>
+            <li>Accessibility</li>
+            <li>SEO Basics</li>
+          </ul>
+        `
+      },
+      css: {
+        title: "CSS",
+        text: `
+          <ul>
+            <li>Learn the basics</li>
+            <li>Making Layouts</li>
+            <li>Responsive Design</li>
+          </ul>
+        `
+      },
+      javascript: {
+        title: "JavaScript",
+        text: `
+          <ul>
+            <li>Learn the Basics</li>
+            <li>Learn DOM Manipulation</li>
+            <li>Fetch API / Ajax (XHR)</li>
+            <li>ES6+ features</li>
+          </ul>
+        `
+      },
+      vcs: {
+        title: "Version Control Systems",
+        text: `
+          <ul>
+            <li>Git</li>
+            <li>VCS Hosting:</li>
+            <ul>
+              <li>GitHub</li>
+              <li>GitLab</li>
+              <li>Bitbucket</li>
+            </ul>
+          </ul>
+        `
+      },
+      packagemanagers: {
+        title: "Package Managers",
+        text: `
+          <ul>
+            <li>npm</li>
+            <li>yarn</li>
+            <li>pnpm</li>
+          </ul>
+        `
+      },
+      cssadvanced: {
+        title: "CSS Advanced",
+        text: `
+          <ul>
+            <li>CSS Architecture (BEM)</li>
+            <li>CSS Preprocessors:</li>
+            <ul>
+              <li>Sass</li>
+              <li>PostCSS</li>
+            </ul>
+            <li>CSS-in-JS</li>
+            <li>Tailwind CSS</li>
+            <li>CSS Modules</li>
+            <li>Styled Components</li>
+            <li>Panda CSS</li>
+            <li>Shadcn UI</li>
+            <li>Mantine</li>
+          </ul>
+        `
+      },
+      frameworks: {
+        title: "Frameworks",
+        text: `
+          <p>Pick a Framework:</p>
+          <ul>
+            <li>React <span style="color: #ff2770;">(Recommended)</span></li>
+            <li>Vue.js</li>
+            <li>Angular</li>
+          </ul>
+        `
+      },
+      altframeworks: {
+        title: "Alternative Frameworks",
+        text: `
+          <ul>
+            <li>Svelte</li>
+            <li>Solid JS</li>
+            <li>Qwik</li>
+            <li>Astro</li>
+          </ul>
+        `
+      },
+      buildtools: {
+        title: "Build Tools",
+        text: `
+          <p>Module Bundlers:</p>
+          <ul>
+            <li>Vite <span style="color: #ff2770;">(Recommended)</span></li>
+            <li>Webpack</li>
+            <li>Rollup</li>
+            <li>esbuild</li>
+            <li>Parcel</li>
+            <li>SWC</li>
+          </ul>
+          <p>Linters and Formatters:</p>
+          <ul>
+            <li>ESLint</li>
+            <li>Prettier</li>
+          </ul>
+        `
+      },
+      testing: {
+        title: "Testing",
+        text: `
+          <ul>
+            <li>Vitest</li>
+            <li>Jest</li>
+            <li>Cypress</li>
+            <li>Playwright</li>
+          </ul>
+        `
+      },
+      security: {
+        title: "Web Security & Authentication",
+        text: `
+          <p>Web Security Basics:</p>
+          <ul>
+            <li>HTTPS</li>
+            <li>CORS</li>
+            <li>Content Security Policy</li>
+            <li>OWASP Security Risks</li>
+          </ul>
+          <p>Authentication Strategies:</p>
+          <ul>
+            <li>JWT</li>
+            <li>OAuth</li>
+            <li>SSO</li>
+            <li>Basic Auth</li>
+            <li>Session Auth</li>
+          </ul>
+        `
+      },
+      typecheckers: {
+        title: "Type Checkers",
+        text: `
+          <ul>
+            <li>TypeScript <span style="color: #ff2770;">(Recommended)</span></li>
+          </ul>
+        `
+      },
+      webcomponents: {
+        title: "Web Components",
+        text: `
+          <ul>
+            <li>Custom Elements</li>
+            <li>HTML Templates</li>
+            <li>Shadow DOM</li>
+          </ul>
+        `
+      },
+      statemanagement: {
+        title: "State Management",
+        text: `
+          <ul>
+            <li>Context API</li>
+            <li>Redux</li>
+            <li>MobX</li>
+            <li>Recoil</li>
+            <li>Zustand <span style="color: #ff2770;">(Recommended)</span></li>
+            <li>Jotai</li>
+            <li>XState</li>
+          </ul>
+        `
+      },
+      ssr: {
+        title: "Server-Side Rendering",
+        text: `
+          <ul>
+            <li>Next.js (React) <span style="color: #ff2770;">(Recommended)</span></li>
+            <li>Nuxt.js (Vue.js)</li>
+            <li>SvelteKit (Svelte)</li>
+            <li>Angular Universal</li>
+          </ul>
+          <p>Static Site Generators:</p>
+          <ul>
+            <li>Astro</li>
+            <li>Next.js</li>
+            <li>Eleventy</li>
+            <li>Vuepress</li>
+            <li>Nuxt.js</li>
+          </ul>
+        `
+      },
+      graphql: {
+        title: "GraphQL",
+        text: `
+          <ul>
+            <li>Apollo</li>
+            <li>Relay Modern</li>
+          </ul>
+        `
+      },
+      performance: {
+        title: "Performance",
+        text: `
+          <p>Measure & Improve Performance:</p>
+          <ul>
+            <li>PRPL Pattern</li>
+            <li>RAIL Model</li>
+            <li>Performance Metrics</li>
+            <li>Using Lighthouse</li>
+            <li>Using DevTools</li>
+            <li>Performance Best Practices</li>
+          </ul>
+        `
+      },
+      pwas: {
+        title: "Progressive Web Apps",
+        text: `
+          <p>Browser APIs:</p>
+          <ul>
+            <li>Storage</li>
+            <li>Web Sockets</li>
+            <li>Service Workers</li>
+            <li>Location</li>
+            <li>Notifications</li>
+            <li>Device Orientation</li>
+            <li>Payments</li>
+            <li>Credentials</li>
+            <li>Server Sent Events</li>
+          </ul>
+        `
+      },
+      mobileapps: {
+        title: "Mobile Apps",
+        text: `
+          <ul>
+            <li>React Native <span style="color: #ff2770;">(Recommended)</span></li>
+            <li>Flutter</li>
+            <li>Ionic</li>
+          </ul>
+        `
+      },
+      desktopapps: {
+        title: "Desktop Apps",
+        text: `
+          <ul>
+            <li>Electron</li>
+            <li>Tauri <span style="color: #ff2770;">(Recommended)</span></li>
+            <li>Flutter</li>
+          </ul>
+        `
+      }
+    };
+
+    function openModal(nodeKey) {
+      const modal = document.getElementById("modal");
+      const modalTitle = document.getElementById("modal-title");
+      const modalText = document.getElementById("modal-text");
+
+      const data = nodeData[nodeKey];
+      modalTitle.innerText = data.title;
+      modalText.innerHTML = data.text;
+      modal.style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("modal").style.display = "none";
+    }
+
+    // Close modal if user clicks outside content
+    window.onclick = function(e) {
+      const modal = document.getElementById("modal");
+      if (e.target === modal) {
+        closeModal();
+      }
+    };
+  </script>
+</body>
+</html>

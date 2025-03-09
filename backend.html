@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Backend Roadmap</title>
+  <style>
+    body {
+      background-color: #25252b;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid #45f3ff;
+    }
+
+    h1 {
+      color: #ff2770;
+      margin: 0;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: #45f3ff;
+      text-decoration: none;
+      font-weight: bold;
+      border: 1px solid #45f3ff;
+      padding: 5px 10px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background-color: #45f3ff;
+      color: #25252b;
+    }
+
+    /* Container for the roadmap diagram */
+    .roadmap-container {
+      position: relative;
+      width: 90%;
+      max-width: 1200px;
+      height: 2100px; /* Increased height to accommodate all nodes */
+      margin: 40px auto;
+      background-color: #25252b;
+      border: 2px solid #45f3ff;
+      border-radius: 8px;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    /* The SVG lines are placed behind the nodes */
+    .roadmap-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1; /* behind the nodes */
+    }
+
+    /* Each clickable node (box) */
+    .node {
+      position: absolute;
+      z-index: 2; /* above lines */
+      width: 180px; /* slightly wider for better content fit */
+      height: 40px; /* fixed height for better alignment */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: #333;
+      border: 2px solid #ff2770;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      color: #fff;
+      font-weight: bold;
+      /* Center the node around its position */
+      transform: translate(-50%, -50%);
+    }
+
+    /* Hover effect: glow + slight lift */
+    .node:hover {
+      background: #ff2770;
+      color: #25252b;
+      transform: translate(-50%, -50%) translateY(-3px);
+      box-shadow: 0 0 15px #ff2770;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: #25252b;
+      border: 2px solid #45f3ff;
+      border-radius: 8px;
+      padding: 20px;
+      width: 80%;
+      max-width: 600px;
+      position: relative;
+      text-align: left;
+      max-height: 70vh;
+      overflow-y: auto;
+      color: #fff;
+    }
+
+    .close {
+      color: #45f3ff;
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #ff2770;
+    }
+
+    #modal-title {
+      color: #ff2770;
+      margin-top: 0;
+      border-bottom: 1px solid #45f3ff;
+      padding-bottom: 10px;
+    }
+
+    /* Category label styles */
+    .category-label {
+      position: absolute;
+      font-size: 20px;
+      font-weight: bold;
+      color: #45f3ff;
+      z-index: 2;
+    }
+
+    /* Alternate node styles */
+    .node.primary {
+      border-color: #ff2770;
+    }
+
+    .node.alternative {
+      border-color: #45f3ff;
+      background: #2a2a33;
+    }
+    
+    .node.alternative:hover {
+      background: #45f3ff;
+      color: #25252b;
+      box-shadow: 0 0 15px #45f3ff;
+    }
+    
+    .node.optional {
+      border-style: dashed;
+      opacity: 0.9;
+    }
+    
+    /* Personal recommendation tag */
+    .recommendation {
+      position: absolute;
+      background-color: #ff2770;
+      color: #25252b;
+      font-size: 10px;
+      padding: 2px 5px;
+      border-radius: 4px;
+      top: -10px;
+      right: -10px;
+      transform: rotate(10deg);
+      z-index: 3;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Backend Development Roadmap</h1>
+    <a href="index.html" class="back-btn">← Back</a>
+  </header>
+
+  <main>
+    <div class="roadmap-container">
+      <!-- Category Labels -->
+      <div class="category-label" style="left: 50px; top: 80px;">Fundamentals</div>
+      <div class="category-label" style="left: 50px; top: 440px;">Core Skills</div>
+      <div class="category-label" style="left: 50px; top: 800px;">Databases</div>
+      <div class="category-label" style="left: 50px; top: 1160px;">Web Security</div>
+      <div class="category-label" style="left: 50px; top: 1520px;">Advanced Topics</div>
+      
+      <!-- SVG for connecting lines - Using absolute coordinates that match node positions -->
+      <svg class="roadmap-svg" viewBox="0 0 1200 2100">
+        <defs>
+          <!-- Arrowhead marker -->
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+                  refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#45f3ff" />
+          </marker>
+          <!-- Dashed line marker for optional paths -->
+          <pattern id="dashed" patternUnits="userSpaceOnUse" width="6" height="1">
+            <line x1="0" y1="0" x2="3" y2="0" stroke="#45f3ff" stroke-width="1" />
+          </pattern>
+        </defs>
+
+        <!-- Fundamentals Section -->
+        <!-- Internet to Language & OS Knowledge -->
+        <line x1="600" y1="100" x2="300" y2="220" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="100" x2="900" y2="220" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+              
+        <!-- Language, OS Knowledge to Version Control -->
+        <line x1="300" y1="220" x2="600" y2="340" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="220" x2="600" y2="340" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- Core Skills Section -->
+        <!-- Version Control to APIs, DB Knowledge -->
+        <line x1="600" y1="340" x2="300" y2="460" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="340" x2="900" y2="460" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+              
+        <!-- APIs, DB Knowledge to Caching, Web Servers -->
+        <line x1="300" y1="460" x2="300" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="460" x2="600" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="460" x2="900" y2="580" 
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+
+        <!-- Databases Section -->
+        <!-- Caching, Testing, Web Servers to Relational DBs -->
+        <line x1="300" y1="580" x2="300" y2="700"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="580" x2="300" y2="700"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="580" x2="300" y2="700"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Relational DBs to NoSQL -->
+        <line x1="300" y1="700" x2="900" y2="820"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- NoSQL to Search Engines -->
+        <line x1="900" y1="820" x2="600" y2="940"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Web Security Section -->
+        <!-- Search Engines to Authentication -->
+        <line x1="600" y1="940" x2="300" y2="1060"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="600" y1="940" x2="900" y2="1060"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Authentication, Security to CI/CD, Containers -->
+        <line x1="300" y1="1060" x2="300" y2="1180"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1060" x2="900" y2="1180"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Advanced Topics Section -->
+        <!-- CI/CD, Containers to Message Brokers, GraphQL -->
+        <line x1="300" y1="1180" x2="300" y2="1300"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1180" x2="900" y2="1300"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Message Brokers, GraphQL to Design Patterns, Scaling -->
+        <line x1="300" y1="1300" x2="300" y2="1420"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1300" x2="900" y2="1420"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Design Patterns, Scaling to Observability -->
+        <line x1="300" y1="1420" x2="600" y2="1540"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        <line x1="900" y1="1420" x2="600" y2="1540"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Observability to Serverless -->
+        <line x1="600" y1="1540" x2="600" y2="1660"
+              stroke="#45f3ff" stroke-width="2"
+              marker-end="url(#arrowhead)"/>
+        
+        <!-- Serverless to Optional Connection (dashed) -->
+        <line x1="600" y1="1660" x2="600" y2="1780"
+              stroke="#45f3ff" stroke-width="2" stroke-dasharray="5,5"
+              marker-end="url(#arrowhead)"/>
+      </svg>
+
+      <!-- Nodes (boxes) - Using absolute positioning -->
+      <!-- Fundamentals -->
+      <div class="node primary" style="left: 600px; top: 100px;"
+           onclick="openModal('internet')">Internet</div>
+      <div class="node primary" style="left: 300px; top: 220px;"
+           onclick="openModal('language')">Programming Language</div>
+      <div class="node primary" style="left: 900px; top: 220px;"
+           onclick="openModal('os')">OS Knowledge</div>
+      <div class="node primary" style="left: 600px; top: 340px;"
+           onclick="openModal('vcs')">Version Control</div>
+           
+      <!-- Core Skills -->
+      <div class="node primary" style="left: 300px; top: 460px;"
+           onclick="openModal('apis')">APIs</div>
+      <div class="node primary" style="left: 900px; top: 460px;"
+           onclick="openModal('databases')">Database Concepts</div>
+      <div class="node primary" style="left: 300px; top: 580px;"
+           onclick="openModal('caching')">Caching</div>
+      <div class="node primary" style="left: 600px; top: 580px;"
+           onclick="openModal('testing')">Testing</div>
+      <div class="node primary" style="left: 900px; top: 580px;"
+           onclick="openModal('webservers')">Web Servers</div>
+           
+      <!-- Databases -->
+      <div class="node primary" style="left: 300px; top: 700px;"
+           onclick="openModal('relational')">Relational Databases
+           <span class="recommendation">♦</span>
+      </div>
+      <div class="node primary" style="left: 900px; top: 820px;"
+           onclick="openModal('nosql')">NoSQL Databases</div>
+      <div class="node primary" style="left: 600px; top: 940px;"
+           onclick="openModal('search')">Search Engines</div>
+           
+      <!-- Web Security -->
+      <div class="node primary" style="left: 300px; top: 1060px;"
+           onclick="openModal('authentication')">Authentication</div>
+      <div class="node primary" style="left: 900px; top: 1060px;"
+           onclick="openModal('security')">Web Security</div>
+      <div class="node primary" style="left: 300px; top: 1180px;"
+           onclick="openModal('cicd')">CI / CD</div>
+      <div class="node primary" style="left: 900px; top: 1180px;"
+           onclick="openModal('containers')">Containerization</div>
+           
+      <!-- Advanced Topics -->
+      <div class="node primary" style="left: 300px; top: 1300px;"
+           onclick="openModal('messagebrokers')">Message Brokers</div>
+      <div class="node alternative" style="left: 900px; top: 1300px;"
+           onclick="openModal('graphql')">GraphQL</div>
+      <div class="node primary" style="left: 300px; top: 1420px;"
+           onclick="openModal('designpatterns')">Design Principles</div>
+      <div class="node primary" style="left: 900px; top: 1420px;"
+           onclick="openModal('scaling')">Building for Scale</div>
+      <div class="node primary" style="left: 600px; top: 1540px;"
+           onclick="openModal('observability')">Observability</div>
+      <div class="node primary" style="left: 600px; top: 1660px;"
+           onclick="openModal('serverless')">Serverless</div>
+      <div class="node optional" style="left: 600px; top: 1780px;"
+           onclick="openModal('architecturalpatterns')">Architectural Patterns</div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2 id="modal-title"></h2>
+        <div id="modal-text"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Data extracted from the PDF
+    const nodeData = {
+      internet: {
+        title: "Internet",
+        text: `
+          <ul>
+            <li>How does the internet work?</li>
+            <li>What is HTTP?</li>
+            <li>Browsers and how they work?</li>
+            <li>DNS and how it works?</li>
+            <li>What is Domain Name?</li>
+            <li>What is hosting?</li>
+          </ul>
+        `
+      },
+      language: {
+        title: "Programming Language",
+        text: `
+          <p>Pick a Language:</p>
+          <ul>
+            <li>JavaScript</li>
+            <li>Python <span style="color: #ff2770;">(Recommended)</span></li>
+            <li>Java</li>
+            <li>Go</li>
+            <li>Rust</li>
+            <li>C#</li>
+            <li>PHP</li>
+            <li>Ruby</li>
+          </ul>
+        `
+      },
+      os: {
+        title: "OS and General Knowledge",
+        text: `
+          <ul>
+            <li>Terminal Usage</li>
+            <li>Basic Terminal Commands
+              <ul>
+                <li>grep, awk, sed, lsof, curl, wget</li>
+                <li>tail, head, less, find, ssh, kill, dig</li>
+              </ul>
+            </li>
+            <li>POSIX Basics (stdin, stdout, stderr, pipes)</li>
+            <li>Process Management</li>
+            <li>Threads and Concurrency</li>
+            <li>Memory Management</li>
+            <li>Interprocess Communication</li>
+            <li>I/O Management</li>
+            <li>Basic Networking Concepts</li>
+            <li>How OSs work in General</li>
+          </ul>
+        `
+      },
+      vcs: {
+        title: "Version Control Systems",
+        text: `
+          <ul>
+            <li>Git</li>
+            <li>Repo hosting services
+              <ul>
+                <li>GitHub</li>
+                <li>GitLab</li>
+                <li>Bitbucket</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      apis: {
+        title: "Learn about APIs",
+        text: `
+          <ul>
+            <li>REST <span style="color: #ff2770;">(Recommended)</span></li>
+            <li>JSON APIs</li>
+            <li>SOAP</li>
+            <li>HATEOAS</li>
+            <li>Open API Specs</li>
+            <li>gRPC</li>
+            <li>WebSockets</li>
+            <li>Server Sent Events</li>
+          </ul>
+        `
+      },
+      databases: {
+        title: "Database Concepts",
+        text: `
+          <ul>
+            <li>ORMs</li>
+            <li>ACID</li>
+            <li>Transactions</li>
+            <li>N+1 Problem</li>
+            <li>Database Indexes</li>
+            <li>Data Replication</li>
+            <li>Sharding Strategies</li>
+            <li>CAP Theorem</li>
+            <li>Normalization</li>
+          </ul>
+        `
+      },
+      caching: {
+        title: "Caching",
+        text: `
+          <ul>
+            <li>CDN</li>
+            <li>Server Side
+              <ul>
+                <li>Redis <span style="color: #ff2770;">(Recommended)</span></li>
+                <li>Memcached</li>
+              </ul>
+            </li>
+            <li>Client Side</li>
+          </ul>
+        `
+      },
+      testing: {
+        title: "Testing",
+        text: `
+          <ul>
+            <li>Integration Testing</li>
+            <li>Unit Testing</li>
+            <li>Functional Testing</li>
+          </ul>
+        `
+      },
+      webservers: {
+        title: "Web Servers",
+        text: `
+          <ul>
+            <li>Nginx <span style="color: #ff2770;">(Recommended)</span></li>
+            <li>Apache</li>
+            <li>Caddy</li>
+            <li>MS IIS</li>
+          </ul>
+        `
+      },
+      relational: {
+        title: "Relational Databases",
+        text: `
+          <ul>
+            <li>PostgreSQL <span style="color: #ff2770;">(Recommended)</span></li>
+            <li>MySQL</li>
+            <li>MariaDB</li>
+            <li>MS SQL</li>
+            <li>Oracle</li>
+          </ul>
+        `
+      },
+      nosql: {
+        title: "NoSQL Databases",
+        text: `
+          <ul>
+            <li>Document DBs
+              <ul>
+                <li>MongoDB</li>
+                <li>CouchDB</li>
+              </ul>
+            </li>
+            <li>Time Series
+              <ul>
+                <li>InfluxDB</li>
+                <li>TimeScale</li>
+              </ul>
+            </li>
+            <li>Realtime
+              <ul>
+                <li>Firebase</li>
+                <li>RethinkDB</li>
+              </ul>
+            </li>
+            <li>Column DBs
+              <ul>
+                <li>Cassandra</li>
+                <li>HBase</li>
+              </ul>
+            </li>
+            <li>Key-Value
+              <ul>
+                <li>Redis</li>
+                <li>DynamoDB</li>
+              </ul>
+            </li>
+            <li>Graph DBs
+              <ul>
+                <li>Neo4j</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      search: {
+        title: "Search Engines",
+        text: `
+          <ul>
+            <li>Elasticsearch <span style="color: #ff2770;">(Recommended)</span></li>
+            <li>Solr</li>
+          </ul>
+        `
+      },
+      authentication: {
+        title: "Authentication",
+        text: `
+          <ul>
+            <li>OAuth</li>
+            <li>Basic Auth</li>
+            <li>Token Auth</li>
+            <li>JWT</li>
+            <li>OpenID</li>
+            <li>SAML</li>
+            <li>Cookie Based</li>
+          </ul>
+        `
+      },
+      security: {
+        title: "Web Security Knowledge",
+        text: `
+          <ul>
+            <li>HTTPS</li>
+            <li>CORS</li>
+            <li>Content Security Policy</li>
+            <li>SSL/TLS</li>
+            <li>OWASP Risks</li>
+            <li>Hashing Algorithms
+              <ul>
+                <li>MD5 and why not to use it</li>
+                <li>SHA Family</li>
+                <li>scrypt, bcrypt</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      cicd: {
+        title: "CI / CD",
+        text: `
+          <p>Continuous Integration and Continuous Delivery are essential practices for modern development teams.</p>
+          <ul>
+            <li>Popular CI/CD Tools:
+              <ul>
+                <li>GitHub Actions</li>
+                <li>Jenkins</li>
+                <li>CircleCI</li>
+                <li>GitLab CI</li>
+                <li>TravisCI</li>
+              </ul>
+            </li>
+            <li>Key CI/CD Concepts:
+              <ul>
+                <li>Automated testing</li>
+                <li>Automated deployment</li>
+                <li>Environment management</li>
+                <li>Artifact management</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      containers: {
+        title: "Containerization vs Virtualization",
+        text: `
+          <ul>
+            <li>Docker <span style="color: #ff2770;">(Recommended)</span></li>
+            <li>LXC</li>
+            <li>Kubernetes</li>
+          </ul>
+        `
+      },
+      messagebrokers: {
+        title: "Message Brokers",
+        text: `
+          <ul>
+            <li>RabbitMQ</li>
+            <li>Kafka <span style="color: #ff2770;">(Recommended)</span></li>
+          </ul>
+        `
+      },
+      graphql: {
+        title: "GraphQL",
+        text: `
+          <ul>
+            <li>Apollo</li>
+            <li>Relay Modern</li>
+          </ul>
+        `
+      },
+      designpatterns: {
+        title: "Design and Development Principles",
+        text: `
+          <ul>
+            <li>GOF Design Patterns</li>
+            <li>Domain Driven Design</li>
+            <li>Test Driven Development</li>
+            <li>CQRS</li>
+            <li>Event Sourcing</li>
+            <li>Twelve Factor Apps</li>
+          </ul>
+        `
+      },
+      scaling: {
+        title: "Building for Scale",
+        text: `
+          <ul>
+            <li>Migration Strategies</li>
+            <li>Types of Scaling</li>
+            <li>Horizontal vs Vertical Scaling</li>
+            <li>Scaling Databases</li>
+            <li>Observability and Metrics</li>
+            <li>Mitigation Strategies</li>
+            <li>Instrumentation, Monitoring, Telemetry</li>
+            <li>Graceful Degradation</li>
+            <li>Throttling</li>
+            <li>Backpressure</li>
+            <li>Loadshifting</li>
+            <li>Circuit Breaker</li>
+            <li>Failure Modes</li>
+          </ul>
+        `
+      },
+      observability: {
+        title: "Observability",
+        text: `
+          <p>Metrics, logging and other observable items that can help in debugging and solving issues when things go wrong.</p>
+          <ul>
+            <li>Logging</li>
+            <li>Metrics collection</li>
+            <li>Distributed tracing</li>
+            <li>Profiling Performance</li>
+            <li>Alerting</li>
+            <li>Popular tools:
+              <ul>
+                <li>Prometheus & Grafana</li>
+                <li>ELK Stack (Elasticsearch, Logstash, Kibana)</li>
+                <li>Jaeger / Zipkin</li>
+                <li>New Relic</li>
+                <li>Datadog</li>
+              </ul>
+            </li>
+          </ul>
+        `
+      },
+      serverless: {
+        title: "Serverless",
+        text: `
+          <ul>
+            <li>AWS Lambda</li>
+            <li>Azure Functions</li>
+            <li>Google Cloud Functions</li>
+            <li>Firebase Functions</li>
+            <li>CloudFlare Workers</li>
+          </ul>
+          <p>Serverless frameworks:</p>
+          <ul>
+            <li>Serverless Framework</li>
+            <li>AWS SAM</li>
+            <li>Terraform</li>
+            <li>Pulumi</li>
+          </ul>
+        `
+      },
+      architecturalpatterns: {
+        title: "Architectural Patterns",
+        text: `
+          <ul>
+            <li>Monolithic Apps</li>
+            <li>Microservices <span style="color: #ff2770;">(Recommended)</span></li>
+            <li>SOA (Service-Oriented Architecture)</li>
+            <li>Serverless Architecture</li>
+            <li>Service Mesh</li>
+          </ul>
+        `
+      }
+    };
+
+    function openModal(nodeKey) {
+      const modal = document.getElementById("modal");
+      const modalTitle = document.getElementById("modal-title");
+      const modalText = document.getElementById("modal-text");
+
+      const data = nodeData[nodeKey];
+      modalTitle.innerText = data.title;
+      modalText.innerHTML = data.text;
+      modal.style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("modal").style.display = "none";
+    }
+
+    // Close modal if user clicks outside content
+    window.onclick = function(e) {
+      const modal = document.getElementById("modal");
+      if (e.target === modal) {
+        closeModal();
+      }
+    };
+  </script>
+</body>
+</html>
