@@ -229,6 +229,56 @@ nav {
   -webkit-text-fill-color: transparent;
 }
 
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px; /* Adjust spacing as needed */
+}
+
+/* Ensure the html and body take full height */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin: 40px 0; /* Adjust vertical spacing as needed */
+}
+
+.button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--gradient); /* Uses your theme gradient */
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(69, 243, 255, 0.3);
+  cursor: pointer;
+  transition: width 0.3s ease, border-radius 0.3s ease;
+  overflow: hidden;
+  position: relative;
+}
+
+.svgIcon {
+  width: 16px;
+  transition: transform 0.3s ease;
+}
+
+.button:hover {
+  width: 140px;
+  border-radius: 30px;
+}
+
+.button:hover .svgIcon {
+  transform: translateX(-10px);
+}
+
+
 .elevate-x span {
   color: var(--secondary);
 }
